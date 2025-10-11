@@ -44,12 +44,13 @@ const familyBonusOptions: { id: FamilyBonusOption; label: string }[] = [
   { id: "full", label: "ganzer Familienbonus" },
 ];
 
+type ActiveCommutingFrequency = Exclude<CommutingFrequency, "none">;
+
 const commutingFrequencyOptions: {
-  id: CommutingFrequency;
+  id: ActiveCommutingFrequency;
   label: string;
   description: string;
 }[] = [
-  { id: "none", label: "0 Tage", description: "kein Pendeln" },
   {
     id: "upto10",
     label: "bis 10 Tage",
@@ -79,7 +80,9 @@ export default function Home() {
   const [publicTransportReasonable, setPublicTransportReasonable] =
     useState<boolean>(true);
   const [commutingFrequency, setCommutingFrequency] =
-    useState<CommutingFrequency>("none");
+    useState<ActiveCommutingFrequency>("upto10");
+  const [receivesCommuterAllowance, setReceivesCommuterAllowance] =
+    useState<boolean>(false);
 
   const previewGross = useMemo(() => {
     const parsedIncome = Number.parseFloat(income);
@@ -112,9 +115,15 @@ export default function Home() {
         ? Number.parseFloat(companyCarValue) || 0
         : 0,
       allowance: Number.parseFloat(allowance) || 0,
-      commuterDistance: Number.parseFloat(commuterDistance) || 0,
-      publicTransportReasonable,
-      commutingFrequency,
+      commuterDistance: receivesCommuterAllowance
+        ? Number.parseFloat(commuterDistance) || 0
+        : 0,
+      publicTransportReasonable: receivesCommuterAllowance
+        ? publicTransportReasonable
+        : true,
+      commutingFrequency: receivesCommuterAllowance
+        ? commutingFrequency
+        : "none",
     };
 
     const encoded = encodeURIComponent(JSON.stringify(payload));
@@ -272,26 +281,28 @@ export default function Home() {
                     className="w-full rounded-xl border border-rose-200/80 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
                   />
                 </label>
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-3 rounded-2xl border border-rose-100/80 bg-white/70 p-4">
                   <label className="flex items-center gap-3 text-sm font-medium text-slate-600">
                     <input
                       type="checkbox"
                       checked={hasCompanyCar}
                       onChange={(event) => setHasCompanyCar(event.target.checked)}
-                      className="h-4 w-4 rounded border-rose-300 text-rose-500 focus:ring-rose-500"
+                      className="h-4 w-4 rounded border-rose-300 text-rose-500 accent-rose-500 focus:ring-rose-500"
                     />
                     Sachbezug durch Firmen-PKW
                   </label>
                   {hasCompanyCar && (
-                    <input
-                      type="number"
-                      min="0"
-                      step="10"
-                      value={companyCarValue}
-                      onChange={(event) => setCompanyCarValue(event.target.value)}
-                      placeholder="Sachbezugswert pro Monat"
-                      className="w-full rounded-xl border border-rose-200/80 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
-                    />
+                    <label className="flex flex-col gap-2 text-sm text-slate-600">
+                      <span>Sachbezugswert pro Monat (€)</span>
+                      <input
+                        type="number"
+                        min="0"
+                        step="10"
+                        value={companyCarValue}
+                        onChange={(event) => setCompanyCarValue(event.target.value)}
+                        className="w-full rounded-xl border border-rose-200/80 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
+                      />
+                    </label>
                   )}
                 </div>
               </div>
@@ -301,46 +312,73 @@ export default function Home() {
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
                 4. Pendlerpauschale
               </p>
-              <label className="flex flex-col gap-2 text-sm">
-                Einfache Wegstrecke (km)
-                <input
-                  type="number"
-                  min="0"
-                  step="1"
-                  value={commuterDistance}
-                  onChange={(event) => setCommuterDistance(event.target.value)}
-                  className="w-full rounded-xl border border-rose-200/80 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
-                />
-              </label>
-              <div className="flex gap-4 text-sm font-medium text-slate-600">
-                <button
-                  type="button"
-                  onClick={() => setPublicTransportReasonable(true)}
-                  className={`flex-1 rounded-xl border px-4 py-3 transition ${publicTransportReasonable ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
-                >
-                  Öffi-Nutzung zumutbar
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPublicTransportReasonable(false)}
-                  className={`flex-1 rounded-xl border px-4 py-3 transition ${!publicTransportReasonable ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
-                >
-                  Öffis nicht zumutbar
-                </button>
-              </div>
-              <div className="grid gap-3 sm:grid-cols-3">
-                {commutingFrequencyOptions.map((option) => (
+              <div className="flex flex-col gap-3 text-sm">
+                <p className="font-medium text-slate-700">
+                  Pendlerpauschale in Anspruch nehmen?
+                </p>
+                <div className="grid grid-cols-2 gap-3 sm:max-w-xs">
                   <button
-                    key={option.id}
                     type="button"
-                    onClick={() => setCommutingFrequency(option.id)}
-                    className={`rounded-xl border p-3 text-left text-sm transition ${commutingFrequency === option.id ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
+                    onClick={() => setReceivesCommuterAllowance(false)}
+                    className={`rounded-xl border px-4 py-3 text-sm font-medium transition ${!receivesCommuterAllowance ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
                   >
-                    <p className="font-semibold">{option.label}</p>
-                    <p className="text-xs text-rose-500/80">{option.description}</p>
+                    Nein
                   </button>
-                ))}
+                  <button
+                    type="button"
+                    onClick={() => setReceivesCommuterAllowance(true)}
+                    className={`rounded-xl border px-4 py-3 text-sm font-medium transition ${receivesCommuterAllowance ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
+                  >
+                    Ja
+                  </button>
+                </div>
               </div>
+              {receivesCommuterAllowance && (
+                <>
+                  <label className="flex flex-col gap-2 text-sm">
+                    Einfache Wegstrecke (km)
+                    <input
+                      type="number"
+                      min="0"
+                      step="1"
+                      value={commuterDistance}
+                      onChange={(event) =>
+                        setCommuterDistance(event.target.value)
+                      }
+                      className="w-full rounded-xl border border-rose-200/80 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
+                    />
+                  </label>
+                  <div className="flex gap-4 text-sm font-medium text-slate-600">
+                    <button
+                      type="button"
+                      onClick={() => setPublicTransportReasonable(true)}
+                      className={`flex-1 rounded-xl border px-4 py-3 transition ${publicTransportReasonable ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
+                    >
+                      Öffi-Nutzung zumutbar
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPublicTransportReasonable(false)}
+                      className={`flex-1 rounded-xl border px-4 py-3 transition ${!publicTransportReasonable ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
+                    >
+                      Öffis nicht zumutbar
+                    </button>
+                  </div>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {commutingFrequencyOptions.map((option) => (
+                      <button
+                        key={option.id}
+                        type="button"
+                        onClick={() => setCommutingFrequency(option.id)}
+                        className={`rounded-xl border p-3 text-left text-sm transition ${commutingFrequency === option.id ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
+                      >
+                        <p className="font-semibold">{option.label}</p>
+                        <p className="text-xs text-rose-500/80">{option.description}</p>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
 
             <button
