@@ -172,14 +172,32 @@ export default function ResultPage({ searchParams }: ResultPageProps) {
               {summaryMetrics.map((metric) => (
                 <div
                   key={metric.label}
-                  className={`rounded-2xl border border-white/60 bg-white/80 p-6 shadow ${metric.accent ? "bg-gradient-to-br from-rose-500 to-rose-600 text-white shadow-rose-500/40" : "text-slate-700"}`}
+                  className={`group relative overflow-hidden rounded-3xl border border-white/70 bg-white/85 p-[1px] shadow transition-all duration-200 hover:-translate-y-1 hover:shadow-2xl ${
+                    metric.accent ? "border-transparent bg-gradient-to-br from-rose-500 to-rose-600 shadow-rose-500/40" : ""
+                  }`}
                 >
-                  <p
-                    className={`text-sm font-medium uppercase tracking-[0.2em] ${metric.accent ? "text-white/70" : "text-rose-500"}`}
+                  <div
+                    className={`relative flex h-full flex-col justify-between gap-4 rounded-[1.6rem] p-6 ${
+                      metric.accent
+                        ? "bg-gradient-to-br from-rose-500 via-rose-500/95 to-rose-600 text-white"
+                        : "bg-white/95 text-slate-700"
+                    }`}
                   >
-                    {metric.label}
-                  </p>
-                  <p className="mt-3 text-3xl font-semibold">{metric.value}</p>
+                    <p
+                      className={`text-xs font-semibold uppercase tracking-[0.35em] text-rose-400 ${
+                        metric.accent ? "text-white/70" : ""
+                      }`}
+                    >
+                      {metric.label}
+                    </p>
+                    <p
+                      className={`text-3xl font-semibold leading-tight tracking-tight sm:text-[2.4rem] ${
+                        metric.accent ? "text-white" : "text-slate-900"
+                      }`}
+                    >
+                      {metric.value}
+                    </p>
+                  </div>
                 </div>
               ))}
             </section>
@@ -192,21 +210,23 @@ export default function ResultPage({ searchParams }: ResultPageProps) {
                 {breakdown.map((item) => (
                   <div
                     key={item.title}
-                    className="rounded-2xl border border-white/60 bg-white/75 p-5 shadow-inner"
+                    className="flex h-full flex-col gap-4 rounded-2xl border border-white/70 bg-white/80 p-6 shadow-inner transition-all duration-200 hover:-translate-y-1 hover:shadow-xl"
                   >
                     <p className="text-sm font-semibold text-rose-600">
                       {item.title}
                     </p>
-                    <p className="mt-1 text-2xl font-semibold text-slate-900">
-                      {item.monthly}
-                      <span className="ml-2 text-sm font-normal text-slate-500">
+                    <p className="text-2xl font-semibold text-slate-900">
+                      <span className="leading-tight tracking-tight text-3xl sm:text-[2rem]">
+                        {item.monthly}
+                      </span>
+                      <span className="ml-2 text-xs font-medium uppercase tracking-[0.2em] text-slate-400">
                         / Monat
                       </span>
                     </p>
-                    <p className="text-sm text-slate-500">
-                      {item.annual} pro Jahr
+                    <p className="text-sm font-medium text-slate-500">
+                      <span className="font-semibold text-slate-600">{item.annual}</span> pro Jahr
                     </p>
-                    <p className="mt-3 text-xs text-slate-500/80">
+                    <p className="text-xs leading-relaxed text-slate-500/80">
                       {item.description}
                     </p>
                   </div>
@@ -222,22 +242,25 @@ export default function ResultPage({ searchParams }: ResultPageProps) {
               </p>
               <ul className="mt-4 grid gap-3 text-sm text-slate-600">
                 {contextDetails.map((detail) => (
-                  <li key={detail.label} className="flex flex-col gap-1 rounded-xl bg-rose-50/60 p-3">
-                    <span className="text-xs font-medium uppercase tracking-[0.2em] text-rose-400">
+                  <li
+                    key={detail.label}
+                    className="flex flex-col gap-1 rounded-2xl border border-rose-100 bg-rose-50/70 p-4 shadow-sm"
+                  >
+                    <span className="text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-rose-400">
                       {detail.label}
                     </span>
-                    <span className="text-base text-slate-700">{detail.value}</span>
+                    <span className="break-words text-base text-slate-700">{detail.value}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="rounded-2xl bg-gradient-to-br from-rose-500 to-rose-600 p-6 text-white shadow-lg">
-              <h3 className="text-lg font-semibold">Was wurde berücksichtigt?</h3>
-              <p className="mt-3 text-sm text-white/80">
+            <div className="rounded-3xl bg-gradient-to-br from-rose-500 via-rose-500/95 to-rose-600 p-8 text-white shadow-2xl">
+              <h3 className="text-xl font-semibold tracking-tight">Was wurde berücksichtigt?</h3>
+              <p className="mt-4 text-sm leading-relaxed text-white/85">
                 Wir ziehen Sozialversicherung, progressive Lohnsteuer, Pendlerpauschale, Sachbezug sowie Familienbonus und Alleinverdiener:innen-Absetzbeträge in einer einzigen Berechnung zusammen.
               </p>
-              <p className="mt-4 text-xs uppercase tracking-[0.2em] text-white/70">
+              <p className="mt-6 text-[0.7rem] font-semibold uppercase tracking-[0.35em] text-white/75">
                 Ergebnis basiert auf deinen Angaben und dient als Orientierung.
               </p>
             </div>
