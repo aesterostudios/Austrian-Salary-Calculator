@@ -19,25 +19,21 @@ import type {
 const employmentOptions: {
   id: EmploymentType;
   title: string;
-  description: string;
   icon: ComponentType<SVGProps<SVGSVGElement>>;
 }[] = [
   {
     id: "employee",
     title: "Arbeiter:in / Angestellte:r",
-    description: "Standard ASVG-Beschäftigung mit allen Abgaben.",
     icon: BuildingOffice2Icon,
   },
   {
     id: "apprentice",
     title: "Lehrling",
-    description: "Reduzierte SV-Sätze für Lehrverhältnisse.",
     icon: AcademicCapIcon,
   },
   {
     id: "pensioner",
     title: "Pensionist:in",
-    description: "Berechnung für gesetzliche Pensionen.",
     icon: HeartIcon,
   },
 ];
@@ -72,7 +68,7 @@ export default function Home() {
     "employee",
   );
   const [incomePeriod, setIncomePeriod] = useState<IncomePeriod>("monthly");
-  const [income, setIncome] = useState<string>("3500");
+  const [income, setIncome] = useState<string>("3000");
   const [isSingleEarner, setIsSingleEarner] = useState<boolean>(false);
   const [familyBonus, setFamilyBonus] = useState<FamilyBonusOption>("none");
   const [children, setChildren] = useState<string>("0");
@@ -83,7 +79,7 @@ export default function Home() {
   const [publicTransportReasonable, setPublicTransportReasonable] =
     useState<boolean>(true);
   const [commutingFrequency, setCommutingFrequency] =
-    useState<CommutingFrequency>("moreThan10");
+    useState<CommutingFrequency>("none");
 
   const previewGross = useMemo(() => {
     const parsedIncome = Number.parseFloat(income);
@@ -131,16 +127,13 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-br from-rose-50 via-white to-rose-100" />
         <div className="relative grid gap-12 p-10 lg:grid-cols-[1.2fr_1fr] lg:p-16">
           <div className="flex flex-col gap-8">
-            <header className="flex flex-col gap-4">
+            <header className="flex flex-col gap-3">
               <span className="inline-flex w-fit items-center gap-2 rounded-full bg-rose-100/80 px-4 py-1 text-sm font-medium text-rose-600">
                 Online Brutto-Netto-Rechner
               </span>
               <h1 className="text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
                 Berechne dein österreichisches Netto-Gehalt in zwei Schritten.
               </h1>
-              <p className="text-base text-slate-600">
-                Wir spiegeln die Funktionen des AK-Rechners und verpacken sie in ein modernes, fokussiertes Interface.
-              </p>
             </header>
 
             <section className="rounded-2xl bg-white/70 p-6 shadow-inner ring-1 ring-white/60">
@@ -155,9 +148,7 @@ export default function Home() {
               </div>
             </section>
 
-            <p className="text-sm text-slate-500">
-              Zwei Screens genügen: gib deine Daten ein und sieh das Ergebnis auf der nächsten Seite.
-            </p>
+            <div className="hidden h-px w-full bg-gradient-to-r from-transparent via-rose-200/70 to-transparent lg:block" />
           </div>
 
           <form
@@ -178,19 +169,16 @@ export default function Home() {
                       key={option.id}
                       type="button"
                       onClick={() => setEmploymentType(option.id)}
-                      className={`group flex flex-col gap-3 rounded-xl border p-4 text-left transition-all ${active ? "border-rose-500 bg-rose-500/10 shadow-lg" : "border-transparent bg-white/70 hover:border-rose-200 hover:bg-rose-50/80"}`}
+                      className={`group flex flex-col items-center gap-3 rounded-xl border p-5 text-center transition-all ${active ? "border-rose-500 bg-rose-500/10 shadow-lg" : "border-transparent bg-white/70 hover:border-rose-200 hover:bg-rose-50/80"}`}
                     >
                       <span
-                        className={`inline-flex h-10 w-10 items-center justify-center rounded-full ${active ? "bg-rose-500 text-white" : "bg-rose-100 text-rose-600"}`}
+                        className={`inline-flex h-12 w-12 items-center justify-center rounded-full border ${active ? "border-rose-500 bg-rose-500 text-white" : "border-rose-100 bg-rose-50 text-rose-600"}`}
                       >
-                        <Icon className="h-5 w-5" />
+                        <Icon className="h-6 w-6" />
                       </span>
-                      <div>
-                        <p className="text-sm font-semibold text-slate-900">
-                          {option.title}
-                        </p>
-                        <p className="text-xs text-slate-500">{option.description}</p>
-                      </div>
+                      <p className="text-sm font-semibold text-slate-900">
+                        {option.title}
+                      </p>
                     </button>
                   );
                 })}
@@ -250,22 +238,28 @@ export default function Home() {
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
                 3. Steuerliche Begünstigungen
               </p>
-              <label className="flex flex-col gap-2 text-sm">
-                Familienbonus Plus
-                <select
-                  value={familyBonus}
-                  onChange={(event) =>
-                    setFamilyBonus(event.target.value as FamilyBonusOption)
-                  }
-                  className="w-full rounded-xl border border-rose-200/80 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
-                >
-                  {familyBonusOptions.map((option) => (
-                    <option key={option.id} value={option.id}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <div className="flex flex-col gap-3 text-sm">
+                <p className="font-medium text-slate-700">Familienbonus Plus</p>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {familyBonusOptions.map((option) => {
+                    const active = familyBonus === option.id;
+
+                    return (
+                      <button
+                        key={option.id}
+                        type="button"
+                        onClick={() =>
+                          setFamilyBonus(option.id as FamilyBonusOption)
+                        }
+                        className={`flex flex-col items-center justify-center rounded-xl border px-4 py-3 text-sm font-medium transition ${active ? "border-rose-500 bg-gradient-to-br from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/30" : "border-transparent bg-rose-100/70 text-rose-600 hover:border-rose-200 hover:bg-rose-200/70"}`}
+                        aria-pressed={active}
+                      >
+                        {option.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 <label className="flex flex-col gap-2 text-sm">
                   Freibetrag monatlich (€)
