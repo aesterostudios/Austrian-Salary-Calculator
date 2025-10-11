@@ -6,8 +6,10 @@ import {
   type CalculatorInput,
 } from "@/lib/calculator";
 
+type SearchParams = Record<string, string | string[] | undefined>;
+
 interface ResultPageProps {
-  searchParams?: Record<string, string | string[] | undefined>;
+  searchParams?: Promise<SearchParams> | SearchParams;
 }
 
 function parsePayload(value: string | string[] | undefined): CalculatorInput | null {
@@ -28,8 +30,9 @@ function parsePayload(value: string | string[] | undefined): CalculatorInput | n
   }
 }
 
-export default function ResultPage({ searchParams }: ResultPageProps) {
-  const payload = parsePayload(searchParams?.payload);
+export default async function ResultPage({ searchParams }: ResultPageProps) {
+  const resolvedSearchParams = await searchParams;
+  const payload = parsePayload(resolvedSearchParams?.payload);
 
   if (!payload) {
     redirect("/");
@@ -148,43 +151,61 @@ export default function ResultPage({ searchParams }: ResultPageProps) {
   ];
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-6 py-16">
-      <div className="relative w-full max-w-6xl overflow-hidden rounded-3xl bg-white/85 shadow-2xl backdrop-blur">
-        <div className="absolute inset-0 bg-gradient-to-br from-white via-rose-50 to-rose-100" />
-        <div className="relative grid gap-12 p-10 lg:grid-cols-[1.15fr_1fr] lg:p-16">
-          <div className="flex flex-col gap-8">
-            <div className="flex items-center justify-between">
-              <h1 className="text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
-                Dein Ergebnis
-              </h1>
+    <div className="flex min-h-screen items-center justify-center bg-rose-50/60 px-6 py-16">
+      <div className="relative w-full max-w-6xl overflow-hidden rounded-[2.5rem] border border-rose-100/60 bg-white/90 shadow-[0_30px_70px_rgba(241,71,133,0.15)] backdrop-blur">
+        <div className="absolute inset-0 bg-gradient-to-br from-white via-rose-50/70 to-rose-100/80" />
+        <div className="relative grid gap-12 p-8 sm:p-12 lg:grid-cols-[1.1fr_0.9fr] lg:p-16">
+          <div className="flex flex-col gap-10">
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.4em] text-rose-400">Ergebnis</p>
+                <h1 className="mt-3 text-4xl font-semibold tracking-tight text-slate-900 sm:text-[3rem]">
+                  Dein Nettogehalt
+                </h1>
+              </div>
               <Link
                 href="/"
-                className="rounded-full border border-rose-200/80 bg-white/70 px-4 py-2 text-sm font-medium text-rose-600 shadow hover:border-rose-300"
+                className="inline-flex items-center justify-center rounded-full border border-rose-200/80 bg-white/90 px-4 py-2 text-sm font-medium text-rose-600 shadow-sm transition-colors hover:border-rose-300 hover:text-rose-700"
               >
                 Zurück zur Eingabe
               </Link>
             </div>
-            <p className="text-base text-slate-600">
-              Auf Basis deiner Angaben spiegeln wir die Logik des Arbeiterkammer-Rechners und zeigen die wichtigsten Kennzahlen transparent an.
-            </p>
 
             <section className="grid gap-4 sm:grid-cols-3">
               {summaryMetrics.map((metric) => (
                 <div
                   key={metric.label}
-                  className={`rounded-2xl border border-white/60 bg-white/80 p-6 shadow ${metric.accent ? "bg-gradient-to-br from-rose-500 to-rose-600 text-white shadow-rose-500/40" : "text-slate-700"}`}
+                  className={`group relative overflow-hidden rounded-[2rem] border border-rose-100/60 bg-white/95 p-[1px] shadow transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl ${
+                    metric.accent ? "border-transparent bg-gradient-to-br from-rose-500 to-rose-600 shadow-rose-500/40" : ""
+                  }`}
                 >
-                  <p
-                    className={`text-sm font-medium uppercase tracking-[0.2em] ${metric.accent ? "text-white/70" : "text-rose-500"}`}
+                  <div
+                    className={`relative flex h-full flex-col justify-between gap-4 rounded-[1.7rem] p-6 sm:p-7 ${
+                      metric.accent
+                        ? "bg-gradient-to-br from-rose-500 via-rose-500/95 to-rose-600 text-white"
+                        : "bg-white/95 text-slate-700"
+                    }`}
                   >
-                    {metric.label}
-                  </p>
-                  <p className="mt-3 text-3xl font-semibold">{metric.value}</p>
+                    <p
+                      className={`text-[0.65rem] font-semibold uppercase tracking-[0.38em] text-rose-400 ${
+                        metric.accent ? "text-white/70" : ""
+                      }`}
+                    >
+                      {metric.label}
+                    </p>
+                    <p
+                      className={`text-[clamp(2rem,3vw,2.75rem)] font-semibold leading-tight tracking-tight ${
+                        metric.accent ? "text-white" : "text-slate-900"
+                      }`}
+                    >
+                      {metric.value}
+                    </p>
+                  </div>
                 </div>
               ))}
             </section>
 
-            <section className="grid gap-4">
+            <section className="grid gap-5">
               <h2 className="text-lg font-semibold text-slate-900">
                 Aufschlüsselung monatlich / jährlich
               </h2>
@@ -192,21 +213,23 @@ export default function ResultPage({ searchParams }: ResultPageProps) {
                 {breakdown.map((item) => (
                   <div
                     key={item.title}
-                    className="rounded-2xl border border-white/60 bg-white/75 p-5 shadow-inner"
+                    className="flex h-full flex-col gap-4 rounded-2xl border border-rose-100/70 bg-white/85 p-6 shadow transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
                   >
                     <p className="text-sm font-semibold text-rose-600">
                       {item.title}
                     </p>
-                    <p className="mt-1 text-2xl font-semibold text-slate-900">
-                      {item.monthly}
-                      <span className="ml-2 text-sm font-normal text-slate-500">
+                    <p className="text-2xl font-semibold text-slate-900">
+                      <span className="text-[clamp(1.7rem,2.4vw,2.2rem)] leading-tight tracking-tight">
+                        {item.monthly}
+                      </span>
+                      <span className="ml-2 text-xs font-medium uppercase tracking-[0.2em] text-slate-400">
                         / Monat
                       </span>
                     </p>
-                    <p className="text-sm text-slate-500">
-                      {item.annual} pro Jahr
+                    <p className="text-sm font-medium text-slate-500">
+                      <span className="font-semibold text-slate-600">{item.annual}</span> pro Jahr
                     </p>
-                    <p className="mt-3 text-xs text-slate-500/80">
+                    <p className="text-xs leading-relaxed text-slate-500/80">
                       {item.description}
                     </p>
                   </div>
@@ -215,29 +238,32 @@ export default function ResultPage({ searchParams }: ResultPageProps) {
             </section>
           </div>
 
-          <aside className="flex flex-col gap-6 rounded-2xl bg-white/90 p-8 shadow-lg ring-1 ring-white/60">
+          <aside className="flex flex-col gap-6 rounded-[2rem] border border-rose-100/70 bg-white/95 p-8 shadow-lg">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
+              <p className="text-xs font-semibold uppercase tracking-[0.32em] text-rose-500">
                 Deine Angaben
               </p>
               <ul className="mt-4 grid gap-3 text-sm text-slate-600">
                 {contextDetails.map((detail) => (
-                  <li key={detail.label} className="flex flex-col gap-1 rounded-xl bg-rose-50/60 p-3">
-                    <span className="text-xs font-medium uppercase tracking-[0.2em] text-rose-400">
+                  <li
+                    key={detail.label}
+                    className="flex flex-col gap-1 rounded-2xl border border-rose-100 bg-rose-50/70 p-4 shadow-sm"
+                  >
+                    <span className="text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-rose-400">
                       {detail.label}
                     </span>
-                    <span className="text-base text-slate-700">{detail.value}</span>
+                    <span className="break-words text-base text-slate-700">{detail.value}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="rounded-2xl bg-gradient-to-br from-rose-500 to-rose-600 p-6 text-white shadow-lg">
-              <h3 className="text-lg font-semibold">Was wurde berücksichtigt?</h3>
-              <p className="mt-3 text-sm text-white/80">
+            <div className="rounded-[2rem] bg-gradient-to-br from-rose-500 via-rose-500/95 to-rose-600 p-8 text-white shadow-2xl">
+              <h3 className="text-xl font-semibold tracking-tight">Was wurde berücksichtigt?</h3>
+              <p className="mt-4 text-sm leading-relaxed text-white/85">
                 Wir ziehen Sozialversicherung, progressive Lohnsteuer, Pendlerpauschale, Sachbezug sowie Familienbonus und Alleinverdiener:innen-Absetzbeträge in einer einzigen Berechnung zusammen.
               </p>
-              <p className="mt-4 text-xs uppercase tracking-[0.2em] text-white/70">
+              <p className="mt-6 text-[0.7rem] font-semibold uppercase tracking-[0.35em] text-white/75">
                 Ergebnis basiert auf deinen Angaben und dient als Orientierung.
               </p>
             </div>
