@@ -7,7 +7,7 @@ import {
 } from "@/lib/calculator";
 
 interface ResultPageProps {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  searchParams?: Record<string, string | string[] | undefined>;
 }
 
 function parsePayload(value: string | string[] | undefined): CalculatorInput | null {
@@ -28,9 +28,8 @@ function parsePayload(value: string | string[] | undefined): CalculatorInput | n
   }
 }
 
-export default async function ResultPage({ searchParams }: ResultPageProps) {
-  const resolvedParams = await searchParams;
-  const payload = parsePayload(resolvedParams?.payload);
+export default function ResultPage({ searchParams }: ResultPageProps) {
+  const payload = parsePayload(searchParams?.payload);
 
   if (!payload) {
     redirect("/");
@@ -40,6 +39,20 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
 
   const grossLabel =
     payload.incomePeriod === "monthly" ? "Monatsbrutto" : "Jahresbrutto";
+  const grossInputValue =
+    payload.incomePeriod === "monthly"
+      ? formatCurrency(result.grossMonthly)
+      : formatCurrency(result.grossAnnual);
+  const sanitizedChildren = Math.max(payload.children ?? 0, 0);
+  const sanitizedAllowance = Math.max(payload.allowance ?? 0, 0);
+  const sanitizedCompanyCarValue = Math.max(payload.companyCarValue ?? 0, 0);
+  const commutingFrequencyLabels = {
+    none: "kein Pendeln",
+    upto10: "bis 10 Tage",
+    moreThan10: "mehr als 10 Tage",
+  } as const;
+  const commutingFrequencyLabel =
+    commutingFrequencyLabels[payload.commutingFrequency] ?? "unbekannt";
 
   const summaryMetrics = [
     {
@@ -103,10 +116,7 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
     },
     {
       label: grossLabel,
-      value:
-        payload.incomePeriod === "monthly"
-          ? formatCurrency(payload.income)
-          : formatCurrency(payload.income),
+      value: grossInputValue,
     },
     {
       label: "Familienbonus",
@@ -119,21 +129,21 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
     },
     {
       label: "Kinder",
-      value: String(payload.children ?? 0),
+      value: String(sanitizedChildren),
     },
     {
       label: "Firmen-PKW",
       value: payload.hasCompanyCar
-        ? `${formatCurrency(payload.companyCarValue)} SB`
+        ? `${formatCurrency(sanitizedCompanyCarValue)} SB`
         : "kein Sachbezug",
     },
     {
       label: "Freibetrag",
-      value: formatCurrency(payload.allowance ?? 0),
+      value: formatCurrency(sanitizedAllowance),
     },
     {
       label: "Pendlerstrecke",
-      value: `${payload.commuterDistance} km (${payload.publicTransportReasonable ? "Öffis zumutbar" : "Öffis nicht zumutbar"})`,
+      value: `${payload.commuterDistance} km (${payload.publicTransportReasonable ? "Öffis zumutbar" : "Öffis nicht zumutbar"}, ${commutingFrequencyLabel})`,
     },
   ];
 
