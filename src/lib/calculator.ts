@@ -182,8 +182,9 @@ export function calculateNetSalary(input: CalculatorInput): CalculationResult {
     commutingFrequency,
   } = input;
 
+  const sanitizedIncome = Math.max(income, 0);
   const grossMonthly =
-    incomePeriod === "monthly" ? income : Math.max(income, 0) / 12;
+    incomePeriod === "monthly" ? sanitizedIncome : sanitizedIncome / 12;
 
   const taxableGrossMonthly =
     grossMonthly + (hasCompanyCar ? Math.max(companyCarValue, 0) : 0);
@@ -196,7 +197,8 @@ export function calculateNetSalary(input: CalculatorInput): CalculationResult {
 
   const allowancesMonthly = Math.max(allowance, 0) + commuterAllowanceMonthly;
 
-  const socialInsuranceRate = SOCIAL_INSURANCE_RATES[employmentType];
+  const socialInsuranceRate =
+    SOCIAL_INSURANCE_RATES[employmentType] ?? SOCIAL_INSURANCE_RATES.employee;
   const socialInsuranceMonthly = taxableGrossMonthly * socialInsuranceRate;
   const socialInsuranceAnnual = socialInsuranceMonthly * 12;
 
@@ -209,13 +211,15 @@ export function calculateNetSalary(input: CalculatorInput): CalculationResult {
 
   const baseTaxAnnual = progressiveIncomeTax(taxableIncomeAnnual);
 
+  const sanitizedChildren = Math.max(children, 0);
+
   const creditsAnnual =
-    calculateSingleEarnerCredit(isSingleEarner, Math.max(children, 0)) +
+    calculateSingleEarnerCredit(isSingleEarner, sanitizedChildren) +
     (employmentType === "pensioner" ? 764 : 400);
 
   const familyBonusAnnual = calculateFamilyBonus(
     familyBonus,
-    Math.max(children, 0),
+    sanitizedChildren,
   );
 
   const incomeTaxAnnual = Math.max(
