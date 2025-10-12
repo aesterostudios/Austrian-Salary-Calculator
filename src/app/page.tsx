@@ -281,18 +281,42 @@ export default function Home() {
                     className="w-full rounded-xl border border-rose-200/80 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
                   />
                 </label>
-                <div className="flex flex-col gap-3 rounded-2xl border border-rose-100/80 bg-white/70 p-4">
-                  <label className="flex items-center gap-3 text-sm font-medium text-slate-600">
+                <div
+                  className={`rounded-2xl border p-5 transition-all duration-200 ${
+                    hasCompanyCar
+                      ? "border-rose-300 bg-rose-50/80 shadow-inner"
+                      : "border-rose-100/80 bg-white/70 hover:border-rose-200 hover:bg-rose-50/60"
+                  }`}
+                >
+                  <label className="flex cursor-pointer items-center justify-between gap-4">
+                    <div className="flex flex-col gap-1 text-left">
+                      <span className="text-sm font-semibold text-slate-700">
+                        Sachbezug durch Firmen-PKW
+                      </span>
+                      <span className="text-xs text-slate-500">
+                        Geldwerten Vorteil berücksichtigen
+                      </span>
+                    </div>
+                    <span
+                      className={`relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition ${
+                        hasCompanyCar ? "bg-rose-500" : "bg-slate-200"
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition ${
+                          hasCompanyCar ? "translate-x-5" : "translate-x-1"
+                        }`}
+                      />
+                    </span>
                     <input
                       type="checkbox"
                       checked={hasCompanyCar}
                       onChange={(event) => setHasCompanyCar(event.target.checked)}
-                      className="h-4 w-4 rounded border-rose-300 text-rose-500 accent-rose-500 focus:ring-rose-500"
+                      className="sr-only"
                     />
-                    Sachbezug durch Firmen-PKW
                   </label>
                   {hasCompanyCar && (
-                    <label className="flex flex-col gap-2 text-sm text-slate-600">
+                    <label className="mt-5 flex flex-col gap-2 text-sm text-slate-600">
                       <span>Sachbezugswert pro Monat (€)</span>
                       <input
                         type="number"
