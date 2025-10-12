@@ -218,13 +218,13 @@ export default function Home() {
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
                 3. Familiensituation
               </p>
-              <div className="flex flex-col gap-3 text-sm">
+              <div className="flex flex-col gap-4 text-sm">
                 <p className="font-medium text-slate-700">Hast du Kinder?</p>
                 <div className="grid grid-cols-2 gap-3 sm:max-w-xs">
                   <button
                     type="button"
                     onClick={() => setHasChildren(true)}
-                    className={`rounded-xl border px-4 py-3 text-sm font-medium transition ${hasChildren ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
+                    className={`rounded-xl border px-5 py-3 text-sm font-medium transition ${hasChildren ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
                     aria-pressed={hasChildren}
                   >
                     Ja
@@ -238,7 +238,7 @@ export default function Home() {
                       setIsSingleEarner(false);
                       setFamilyBonus("none");
                     }}
-                    className={`rounded-xl border px-4 py-3 text-sm font-medium transition ${!hasChildren ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
+                    className={`rounded-xl border px-5 py-3 text-sm font-medium transition ${!hasChildren ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
                     aria-pressed={!hasChildren}
                   >
                     Nein
@@ -246,8 +246,8 @@ export default function Home() {
                 </div>
               </div>
               {hasChildren && (
-                <div className="grid gap-5 rounded-2xl bg-rose-50/60 p-5">
-                  <div className="grid gap-3 sm:grid-cols-2">
+                <div className="grid gap-6 rounded-2xl bg-rose-50/60 p-6">
+                  <div className="grid gap-4 sm:grid-cols-2">
                     <label className="flex flex-col gap-2 text-sm">
                       <span className="font-medium text-slate-700">
                         Anzahl Kinder bis 17 Jahre
@@ -276,16 +276,16 @@ export default function Home() {
                       </span>
                     </label>
                   </div>
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    <div className="flex flex-col gap-2 text-sm">
+                  <div className="grid gap-6">
+                    <div className="flex flex-col gap-3 text-sm">
                       <span className="font-medium text-slate-700">
                         Alleinverdiener:in bzw. Alleinerzieher:in?
                       </span>
-                      <div className="grid grid-cols-2 gap-3">
+                      <div className="grid grid-cols-2 gap-2 sm:max-w-[15rem]">
                         <button
                           type="button"
                           onClick={() => setIsSingleEarner(true)}
-                          className={`rounded-xl border px-4 py-2 text-sm font-medium transition ${isSingleEarner ? "border-rose-500 bg-rose-500/20 text-rose-600" : "border-transparent bg-white/70 text-rose-600 hover:border-rose-200"}`}
+                          className={`rounded-lg border px-4 py-2 text-sm font-semibold transition ${isSingleEarner ? "border-rose-500 bg-white text-rose-600 shadow-[0_4px_18px_rgba(244,63,94,0.18)]" : "border-rose-200 bg-white/80 text-rose-500 hover:border-rose-300 hover:bg-white"}`}
                           aria-pressed={isSingleEarner}
                         >
                           Ja
@@ -293,18 +293,18 @@ export default function Home() {
                         <button
                           type="button"
                           onClick={() => setIsSingleEarner(false)}
-                          className={`rounded-xl border px-4 py-2 text-sm font-medium transition ${!isSingleEarner ? "border-rose-500 bg-rose-500/20 text-rose-600" : "border-transparent bg-white/70 text-rose-600 hover:border-rose-200"}`}
+                          className={`rounded-lg border px-4 py-2 text-sm font-semibold transition ${!isSingleEarner ? "border-rose-500 bg-white text-rose-600 shadow-[0_4px_18px_rgba(244,63,94,0.18)]" : "border-rose-200 bg-white/80 text-rose-500 hover:border-rose-300 hover:bg-white"}`}
                           aria-pressed={!isSingleEarner}
                         >
                           Nein
                         </button>
                       </div>
                     </div>
-                    <div className="flex flex-col gap-2 text-sm">
+                    <div className="flex flex-col gap-3 text-sm">
                       <span className="font-medium text-slate-700">
                         Familienbonus Plus
                       </span>
-                      <div className="grid gap-3 sm:grid-cols-3">
+                      <div className="grid gap-3 sm:max-w-md">
                         {familyBonusOptions.map((option) => {
                           const active = familyBonus === option.id;
                           return (
@@ -314,7 +314,11 @@ export default function Home() {
                               onClick={() =>
                                 setFamilyBonus(option.id as FamilyBonusOption)
                               }
-                              className={`flex flex-col items-center justify-center rounded-xl border px-4 py-3 text-sm font-medium transition ${active ? "border-rose-500 bg-gradient-to-br from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/30" : "border-transparent bg-white/80 text-rose-600 hover:border-rose-200 hover:bg-rose-100/80"}`}
+                              className={`w-full rounded-xl border px-6 py-3 text-left text-sm font-semibold leading-snug transition ${
+                                active
+                                  ? "border-rose-500 bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/30"
+                                  : "border-rose-200 bg-white/85 text-rose-600 hover:border-rose-300 hover:bg-rose-50"
+                              }`}
                               aria-pressed={active}
                             >
                               {option.label}
