@@ -443,7 +443,7 @@ export default function Home() {
               {receivesCommuterAllowance && (
                 <div className="grid gap-3 rounded-2xl bg-rose-50/60 p-5 text-sm">
                   <p className="text-slate-600">
-                    Zur genauen Berechnung nutze bitte den&nbsp;
+                    Zur genauen Berechnung der Pendlerpauschale nutze bitte den&nbsp;
                     <a
                       href="https://pendlerrechner.bmf.gv.at"
                       target="_blank"
@@ -452,7 +452,7 @@ export default function Home() {
                     >
                       Pendlerrechner des BMF
                     </a>
-                    . Trage anschließend den monatlichen Betrag ein.
+                    . Trage anschließend hier den monatlichen Betrag ein.
                   </p>
                   <label className="flex flex-col gap-2 text-sm">
                     <span className="font-medium text-slate-700">
