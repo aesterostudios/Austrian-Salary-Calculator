@@ -133,7 +133,7 @@ export default function Home() {
 
             <section className="rounded-2xl bg-white/70 p-6 shadow-inner ring-1 ring-white/60">
               <div className="flex items-center justify-between">
-                <div>
+                <div className="flex flex-col gap-2">
                   <p className="text-sm text-slate-500">Aktuell ausgewähltes Bruttogehalt</p>
                   <p className="text-3xl font-semibold text-rose-600">{previewGross} / Monat</p>
                 </div>
@@ -252,7 +252,7 @@ export default function Home() {
               </div>
               {hasChildren && (
                 <div className="grid gap-6 rounded-2xl bg-rose-50/60 p-6">
-                  <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="grid gap-4 sm:max-w-md">
                     <label className="flex flex-col gap-2 text-sm">
                       <span className="font-medium text-slate-700">
                         Anzahl Kinder bis 17 Jahre
@@ -286,11 +286,15 @@ export default function Home() {
                       <span className="font-medium text-slate-700">
                         Alleinverdiener:in bzw. Alleinerzieher:in?
                       </span>
-                      <div className="grid grid-cols-2 gap-2 sm:max-w-[15rem]">
+                      <div className="grid gap-3 sm:max-w-md sm:grid-cols-2">
                         <button
                           type="button"
                           onClick={() => setIsSingleEarner(true)}
-                          className={`rounded-lg border px-4 py-2 text-sm font-semibold transition ${isSingleEarner ? "border-rose-500 bg-white text-rose-600 shadow-[0_4px_18px_rgba(244,63,94,0.18)]" : "border-rose-200 bg-white/80 text-rose-500 hover:border-rose-300 hover:bg-white"}`}
+                          className={`w-full rounded-xl border px-6 py-3 text-center text-sm font-semibold transition ${
+                            isSingleEarner
+                              ? "border-rose-500 bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/30"
+                              : "border-rose-200 bg-white/85 text-rose-600 hover:border-rose-300 hover:bg-rose-50"
+                          }`}
                           aria-pressed={isSingleEarner}
                         >
                           Ja
@@ -298,7 +302,11 @@ export default function Home() {
                         <button
                           type="button"
                           onClick={() => setIsSingleEarner(false)}
-                          className={`rounded-lg border px-4 py-2 text-sm font-semibold transition ${!isSingleEarner ? "border-rose-500 bg-white text-rose-600 shadow-[0_4px_18px_rgba(244,63,94,0.18)]" : "border-rose-200 bg-white/80 text-rose-500 hover:border-rose-300 hover:bg-white"}`}
+                          className={`w-full rounded-xl border px-6 py-3 text-center text-sm font-semibold transition ${
+                            !isSingleEarner
+                              ? "border-rose-500 bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/30"
+                              : "border-rose-200 bg-white/85 text-rose-600 hover:border-rose-300 hover:bg-rose-50"
+                          }`}
                           aria-pressed={!isSingleEarner}
                         >
                           Nein
