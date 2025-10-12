@@ -41,7 +41,7 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
   const result = calculateNetSalary(payload);
 
   const grossLabel =
-    payload.incomePeriod === "monthly" ? "Monatsbrutto" : "Jahresbrutto";
+    payload.incomePeriod === "monthly" ? "Brutto monatlich" : "Brutto jährlich;
   const grossInputValue =
     payload.incomePeriod === "monthly"
       ? formatCurrency(result.grossMonthly)
