@@ -55,6 +55,7 @@ export default function Home() {
   const [childrenOver18, setChildrenOver18] = useState<string>("0");
   const [isSingleEarner, setIsSingleEarner] = useState<boolean>(false);
   const [familyBonus, setFamilyBonus] = useState<FamilyBonusOption>("none");
+  const [usesTaxableBenefits, setUsesTaxableBenefits] = useState<boolean>(false);
   const [taxableBenefit, setTaxableBenefit] = useState<string>("0");
   const [companyCarValue, setCompanyCarValue] = useState<string>("0");
   const [allowance, setAllowance] = useState<string>("0");
@@ -98,9 +99,13 @@ export default function Home() {
       childrenOver18: sanitizedChildrenOver18,
       isSingleEarner: hasChildren ? isSingleEarner : false,
       familyBonus: hasChildren ? familyBonus : "none",
-      taxableBenefitsMonthly: Number.parseFloat(taxableBenefit) || 0,
-      companyCarBenefitMonthly: Number.parseFloat(companyCarValue) || 0,
-      allowance: Number.parseFloat(allowance) || 0,
+      taxableBenefitsMonthly: usesTaxableBenefits
+        ? Number.parseFloat(taxableBenefit) || 0
+        : 0,
+      companyCarBenefitMonthly: usesTaxableBenefits
+        ? Number.parseFloat(companyCarValue) || 0
+        : 0,
+      allowance: usesTaxableBenefits ? Number.parseFloat(allowance) || 0 : 0,
       receivesCommuterAllowance,
       commuterAllowanceMonthly: receivesCommuterAllowance
         ? Number.parseFloat(commuterAllowanceValue) || 0
@@ -336,43 +341,73 @@ export default function Home() {
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
                 4. Sachbezüge
               </p>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <label className="flex flex-col gap-2 text-sm">
-                  <span className="font-medium text-slate-700">Sachbezug (monatlich)</span>
-                  <input
-                    type="number"
-                    min="0"
-                    step="10"
-                    value={taxableBenefit}
-                    onChange={(event) => setTaxableBenefit(event.target.value)}
-                    className="w-full rounded-xl border border-rose-200/70 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
-                  />
-                </label>
-                <label className="flex flex-col gap-2 text-sm">
-                  <span className="font-medium text-slate-700">
-                    Sachbezug durch Firmen-PKW (monatlich)
-                  </span>
-                  <input
-                    type="number"
-                    min="0"
-                    step="10"
-                    value={companyCarValue}
-                    onChange={(event) => setCompanyCarValue(event.target.value)}
-                    className="w-full rounded-xl border border-rose-200/70 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
-                  />
-                </label>
+              <div className="flex flex-col gap-4 text-sm">
+                <p className="font-medium text-slate-700">
+                  Nimmst du Sachbezüge in Anspruch?
+                </p>
+                <div className="grid grid-cols-2 gap-3 sm:max-w-xs">
+                  <button
+                    type="button"
+                    onClick={() => setUsesTaxableBenefits(true)}
+                    className={`rounded-xl border px-5 py-3 text-sm font-medium transition ${usesTaxableBenefits ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
+                    aria-pressed={usesTaxableBenefits}
+                  >
+                    Ja
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setUsesTaxableBenefits(false);
+                      setTaxableBenefit("0");
+                      setCompanyCarValue("0");
+                      setAllowance("0");
+                    }}
+                    className={`rounded-xl border px-5 py-3 text-sm font-medium transition ${!usesTaxableBenefits ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
+                    aria-pressed={!usesTaxableBenefits}
+                  >
+                    Nein
+                  </button>
+                </div>
               </div>
-              <label className="flex flex-col gap-2 text-sm">
-                <span className="font-medium text-slate-700">Freibetrag (monatlich)</span>
-                <input
-                  type="number"
-                  min="0"
-                  step="10"
-                  value={allowance}
-                  onChange={(event) => setAllowance(event.target.value)}
-                  className="w-full rounded-xl border border-rose-200/70 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
-                />
-              </label>
+              {usesTaxableBenefits && (
+                <div className="grid gap-4 rounded-2xl bg-rose-50/60 p-6">
+                  <label className="flex flex-col gap-2 text-sm">
+                    <span className="font-medium text-slate-700">Sachbezug (monatlich)</span>
+                    <input
+                      type="number"
+                      min="0"
+                      step="10"
+                      value={taxableBenefit}
+                      onChange={(event) => setTaxableBenefit(event.target.value)}
+                      className="w-full rounded-xl border border-rose-200/70 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
+                    />
+                  </label>
+                  <label className="flex flex-col gap-2 text-sm">
+                    <span className="font-medium text-slate-700">
+                      Sachbezug durch Firmen-PKW (monatlich)
+                    </span>
+                    <input
+                      type="number"
+                      min="0"
+                      step="10"
+                      value={companyCarValue}
+                      onChange={(event) => setCompanyCarValue(event.target.value)}
+                      className="w-full rounded-xl border border-rose-200/70 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
+                    />
+                  </label>
+                  <label className="flex flex-col gap-2 text-sm">
+                    <span className="font-medium text-slate-700">Freibetrag (monatlich)</span>
+                    <input
+                      type="number"
+                      min="0"
+                      step="10"
+                      value={allowance}
+                      onChange={(event) => setAllowance(event.target.value)}
+                      className="w-full rounded-xl border border-rose-200/70 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
+                    />
+                  </label>
+                </div>
+              )}
             </div>
 
             <div className="grid gap-4">
@@ -386,6 +421,14 @@ export default function Home() {
                 <div className="grid grid-cols-2 gap-3 sm:max-w-xs">
                   <button
                     type="button"
+                    onClick={() => setReceivesCommuterAllowance(true)}
+                    className={`rounded-xl border px-4 py-3 text-sm font-medium transition ${receivesCommuterAllowance ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
+                    aria-pressed={receivesCommuterAllowance}
+                  >
+                    Ja
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => {
                       setReceivesCommuterAllowance(false);
                       setCommuterAllowanceValue("0");
@@ -394,14 +437,6 @@ export default function Home() {
                     aria-pressed={!receivesCommuterAllowance}
                   >
                     Nein
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setReceivesCommuterAllowance(true)}
-                    className={`rounded-xl border px-4 py-3 text-sm font-medium transition ${receivesCommuterAllowance ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
-                    aria-pressed={receivesCommuterAllowance}
-                  >
-                    Ja
                   </button>
                 </div>
               </div>
