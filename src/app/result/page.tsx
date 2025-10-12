@@ -41,7 +41,9 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
   const result = calculateNetSalary(payload);
 
   const grossLabel =
-    payload.incomePeriod === "monthly" ? "Brutto monatlich" : "Brutto jährlich;
+    payload.incomePeriod === "monthly"
+      ? "Brutto monatlich"
+      : "Brutto jährlich";
   const grossInputValue =
     payload.incomePeriod === "monthly"
       ? formatCurrency(result.grossMonthly)
@@ -66,13 +68,15 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
     {
       label: "Netto jährlich",
       value: formatCurrency(result.netAnnual),
+      accent: true,
     },
     {
-      label: grossLabel,
-      value:
-        payload.incomePeriod === "monthly"
-          ? formatCurrency(result.grossMonthly)
-          : formatCurrency(result.grossAnnual),
+      label: "Brutto monatlich",
+      value: formatCurrency(result.grossMonthly),
+    },
+    {
+      label: "Brutto jährlich",
+      value: formatCurrency(result.grossAnnual),
     },
   ];
 
@@ -171,16 +175,16 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
               </Link>
             </div>
 
-            <section className="grid gap-4 sm:grid-cols-3">
+            <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {summaryMetrics.map((metric) => (
                 <div
                   key={metric.label}
-                  className={`group relative overflow-hidden rounded-[2rem] border border-rose-100/60 bg-white/95 p-[1px] shadow transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl ${
+                  className={`group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-rose-100/60 bg-white/95 p-[1px] shadow transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl ${
                     metric.accent ? "border-transparent bg-gradient-to-br from-rose-500 to-rose-600 shadow-rose-500/40" : ""
                   }`}
                 >
                   <div
-                    className={`relative flex h-full flex-col justify-between gap-4 rounded-[1.7rem] p-6 sm:p-7 ${
+                    className={`relative flex flex-1 flex-col justify-between gap-4 rounded-[1.7rem] p-6 sm:p-7 ${
                       metric.accent
                         ? "bg-gradient-to-br from-rose-500 via-rose-500/95 to-rose-600 text-white"
                         : "bg-white/95 text-slate-700"
@@ -194,8 +198,10 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
                       {metric.label}
                     </p>
                     <p
-                      className={`text-[clamp(2rem,3vw,2.75rem)] font-semibold leading-tight tracking-tight ${
-                        metric.accent ? "text-white" : "text-slate-900"
+                      className={`font-semibold leading-tight tracking-tight ${
+                        metric.accent
+                          ? "text-[clamp(1.9rem,2.1vw,2.6rem)] text-white"
+                          : "text-[clamp(1.7rem,1.8vw,2.2rem)] text-slate-900"
                       }`}
                     >
                       {metric.value}
@@ -218,14 +224,14 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
                     <p className="text-sm font-semibold text-rose-600">
                       {item.title}
                     </p>
-                    <p className="text-2xl font-semibold text-slate-900">
-                      <span className="text-[clamp(1.7rem,2.4vw,2.2rem)] leading-tight tracking-tight">
+                    <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-2xl font-semibold text-slate-900">
+                      <span className="text-[clamp(1.6rem,1.9vw,2.1rem)] leading-tight tracking-tight">
                         {item.monthly}
                       </span>
-                      <span className="ml-2 text-xs font-medium uppercase tracking-[0.2em] text-slate-400">
+                      <span className="text-xs font-medium uppercase tracking-[0.2em] text-slate-400">
                         / Monat
                       </span>
-                    </p>
+                    </div>
                     <p className="text-sm font-medium text-slate-500">
                       <span className="font-semibold text-slate-600">{item.annual}</span> pro Jahr
                     </p>
