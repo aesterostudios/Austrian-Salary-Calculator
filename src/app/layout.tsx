@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AK Brutto-Netto Rechner Modern Clone",
+  title: "Brutto-Netto Rechner",
   description:
-    "A modern clone of the Arbeiterkammer Brutto-Netto-Rechner with a sleek two-step experience.",
+    "Berechnen Sie Ihr österreichisches Nettogehalt.",
 };
 
 export default function RootLayout({
