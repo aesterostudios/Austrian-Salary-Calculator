@@ -48,16 +48,30 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
     payload.incomePeriod === "monthly"
       ? formatCurrency(result.grossMonthly)
       : formatCurrency(result.grossAnnual);
-  const sanitizedChildren = Math.max(payload.children ?? 0, 0);
+  const sanitizedChildrenUnder18 = Math.max(payload.childrenUnder18 ?? 0, 0);
+  const sanitizedChildrenOver18 = Math.max(payload.childrenOver18 ?? 0, 0);
+  const totalChildren = sanitizedChildrenUnder18 + sanitizedChildrenOver18;
   const sanitizedAllowance = Math.max(payload.allowance ?? 0, 0);
-  const sanitizedCompanyCarValue = Math.max(payload.companyCarValue ?? 0, 0);
-  const commutingFrequencyLabels = {
-    none: "kein Pendeln",
-    upto10: "bis 10 Tage",
-    moreThan10: "mehr als 10 Tage",
+  const sanitizedTaxableBenefit = Math.max(
+    payload.taxableBenefitsMonthly ?? 0,
+    0,
+  );
+  const sanitizedCompanyCarValue = Math.max(
+    payload.companyCarBenefitMonthly ?? 0,
+    0,
+  );
+  const sanitizedCommuterAllowance = Math.max(
+    payload.commuterAllowanceMonthly ?? 0,
+    0,
+  );
+  const hasChildren = payload.hasChildren ?? totalChildren > 0;
+  const familyBonusLabels = {
+    none: "kein Familienbonus",
+    shared: "geteilter Familienbonus",
+    full: "voller Familienbonus",
   } as const;
-  const commutingFrequencyLabel =
-    commutingFrequencyLabels[payload.commutingFrequency] ?? "unbekannt";
+  const familyBonusLabel =
+    familyBonusLabels[payload.familyBonus] ?? familyBonusLabels.none;
 
   const summaryMetrics = [
     {
@@ -107,7 +121,7 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
       monthly: formatCurrency(result.commuterAllowanceMonthly),
       annual: formatCurrency(result.commuterAllowanceMonthly * 12),
       description:
-        "Direkt vom steuerpflichtigen Einkommen abgezogen (groß/klein je nach Zumutbarkeit).",
+        "Vom steuerpflichtigen Einkommen abgezogen – laut Eingabe nach Pendlerrechner.",
     },
   ];
 
@@ -119,38 +133,48 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
           ? "Arbeiter:in / Angestellte:r"
           : payload.employmentType === "apprentice"
             ? "Lehrling"
-            : "Pensionist:in",
+          : "Pensionist:in",
     },
     {
       label: grossLabel,
       value: grossInputValue,
     },
     {
-      label: "Familienbonus",
-      value:
-        payload.familyBonus === "none"
-          ? "kein Familienbonus"
-          : payload.familyBonus === "half"
-            ? "halber Bonus"
-            : "ganzer Bonus",
-    },
-    {
-      label: "Kinder",
-      value: String(sanitizedChildren),
+      label: "Sachbezug (monatlich)",
+      value: formatCurrency(sanitizedTaxableBenefit),
     },
     {
       label: "Firmen-PKW",
-      value: payload.hasCompanyCar
-        ? `${formatCurrency(sanitizedCompanyCarValue)} SB`
-        : "kein Sachbezug",
+      value:
+        sanitizedCompanyCarValue > 0
+          ? formatCurrency(sanitizedCompanyCarValue)
+          : "kein Sachbezug",
     },
     {
       label: "Freibetrag",
       value: formatCurrency(sanitizedAllowance),
     },
     {
-      label: "Pendlerstrecke",
-      value: `${payload.commuterDistance} km (${payload.publicTransportReasonable ? "Öffis zumutbar" : "Öffis nicht zumutbar"}, ${commutingFrequencyLabel})`,
+      label: "Kinder bis 17 Jahre",
+      value: hasChildren ? String(sanitizedChildrenUnder18) : "0",
+    },
+    {
+      label: "Kinder ab 18 Jahre",
+      value: hasChildren ? String(sanitizedChildrenOver18) : "0",
+    },
+    {
+      label: "Alleinverdiener:in / Alleinerzieher:in",
+      value: hasChildren && payload.isSingleEarner ? "Ja" : "Nein",
+    },
+    {
+      label: "Familienbonus Plus",
+      value: hasChildren ? familyBonusLabel : familyBonusLabels.none,
+    },
+    {
+      label: "Pendlerpauschale",
+      value: payload.receivesCommuterAllowance
+        ? formatCurrency(sanitizedCommuterAllowance)
+        : "keine Pendlerpauschale",
     },
   ];
 

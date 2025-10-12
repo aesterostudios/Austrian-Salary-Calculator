@@ -1,21 +1,21 @@
 export type EmploymentType = "employee" | "apprentice" | "pensioner";
 export type IncomePeriod = "monthly" | "yearly";
-export type FamilyBonusOption = "none" | "half" | "full";
-export type CommutingFrequency = "none" | "upto10" | "moreThan10";
+export type FamilyBonusOption = "none" | "shared" | "full";
 
 export interface CalculatorInput {
   employmentType: EmploymentType;
   incomePeriod: IncomePeriod;
   income: number;
+  hasChildren: boolean;
+  childrenUnder18: number;
+  childrenOver18: number;
   isSingleEarner: boolean;
   familyBonus: FamilyBonusOption;
-  children: number;
-  hasCompanyCar: boolean;
-  companyCarValue: number;
+  taxableBenefitsMonthly: number;
+  companyCarBenefitMonthly: number;
   allowance: number;
-  commuterDistance: number;
-  publicTransportReasonable: boolean;
-  commutingFrequency: CommutingFrequency;
+  receivesCommuterAllowance: boolean;
+  commuterAllowanceMonthly: number;
 }
 
 export interface CalculationResult {
@@ -45,66 +45,12 @@ const SOCIAL_INSURANCE_RATES: Record<EmploymentType, number> = {
   pensioner: 0.051,
 };
 
-interface AllowanceBracket {
-  min: number;
-  max: number;
-  amount: number;
-}
-
-const SMALL_COMMUTER_ALLOWANCE: AllowanceBracket[] = [
-  { min: 20, max: 40, amount: 58 },
-  { min: 40, max: 60, amount: 113 },
-  { min: 60, max: Infinity, amount: 168 },
-];
-
-const LARGE_COMMUTER_ALLOWANCE: AllowanceBracket[] = [
-  { min: 2, max: 20, amount: 31 },
-  { min: 20, max: 40, amount: 123 },
-  { min: 40, max: 60, amount: 214 },
-  { min: 60, max: Infinity, amount: 306 },
-];
-
-const COMMUTING_FREQUENCY_FACTORS: Record<CommutingFrequency, number> = {
-  none: 0,
-  upto10: 0.5,
-  moreThan10: 1,
-};
-
-function determineCommuterAllowance(
-  distance: number,
-  publicTransportReasonable: boolean,
-  frequency: CommutingFrequency,
-): number {
-  if (distance <= 0) {
-    return 0;
-  }
-
-  const table = publicTransportReasonable
-    ? SMALL_COMMUTER_ALLOWANCE
-    : LARGE_COMMUTER_ALLOWANCE;
-
-  const bracket = table.find(
-    (entry) => distance >= entry.min && distance < entry.max,
-  );
-
-  if (!bracket) {
-    return 0;
-  }
-
-  const factor = COMMUTING_FREQUENCY_FACTORS[frequency] ?? 0;
-  return bracket.amount * factor;
-}
-
 function calculateSingleEarnerCredit(
   isSingleEarner: boolean,
   children: number,
 ): number {
-  if (!isSingleEarner) {
+  if (!isSingleEarner || children <= 0) {
     return 0;
-  }
-
-  if (children <= 0) {
-    return 364;
   }
 
   if (children === 1) {
@@ -120,15 +66,20 @@ function calculateSingleEarnerCredit(
 
 function calculateFamilyBonus(
   option: FamilyBonusOption,
-  children: number,
+  childrenUnder18: number,
+  childrenOver18: number,
 ): number {
-  if (children <= 0 || option === "none") {
+  const totalChildren = childrenUnder18 + childrenOver18;
+
+  if (totalChildren <= 0 || option === "none") {
     return 0;
   }
 
-  const basePerChild = 166.68; // € per child and month
   const factor = option === "full" ? 1 : 0.5;
-  return basePerChild * children * factor * 12;
+  const childBonusUnder18 = 166.68 * childrenUnder18;
+  const childBonusOver18 = 54.18 * childrenOver18;
+
+  return (childBonusUnder18 + childBonusOver18) * factor * 12;
 }
 
 function progressiveIncomeTax(annualTaxable: number): number {
@@ -171,15 +122,16 @@ export function calculateNetSalary(input: CalculatorInput): CalculationResult {
     employmentType,
     income,
     incomePeriod,
+    hasChildren,
+    childrenUnder18,
+    childrenOver18,
     isSingleEarner,
     familyBonus,
-    children,
-    hasCompanyCar,
-    companyCarValue,
+    taxableBenefitsMonthly,
+    companyCarBenefitMonthly,
     allowance,
-    commuterDistance,
-    publicTransportReasonable,
-    commutingFrequency,
+    receivesCommuterAllowance,
+    commuterAllowanceMonthly,
   } = input;
 
   const sanitizedIncome = Math.max(income, 0);
@@ -187,15 +139,16 @@ export function calculateNetSalary(input: CalculatorInput): CalculationResult {
     incomePeriod === "monthly" ? sanitizedIncome : sanitizedIncome / 12;
 
   const taxableGrossMonthly =
-    grossMonthly + (hasCompanyCar ? Math.max(companyCarValue, 0) : 0);
+    grossMonthly +
+    Math.max(taxableBenefitsMonthly, 0) +
+    Math.max(companyCarBenefitMonthly, 0);
 
-  const commuterAllowanceMonthly = determineCommuterAllowance(
-    commuterDistance,
-    publicTransportReasonable,
-    commutingFrequency,
-  );
+  const sanitizedCommuterAllowance = receivesCommuterAllowance
+    ? Math.max(commuterAllowanceMonthly, 0)
+    : 0;
 
-  const allowancesMonthly = Math.max(allowance, 0) + commuterAllowanceMonthly;
+  const allowancesMonthly =
+    Math.max(allowance, 0) + sanitizedCommuterAllowance;
 
   const socialInsuranceRate =
     SOCIAL_INSURANCE_RATES[employmentType] ?? SOCIAL_INSURANCE_RATES.employee;
@@ -211,15 +164,22 @@ export function calculateNetSalary(input: CalculatorInput): CalculationResult {
 
   const baseTaxAnnual = progressiveIncomeTax(taxableIncomeAnnual);
 
-  const sanitizedChildren = Math.max(children, 0);
+  const sanitizedChildrenUnder18 = hasChildren
+    ? Math.max(childrenUnder18, 0)
+    : 0;
+  const sanitizedChildrenOver18 = hasChildren
+    ? Math.max(childrenOver18, 0)
+    : 0;
+  const totalChildren = sanitizedChildrenUnder18 + sanitizedChildrenOver18;
 
   const creditsAnnual =
-    calculateSingleEarnerCredit(isSingleEarner, sanitizedChildren) +
+    calculateSingleEarnerCredit(isSingleEarner, totalChildren) +
     (employmentType === "pensioner" ? 764 : 400);
 
   const familyBonusAnnual = calculateFamilyBonus(
     familyBonus,
-    sanitizedChildren,
+    sanitizedChildrenUnder18,
+    sanitizedChildrenOver18,
   );
 
   const incomeTaxAnnual = Math.max(
@@ -254,7 +214,7 @@ export function calculateNetSalary(input: CalculatorInput): CalculationResult {
     familyBonusMonthly: familyBonusAnnual / 12,
     netMonthly,
     netAnnual,
-    commuterAllowanceMonthly,
+    commuterAllowanceMonthly: sanitizedCommuterAllowance,
   };
 }
 
