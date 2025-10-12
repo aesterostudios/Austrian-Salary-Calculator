@@ -169,44 +169,55 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
               </div>
               <Link
                 href="/"
-                className="inline-flex items-center justify-center self-center rounded-full border border-rose-200/70 bg-white/90 px-5 py-2.5 text-sm font-semibold text-rose-600 shadow-[0_12px_30px_rgba(244,114,182,0.15)] transition-all hover:-translate-y-0.5 hover:border-rose-300 hover:text-rose-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200"
+                className="inline-flex items-center justify-center self-center rounded-full border border-rose-200/70 bg-white/90 px-5 py-2.5 text-sm font-semibold text-rose-600 shadow-[0_12px_30px_rgba(244,114,182,0.15)] transition-all hover:-translate-y-0.5 hover:border-rose-300 hover:text-rose-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200 whitespace-nowrap"
               >
                 Zurück zur Eingabe
               </Link>
             </div>
 
-            <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              {summaryMetrics.map((metric) => (
+            <section className="grid gap-4">
+              {["accent", "standard"].map((group) => (
                 <div
-                  key={metric.label}
-                  className={`group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-rose-100/60 bg-white/95 p-[1px] shadow transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl ${
-                    metric.accent ? "border-transparent bg-gradient-to-br from-rose-500 to-rose-600 shadow-rose-500/40" : ""
-                  }`}
+                  key={group}
+                  className="grid gap-4 sm:grid-cols-2"
                 >
-                  <div
-                    className={`relative flex flex-1 flex-col justify-between gap-4 rounded-[1.7rem] p-6 sm:p-7 ${
-                      metric.accent
-                        ? "bg-gradient-to-br from-rose-500 via-rose-500/95 to-rose-600 text-white"
-                        : "bg-white/95 text-slate-700"
-                    }`}
-                  >
-                    <p
-                      className={`text-[0.65rem] font-semibold uppercase tracking-[0.38em] text-rose-400 ${
-                        metric.accent ? "text-white/70" : ""
-                      }`}
-                    >
-                      {metric.label}
-                    </p>
-                    <p
-                      className={`font-semibold leading-tight tracking-tight text-balance ${
-                        metric.accent
-                          ? "text-[clamp(1.7rem,1.2rem+0.9vw,2.25rem)] text-white"
-                          : "text-[clamp(1.55rem,1.1rem+0.8vw,2.05rem)] text-slate-900"
-                      }`}
-                    >
-                      {metric.value}
-                    </p>
-                  </div>
+                  {summaryMetrics
+                    .filter((metric) => (group === "accent" ? metric.accent : !metric.accent))
+                    .map((metric) => (
+                      <div
+                        key={metric.label}
+                        className={`group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-rose-100/60 bg-white/95 p-[1px] shadow transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl ${
+                          metric.accent
+                            ? "border-transparent bg-gradient-to-br from-rose-500 to-rose-600 shadow-rose-500/40"
+                            : ""
+                        }`}
+                      >
+                        <div
+                          className={`relative flex flex-1 flex-col justify-between gap-4 rounded-[1.7rem] p-6 sm:p-7 ${
+                            metric.accent
+                              ? "bg-gradient-to-br from-rose-500 via-rose-500/95 to-rose-600 text-white"
+                              : "bg-white/95 text-slate-700"
+                          }`}
+                        >
+                          <p
+                            className={`text-[0.65rem] font-semibold uppercase tracking-[0.38em] text-rose-400 ${
+                              metric.accent ? "text-white/70" : ""
+                            }`}
+                          >
+                            {metric.label}
+                          </p>
+                          <p
+                            className={`font-semibold leading-tight tracking-tight text-balance ${
+                              metric.accent
+                                ? "text-[clamp(1.7rem,1.2rem+0.9vw,2.25rem)] text-white"
+                                : "text-[clamp(1.55rem,1.1rem+0.8vw,2.05rem)] text-slate-900"
+                            }`}
+                          >
+                            {metric.value}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
                 </div>
               ))}
             </section>
