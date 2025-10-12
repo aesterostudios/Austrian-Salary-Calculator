@@ -122,7 +122,7 @@ export default function Home() {
                 Brutto-Netto-Rechner
               </span>
               <h1 className="text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
-                Berechne dein österreichisches Netto-Gehalt.
+                Berechne dein österreichisches Nettogehalt.
               </h1>
             </header>
 
@@ -219,7 +219,7 @@ export default function Home() {
                 3. Familiensituation
               </p>
               <div className="flex flex-col gap-3 text-sm">
-                <p className="font-medium text-slate-700">Haben Sie Kinder?</p>
+                <p className="font-medium text-slate-700">Hast du Kinder?</p>
                 <div className="grid grid-cols-2 gap-3 sm:max-w-xs">
                   <button
                     type="button"
@@ -262,7 +262,7 @@ export default function Home() {
                     </label>
                     <label className="flex flex-col gap-2 text-sm">
                       <span className="font-medium text-slate-700">
-                        Anzahl Kinder ab 18 Jahren
+                        Anzahl Kinder ab 18 Jahre
                       </span>
                       <input
                         type="number"
@@ -377,7 +377,7 @@ export default function Home() {
               </p>
               <div className="flex flex-col gap-3 text-sm">
                 <p className="font-medium text-slate-700">
-                  Nehmen Sie eine Pendlerpauschale in Anspruch?
+                  Nimmst du eine Pendlerpauschale in Anspruch?
                 </p>
                 <div className="grid grid-cols-2 gap-3 sm:max-w-xs">
                   <button
@@ -404,7 +404,7 @@ export default function Home() {
               {receivesCommuterAllowance && (
                 <div className="grid gap-3 rounded-2xl bg-rose-50/60 p-5 text-sm">
                   <p className="text-slate-600">
-                    Zur genauen Berechnung nutzen Sie bitte den&nbsp;
+                    Zur genauen Berechnung nutze bitte den&nbsp;
                     <a
                       href="https://pendlerrechner.bmf.gv.at"
                       target="_blank"
@@ -413,7 +413,7 @@ export default function Home() {
                     >
                       Pendlerrechner des BMF
                     </a>
-                    . Tragen Sie anschließend den monatlichen Betrag ein.
+                    . Trage anschließend den monatlichen Betrag ein.
                   </p>
                   <label className="flex flex-col gap-2 text-sm">
                     <span className="font-medium text-slate-700">
