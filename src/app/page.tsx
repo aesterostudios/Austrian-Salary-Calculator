@@ -138,10 +138,10 @@ export default function Home() {
           <div className="flex flex-col gap-8">
             <header className="flex flex-col gap-3">
               <span className="inline-flex w-fit items-center gap-2 rounded-full bg-rose-100/80 px-4 py-1 text-sm font-medium text-rose-600">
-                Online Brutto-Netto-Rechner
+                Brutto-Netto-Rechner
               </span>
               <h1 className="text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
-                Berechne dein österreichisches Netto-Gehalt in zwei Schritten.
+                Berechne dein österreichisches Netto-Gehalt.
               </h1>
             </header>
 
@@ -211,7 +211,7 @@ export default function Home() {
                 ))}
               </div>
               <label className="flex flex-col gap-2 text-sm">
-                Brutto {incomePeriod === "monthly" ? "pro Monat" : "pro Jahr"}
+                Brutto {incomePeriod === "monthly" ? "/ Monat" : "/ Jahr"}
                 <input
                   type="number"
                   min="0"
@@ -314,7 +314,7 @@ export default function Home() {
               </p>
               <div className="flex flex-col gap-3 text-sm">
                 <p className="font-medium text-slate-700">
-                  Pendlerpauschale in Anspruch nehmen?
+                  Nehmen Sie eine Pendlerpauschale in Anspruch?
                 </p>
                 <div className="grid grid-cols-2 gap-3 sm:max-w-xs">
                   <button
@@ -361,7 +361,7 @@ export default function Home() {
                       onClick={() => setPublicTransportReasonable(false)}
                       className={`flex-1 rounded-xl border px-4 py-3 transition ${!publicTransportReasonable ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
                     >
-                      Öffis nicht zumutbar
+                      Öffi-Nutzung nicht zumutbar
                     </button>
                   </div>
                   <div className="grid gap-3 sm:grid-cols-2">
