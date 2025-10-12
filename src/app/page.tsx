@@ -339,11 +339,11 @@ export default function Home() {
 
             <div className="grid gap-4">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
-                4. Sachbezüge
+                4. Sachbezüge & Freibeträge
               </p>
               <div className="flex flex-col gap-4 text-sm">
                 <p className="font-medium text-slate-700">
-                  Nimmst du Sachbezüge in Anspruch?
+                  Nimmst du Sachbezüge oder steuerliche Freibeträge in Anspruch?
                 </p>
                 <div className="grid grid-cols-2 gap-3 sm:max-w-xs">
                   <button
@@ -396,7 +396,7 @@ export default function Home() {
                     />
                   </label>
                   <label className="flex flex-col gap-2 text-sm">
-                    <span className="font-medium text-slate-700">Freibetrag (monatlich)</span>
+                    <span className="font-medium text-slate-700">Steuerlicher Freibetrag (monatlich)</span>
                     <input
                       type="number"
                       min="0"
