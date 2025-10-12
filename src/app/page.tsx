@@ -6,14 +6,13 @@ import { useRouter } from "next/navigation";
 import {
   BuildingOffice2Icon,
   AcademicCapIcon,
-  HeartIcon,
+  UserIcon,
 } from "@heroicons/react/24/outline";
 import type {
   CalculatorInput,
   EmploymentType,
   FamilyBonusOption,
   IncomePeriod,
-  CommutingFrequency,
 } from "@/lib/calculator";
 
 const employmentOptions: {
@@ -34,33 +33,14 @@ const employmentOptions: {
   {
     id: "pensioner",
     title: "Pensionist:in",
-    icon: HeartIcon,
+    icon: UserIcon,
   },
 ];
 
 const familyBonusOptions: { id: FamilyBonusOption; label: string }[] = [
   { id: "none", label: "kein Familienbonus" },
-  { id: "half", label: "halber Familienbonus" },
-  { id: "full", label: "ganzer Familienbonus" },
-];
-
-type ActiveCommutingFrequency = Exclude<CommutingFrequency, "none">;
-
-const commutingFrequencyOptions: {
-  id: ActiveCommutingFrequency;
-  label: string;
-  description: string;
-}[] = [
-  {
-    id: "upto10",
-    label: "bis 10 Tage",
-    description: "unregelmäßiges Pendeln",
-  },
-  {
-    id: "moreThan10",
-    label: "mehr als 10 Tage",
-    description: "regelmäßiges Pendeln",
-  },
+  { id: "shared", label: "geteilter Familienbonus" },
+  { id: "full", label: "voller Familienbonus" },
 ];
 
 export default function Home() {
@@ -70,19 +50,18 @@ export default function Home() {
   );
   const [incomePeriod, setIncomePeriod] = useState<IncomePeriod>("monthly");
   const [income, setIncome] = useState<string>("3000");
+  const [hasChildren, setHasChildren] = useState<boolean>(false);
+  const [childrenUnder18, setChildrenUnder18] = useState<string>("0");
+  const [childrenOver18, setChildrenOver18] = useState<string>("0");
   const [isSingleEarner, setIsSingleEarner] = useState<boolean>(false);
   const [familyBonus, setFamilyBonus] = useState<FamilyBonusOption>("none");
-  const [children, setChildren] = useState<string>("0");
-  const [hasCompanyCar, setHasCompanyCar] = useState<boolean>(false);
-  const [companyCarValue, setCompanyCarValue] = useState<string>("400");
+  const [taxableBenefit, setTaxableBenefit] = useState<string>("0");
+  const [companyCarValue, setCompanyCarValue] = useState<string>("0");
   const [allowance, setAllowance] = useState<string>("0");
-  const [commuterDistance, setCommuterDistance] = useState<string>("0");
-  const [publicTransportReasonable, setPublicTransportReasonable] =
-    useState<boolean>(true);
-  const [commutingFrequency, setCommutingFrequency] =
-    useState<ActiveCommutingFrequency>("upto10");
   const [receivesCommuterAllowance, setReceivesCommuterAllowance] =
     useState<boolean>(false);
+  const [commuterAllowanceValue, setCommuterAllowanceValue] =
+    useState<string>("0");
 
   const previewGross = useMemo(() => {
     const parsedIncome = Number.parseFloat(income);
@@ -103,27 +82,29 @@ export default function Home() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    const sanitizedChildrenUnder18 = hasChildren
+      ? Number.parseInt(childrenUnder18, 10) || 0
+      : 0;
+    const sanitizedChildrenOver18 = hasChildren
+      ? Number.parseInt(childrenOver18, 10) || 0
+      : 0;
+
     const payload: CalculatorInput = {
       employmentType,
       incomePeriod,
       income: Number.parseFloat(income) || 0,
-      isSingleEarner,
-      familyBonus,
-      children: Number.parseInt(children, 10) || 0,
-      hasCompanyCar,
-      companyCarValue: hasCompanyCar
-        ? Number.parseFloat(companyCarValue) || 0
-        : 0,
+      hasChildren,
+      childrenUnder18: sanitizedChildrenUnder18,
+      childrenOver18: sanitizedChildrenOver18,
+      isSingleEarner: hasChildren ? isSingleEarner : false,
+      familyBonus: hasChildren ? familyBonus : "none",
+      taxableBenefitsMonthly: Number.parseFloat(taxableBenefit) || 0,
+      companyCarBenefitMonthly: Number.parseFloat(companyCarValue) || 0,
       allowance: Number.parseFloat(allowance) || 0,
-      commuterDistance: receivesCommuterAllowance
-        ? Number.parseFloat(commuterDistance) || 0
+      receivesCommuterAllowance,
+      commuterAllowanceMonthly: receivesCommuterAllowance
+        ? Number.parseFloat(commuterAllowanceValue) || 0
         : 0,
-      publicTransportReasonable: receivesCommuterAllowance
-        ? publicTransportReasonable
-        : true,
-      commutingFrequency: receivesCommuterAllowance
-        ? commutingFrequency
-        : "none",
     };
 
     const encoded = encodeURIComponent(JSON.stringify(payload));
@@ -198,143 +179,201 @@ export default function Home() {
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
                 2. Einkommen
               </p>
+              <label className="flex flex-col gap-2 text-sm">
+                <span className="font-medium text-slate-700">
+                  Brutto {incomePeriod === "monthly" ? "pro Monat" : "pro Jahr"}
+                </span>
+                <div className="relative rounded-2xl bg-white/90 px-4 py-3 shadow-inner ring-1 ring-rose-100/70 focus-within:ring-rose-300">
+                  <input
+                    type="number"
+                    min="0"
+                    step="100"
+                    value={income}
+                    onChange={(event) => setIncome(event.target.value)}
+                    className="w-full border-none bg-transparent text-base font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none"
+                    placeholder="z. B. 3.000"
+                    required
+                  />
+                </div>
+              </label>
               <div className="flex flex-wrap gap-3">
-                {["monthly", "yearly"].map((period) => (
-                  <button
-                    key={period}
-                    type="button"
-                    onClick={() => setIncomePeriod(period as IncomePeriod)}
-                    className={`rounded-full px-4 py-2 text-sm font-medium transition ${incomePeriod === period ? "bg-rose-500 text-white shadow" : "bg-rose-100/70 text-rose-600 hover:bg-rose-200"}`}
-                  >
-                    {period === "monthly" ? "monatlich" : "jährlich"}
-                  </button>
-                ))}
+                {["monthly", "yearly"].map((period) => {
+                  const isActive = incomePeriod === period;
+                  return (
+                    <button
+                      key={period}
+                      type="button"
+                      onClick={() => setIncomePeriod(period as IncomePeriod)}
+                      className={`rounded-full px-4 py-2 text-sm font-medium transition ${isActive ? "bg-rose-500 text-white shadow" : "bg-rose-100/70 text-rose-600 hover:bg-rose-200"}`}
+                      aria-pressed={isActive}
+                    >
+                      {period === "monthly" ? "monatlich" : "jährlich"}
+                    </button>
+                  );
+                })}
               </div>
-              <label className="flex flex-col gap-2 text-sm">
-                Brutto {incomePeriod === "monthly" ? "/ Monat" : "/ Jahr"}
-                <input
-                  type="number"
-                  min="0"
-                  step="100"
-                  value={income}
-                  onChange={(event) => setIncome(event.target.value)}
-                  className="w-full rounded-xl border border-rose-200/80 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
-                  required
-                />
-              </label>
-              <label className="flex items-center gap-3 text-sm font-medium text-slate-600">
-                <input
-                  type="checkbox"
-                  checked={isSingleEarner}
-                  onChange={(event) => setIsSingleEarner(event.target.checked)}
-                  className="h-4 w-4 rounded border-rose-300 text-rose-500 focus:ring-rose-500"
-                />
-                Alleinverdiener:in / Alleinerzieher:in
-              </label>
-              <label className="flex flex-col gap-2 text-sm">
-                Anzahl Kinder für Steuerabsetzbeträge
-                <input
-                  type="number"
-                  min="0"
-                  value={children}
-                  onChange={(event) => setChildren(event.target.value)}
-                  className="w-full rounded-xl border border-rose-200/80 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
-                />
-              </label>
             </div>
 
             <div className="grid gap-4">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
-                3. Steuerliche Begünstigungen
+                3. Familiensituation
               </p>
               <div className="flex flex-col gap-3 text-sm">
-                <p className="font-medium text-slate-700">Familienbonus Plus</p>
-                <div className="grid gap-3 sm:grid-cols-3">
-                  {familyBonusOptions.map((option) => {
-                    const active = familyBonus === option.id;
-
-                    return (
-                      <button
-                        key={option.id}
-                        type="button"
-                        onClick={() =>
-                          setFamilyBonus(option.id as FamilyBonusOption)
-                        }
-                        className={`flex flex-col items-center justify-center rounded-xl border px-4 py-3 text-sm font-medium transition ${active ? "border-rose-500 bg-gradient-to-br from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/30" : "border-transparent bg-rose-100/70 text-rose-600 hover:border-rose-200 hover:bg-rose-200/70"}`}
-                        aria-pressed={active}
-                      >
-                        {option.label}
-                      </button>
-                    );
-                  })}
+                <p className="font-medium text-slate-700">Haben Sie Kinder?</p>
+                <div className="grid grid-cols-2 gap-3 sm:max-w-xs">
+                  <button
+                    type="button"
+                    onClick={() => setHasChildren(true)}
+                    className={`rounded-xl border px-4 py-3 text-sm font-medium transition ${hasChildren ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
+                    aria-pressed={hasChildren}
+                  >
+                    Ja
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setHasChildren(false);
+                      setChildrenUnder18("0");
+                      setChildrenOver18("0");
+                      setIsSingleEarner(false);
+                      setFamilyBonus("none");
+                    }}
+                    className={`rounded-xl border px-4 py-3 text-sm font-medium transition ${!hasChildren ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
+                    aria-pressed={!hasChildren}
+                  >
+                    Nein
+                  </button>
                 </div>
               </div>
+              {hasChildren && (
+                <div className="grid gap-5 rounded-2xl bg-rose-50/60 p-5">
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <label className="flex flex-col gap-2 text-sm">
+                      <span className="font-medium text-slate-700">
+                        Anzahl Kinder bis 17 Jahre
+                      </span>
+                      <input
+                        type="number"
+                        min="0"
+                        value={childrenUnder18}
+                        onChange={(event) => setChildrenUnder18(event.target.value)}
+                        className="w-full rounded-xl border border-rose-200/70 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
+                      />
+                    </label>
+                    <label className="flex flex-col gap-2 text-sm">
+                      <span className="font-medium text-slate-700">
+                        Anzahl Kinder ab 18 Jahren
+                      </span>
+                      <input
+                        type="number"
+                        min="0"
+                        value={childrenOver18}
+                        onChange={(event) => setChildrenOver18(event.target.value)}
+                        className="w-full rounded-xl border border-rose-200/70 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
+                      />
+                      <span className="text-xs text-slate-500">
+                        Für welche Familienbeihilfe bezogen wird
+                      </span>
+                    </label>
+                  </div>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="flex flex-col gap-2 text-sm">
+                      <span className="font-medium text-slate-700">
+                        Alleinverdiener:in bzw. Alleinerzieher:in?
+                      </span>
+                      <div className="grid grid-cols-2 gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setIsSingleEarner(true)}
+                          className={`rounded-xl border px-4 py-2 text-sm font-medium transition ${isSingleEarner ? "border-rose-500 bg-rose-500/20 text-rose-600" : "border-transparent bg-white/70 text-rose-600 hover:border-rose-200"}`}
+                          aria-pressed={isSingleEarner}
+                        >
+                          Ja
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setIsSingleEarner(false)}
+                          className={`rounded-xl border px-4 py-2 text-sm font-medium transition ${!isSingleEarner ? "border-rose-500 bg-rose-500/20 text-rose-600" : "border-transparent bg-white/70 text-rose-600 hover:border-rose-200"}`}
+                          aria-pressed={!isSingleEarner}
+                        >
+                          Nein
+                        </button>
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-2 text-sm">
+                      <span className="font-medium text-slate-700">
+                        Familienbonus Plus
+                      </span>
+                      <div className="grid gap-3 sm:grid-cols-3">
+                        {familyBonusOptions.map((option) => {
+                          const active = familyBonus === option.id;
+                          return (
+                            <button
+                              key={option.id}
+                              type="button"
+                              onClick={() =>
+                                setFamilyBonus(option.id as FamilyBonusOption)
+                              }
+                              className={`flex flex-col items-center justify-center rounded-xl border px-4 py-3 text-sm font-medium transition ${active ? "border-rose-500 bg-gradient-to-br from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/30" : "border-transparent bg-white/80 text-rose-600 hover:border-rose-200 hover:bg-rose-100/80"}`}
+                              aria-pressed={active}
+                            >
+                              {option.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="grid gap-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
+                4. Sachbezüge
+              </p>
               <div className="grid gap-3 sm:grid-cols-2">
                 <label className="flex flex-col gap-2 text-sm">
-                  Freibetrag monatlich (€)
+                  <span className="font-medium text-slate-700">Sachbezug (monatlich)</span>
                   <input
                     type="number"
                     min="0"
                     step="10"
-                    value={allowance}
-                    onChange={(event) => setAllowance(event.target.value)}
-                    className="w-full rounded-xl border border-rose-200/80 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
+                    value={taxableBenefit}
+                    onChange={(event) => setTaxableBenefit(event.target.value)}
+                    className="w-full rounded-xl border border-rose-200/70 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
                   />
                 </label>
-                <div
-                  className={`rounded-2xl border p-5 transition-all duration-200 ${
-                    hasCompanyCar
-                      ? "border-rose-300 bg-rose-50/80 shadow-inner"
-                      : "border-rose-100/80 bg-white/70 hover:border-rose-200 hover:bg-rose-50/60"
-                  }`}
-                >
-                  <label className="flex cursor-pointer items-center justify-between gap-4">
-                    <div className="flex flex-col gap-1 text-left">
-                      <span className="text-sm font-semibold text-slate-700">
-                        Sachbezug durch Firmen-PKW
-                      </span>
-                      <span className="text-xs text-slate-500">
-                        Geldwerten Vorteil berücksichtigen
-                      </span>
-                    </div>
-                    <span
-                      className={`relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition ${
-                        hasCompanyCar ? "bg-rose-500" : "bg-slate-200"
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition ${
-                          hasCompanyCar ? "translate-x-5" : "translate-x-1"
-                        }`}
-                      />
-                    </span>
-                    <input
-                      type="checkbox"
-                      checked={hasCompanyCar}
-                      onChange={(event) => setHasCompanyCar(event.target.checked)}
-                      className="sr-only"
-                    />
-                  </label>
-                  {hasCompanyCar && (
-                    <label className="mt-5 flex flex-col gap-2 text-sm text-slate-600">
-                      <span>Sachbezugswert pro Monat (€)</span>
-                      <input
-                        type="number"
-                        min="0"
-                        step="10"
-                        value={companyCarValue}
-                        onChange={(event) => setCompanyCarValue(event.target.value)}
-                        className="w-full rounded-xl border border-rose-200/80 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
-                      />
-                    </label>
-                  )}
-                </div>
+                <label className="flex flex-col gap-2 text-sm">
+                  <span className="font-medium text-slate-700">
+                    Sachbezug durch Firmen-PKW (monatlich)
+                  </span>
+                  <input
+                    type="number"
+                    min="0"
+                    step="10"
+                    value={companyCarValue}
+                    onChange={(event) => setCompanyCarValue(event.target.value)}
+                    className="w-full rounded-xl border border-rose-200/70 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
+                  />
+                </label>
               </div>
+              <label className="flex flex-col gap-2 text-sm">
+                <span className="font-medium text-slate-700">Freibetrag (monatlich)</span>
+                <input
+                  type="number"
+                  min="0"
+                  step="10"
+                  value={allowance}
+                  onChange={(event) => setAllowance(event.target.value)}
+                  className="w-full rounded-xl border border-rose-200/70 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
+                />
+              </label>
             </div>
 
             <div className="grid gap-4">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
-                4. Pendlerpauschale
+                5. Pendlerpauschale
               </p>
               <div className="flex flex-col gap-3 text-sm">
                 <p className="font-medium text-slate-700">
@@ -343,8 +382,12 @@ export default function Home() {
                 <div className="grid grid-cols-2 gap-3 sm:max-w-xs">
                   <button
                     type="button"
-                    onClick={() => setReceivesCommuterAllowance(false)}
+                    onClick={() => {
+                      setReceivesCommuterAllowance(false);
+                      setCommuterAllowanceValue("0");
+                    }}
                     className={`rounded-xl border px-4 py-3 text-sm font-medium transition ${!receivesCommuterAllowance ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
+                    aria-pressed={!receivesCommuterAllowance}
                   >
                     Nein
                   </button>
@@ -352,56 +395,42 @@ export default function Home() {
                     type="button"
                     onClick={() => setReceivesCommuterAllowance(true)}
                     className={`rounded-xl border px-4 py-3 text-sm font-medium transition ${receivesCommuterAllowance ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
+                    aria-pressed={receivesCommuterAllowance}
                   >
                     Ja
                   </button>
                 </div>
               </div>
               {receivesCommuterAllowance && (
-                <>
+                <div className="grid gap-3 rounded-2xl bg-rose-50/60 p-5 text-sm">
+                  <p className="text-slate-600">
+                    Zur genauen Berechnung nutzen Sie bitte den&nbsp;
+                    <a
+                      href="https://pendlerrechner.bmf.gv.at"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-semibold text-rose-600 underline decoration-rose-300 underline-offset-4 transition hover:text-rose-700"
+                    >
+                      Pendlerrechner des BMF
+                    </a>
+                    . Tragen Sie anschließend den monatlichen Betrag ein.
+                  </p>
                   <label className="flex flex-col gap-2 text-sm">
-                    Einfache Wegstrecke (km)
+                    <span className="font-medium text-slate-700">
+                      Pendlerpauschale (monatlich)
+                    </span>
                     <input
                       type="number"
                       min="0"
-                      step="1"
-                      value={commuterDistance}
+                      step="10"
+                      value={commuterAllowanceValue}
                       onChange={(event) =>
-                        setCommuterDistance(event.target.value)
+                        setCommuterAllowanceValue(event.target.value)
                       }
-                      className="w-full rounded-xl border border-rose-200/80 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
+                      className="w-full rounded-xl border border-rose-200/70 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
                     />
                   </label>
-                  <div className="flex gap-4 text-sm font-medium text-slate-600">
-                    <button
-                      type="button"
-                      onClick={() => setPublicTransportReasonable(true)}
-                      className={`flex-1 rounded-xl border px-4 py-3 transition ${publicTransportReasonable ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
-                    >
-                      Öffi-Nutzung zumutbar
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setPublicTransportReasonable(false)}
-                      className={`flex-1 rounded-xl border px-4 py-3 transition ${!publicTransportReasonable ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
-                    >
-                      Öffi-Nutzung nicht zumutbar
-                    </button>
-                  </div>
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    {commutingFrequencyOptions.map((option) => (
-                      <button
-                        key={option.id}
-                        type="button"
-                        onClick={() => setCommutingFrequency(option.id)}
-                        className={`rounded-xl border p-3 text-left text-sm transition ${commutingFrequency === option.id ? "border-rose-500 bg-rose-500/10 text-rose-600" : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"}`}
-                      >
-                        <p className="font-semibold">{option.label}</p>
-                        <p className="text-xs text-rose-500/80">{option.description}</p>
-                      </button>
-                    ))}
-                  </div>
-                </>
+                </div>
               )}
             </div>
 
