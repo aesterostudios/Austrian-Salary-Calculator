@@ -160,8 +160,8 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
         <div className="absolute inset-0 bg-gradient-to-br from-white via-rose-50/70 to-rose-100/80" />
         <div className="relative grid gap-12 p-8 sm:p-12 lg:grid-cols-[1.1fr_0.9fr] lg:p-16">
           <div className="flex flex-col gap-10">
-            <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-              <div>
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+              <div className="text-center sm:text-left">
                 <p className="text-xs font-semibold uppercase tracking-[0.4em] text-rose-400">Ergebnis</p>
                 <h1 className="mt-3 text-4xl font-semibold tracking-tight text-slate-900 sm:text-[3rem]">
                   Dein Nettogehalt
@@ -169,7 +169,7 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
               </div>
               <Link
                 href="/"
-                className="inline-flex items-center justify-center rounded-full border border-rose-200/80 bg-white/90 px-4 py-2 text-sm font-medium text-rose-600 shadow-sm transition-colors hover:border-rose-300 hover:text-rose-700"
+                className="inline-flex items-center justify-center self-center rounded-full border border-rose-200/70 bg-white/90 px-5 py-2.5 text-sm font-semibold text-rose-600 shadow-[0_12px_30px_rgba(244,114,182,0.15)] transition-all hover:-translate-y-0.5 hover:border-rose-300 hover:text-rose-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200"
               >
                 Zurück zur Eingabe
               </Link>
@@ -198,10 +198,10 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
                       {metric.label}
                     </p>
                     <p
-                      className={`font-semibold leading-tight tracking-tight ${
+                      className={`font-semibold leading-tight tracking-tight text-balance ${
                         metric.accent
-                          ? "text-[clamp(1.9rem,2.1vw,2.6rem)] text-white"
-                          : "text-[clamp(1.7rem,1.8vw,2.2rem)] text-slate-900"
+                          ? "text-[clamp(1.7rem,1.2rem+0.9vw,2.25rem)] text-white"
+                          : "text-[clamp(1.55rem,1.1rem+0.8vw,2.05rem)] text-slate-900"
                       }`}
                     >
                       {metric.value}
