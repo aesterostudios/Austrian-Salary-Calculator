@@ -40,10 +40,10 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
 
   const result = calculateNetSalary(payload);
 
-  const grossLabel =
+  const grossInputLabel =
     payload.incomePeriod === "monthly"
-      ? "Brutto monatlich"
-      : "Brutto jährlich";
+      ? "Bruttoeinkommen pro Monat"
+      : "Bruttoeinkommen pro Jahr";
   const grossInputValue =
     payload.incomePeriod === "monthly"
       ? formatCurrency(result.grossMonthly)
@@ -125,56 +125,76 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
     },
   ];
 
-  const contextDetails = [
+  const contextSections: {
+    title: string | null;
+    items: { label: string; value: string }[];
+  }[] = [
     {
-      label: "Beschäftigung",
-      value:
-        payload.employmentType === "employee"
-          ? "Arbeiter:in / Angestellte:r"
-          : payload.employmentType === "apprentice"
-            ? "Lehrling"
-          : "Pensionist:in",
+      title: null as string | null,
+      items: [
+        {
+          label: "Beschäftigungsform",
+          value:
+            payload.employmentType === "employee"
+              ? "Arbeiter:in / Angestellte:r"
+              : payload.employmentType === "apprentice"
+                ? "Lehrling"
+                : "Pensionist:in",
+        },
+        {
+          label: grossInputLabel,
+          value: grossInputValue,
+        },
+      ],
     },
     {
-      label: grossLabel,
-      value: grossInputValue,
+      title: "Familiensituation",
+      items: [
+        {
+          label: "Anzahl Kinder bis 17 Jahre",
+          value: hasChildren ? String(sanitizedChildrenUnder18) : "0",
+        },
+        {
+          label: "Anzahl Kinder ab 18 Jahre",
+          value: hasChildren ? String(sanitizedChildrenOver18) : "0",
+        },
+        {
+          label: "Alleinverdiener:in / Alleinerzieher:in",
+          value: hasChildren && payload.isSingleEarner ? "Ja" : "Nein",
+        },
+        {
+          label: "Familienbonus Plus",
+          value: hasChildren ? familyBonusLabel : familyBonusLabels.none,
+        },
+      ],
     },
     {
-      label: "Sachbezug (monatlich)",
-      value: formatCurrency(sanitizedTaxableBenefit),
+      title: "Sachbezüge & Freibeträge",
+      items: [
+        {
+          label: "Sachbezug (monatlich)",
+          value: formatCurrency(sanitizedTaxableBenefit),
+        },
+        {
+          label: "Sachbezug durch Firmen-PKW (monatlich)",
+          value: formatCurrency(sanitizedCompanyCarValue),
+        },
+        {
+          label: "Steuerlicher Freibetrag (monatlich)",
+          value: formatCurrency(sanitizedAllowance),
+        },
+      ],
     },
     {
-      label: "Firmen-PKW",
-      value:
-        sanitizedCompanyCarValue > 0
-          ? formatCurrency(sanitizedCompanyCarValue)
-          : "kein Sachbezug",
-    },
-    {
-      label: "Freibetrag",
-      value: formatCurrency(sanitizedAllowance),
-    },
-    {
-      label: "Kinder bis 17 Jahre",
-      value: hasChildren ? String(sanitizedChildrenUnder18) : "0",
-    },
-    {
-      label: "Kinder ab 18 Jahre",
-      value: hasChildren ? String(sanitizedChildrenOver18) : "0",
-    },
-    {
-      label: "Alleinverdiener:in / Alleinerzieher:in",
-      value: hasChildren && payload.isSingleEarner ? "Ja" : "Nein",
-    },
-    {
-      label: "Familienbonus Plus",
-      value: hasChildren ? familyBonusLabel : familyBonusLabels.none,
-    },
-    {
-      label: "Pendlerpauschale",
-      value: payload.receivesCommuterAllowance
-        ? formatCurrency(sanitizedCommuterAllowance)
-        : "keine Pendlerpauschale",
+      title: "Pendlerpauschale",
+      items: [
+        {
+          label: "Pendlerpauschale (monatlich)",
+          value: payload.receivesCommuterAllowance
+            ? formatCurrency(sanitizedCommuterAllowance)
+            : formatCurrency(0),
+        },
+      ],
     },
   ];
 
@@ -284,19 +304,30 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
               <p className="text-xs font-semibold uppercase tracking-[0.32em] text-rose-500">
                 Deine Angaben
               </p>
-              <ul className="mt-4 grid gap-3 text-sm text-slate-600">
-                {contextDetails.map((detail) => (
-                  <li
-                    key={detail.label}
-                    className="flex flex-col gap-1 rounded-2xl border border-rose-100 bg-rose-50/70 p-4 shadow-sm"
-                  >
-                    <span className="text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-rose-400">
-                      {detail.label}
-                    </span>
-                    <span className="break-words text-base text-slate-700">{detail.value}</span>
-                  </li>
+              <div className="mt-4 space-y-6 text-sm text-slate-600">
+                {contextSections.map((section, index) => (
+                  <div key={section.title ?? index} className="grid gap-3">
+                    {section.title ? (
+                      <p className="text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-rose-500">
+                        {section.title}
+                      </p>
+                    ) : null}
+                    <ul className="grid gap-3">
+                      {section.items.map((detail) => (
+                        <li
+                          key={detail.label}
+                          className="flex flex-col gap-1 rounded-2xl border border-rose-100 bg-rose-50/70 p-4 shadow-sm"
+                        >
+                          <span className="text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-rose-400">
+                            {detail.label}
+                          </span>
+                          <span className="break-words text-base text-slate-700">{detail.value}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
 
             <div className="rounded-[2rem] bg-gradient-to-br from-rose-500 via-rose-500/95 to-rose-600 p-8 text-white shadow-2xl">
