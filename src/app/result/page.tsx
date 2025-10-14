@@ -128,7 +128,7 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
   const contextSections: {
     title: string | null;
     items: { label: string; value: string }[];
-  } = [
+  }[] = [
     {
       title: null as string | null,
       items: [
