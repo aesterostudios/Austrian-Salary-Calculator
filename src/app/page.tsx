@@ -117,39 +117,37 @@ export default function Home() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-6 py-12">
-      <div className="relative w-full max-w-6xl overflow-hidden rounded-3xl bg-white/80 shadow-xl backdrop-blur">
-        <div className="absolute inset-0 bg-gradient-to-br from-rose-50 via-white to-rose-100" />
-        <div className="relative grid gap-12 p-10 lg:grid-cols-[1.2fr_1fr] lg:p-16">
-          <div className="flex flex-col gap-8">
-            <header className="flex flex-col gap-3">
-              <span className="inline-flex w-fit items-center gap-2 rounded-full bg-rose-100/80 px-4 py-1 text-sm font-medium text-rose-600">
-                Brutto-Netto-Rechner
-              </span>
-              <h1 className="text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
-                Berechne dein österreichisches Nettogehalt.
-              </h1>
-            </header>
+    <main className="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center gap-12 px-6 py-12">
+      <div className="grid gap-12 lg:grid-cols-[1.2fr_1fr]">
+        <div className="flex flex-col gap-8">
+          <header className="flex flex-col gap-3">
+            <span className="inline-flex w-fit items-center gap-2 rounded-full bg-rose-100/80 px-4 py-1 text-sm font-medium text-rose-600">
+              Brutto-Netto-Rechner
+            </span>
+            <h1 className="text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
+              Berechne dein österreichisches Nettogehalt.
+            </h1>
+          </header>
 
-            <section className="rounded-2xl bg-white/70 p-6 shadow-inner ring-1 ring-white/60">
-              <div className="flex items-center justify-between">
-                <div className="flex flex-col gap-2">
-                  <p className="text-sm text-slate-500">Aktuell ausgewähltes Bruttogehalt</p>
-                  <p className="text-3xl font-semibold text-rose-600">{previewGross} / Monat</p>
-                </div>
-                <div className="hidden h-16 w-16 items-center justify-center rounded-full bg-rose-500/10 text-rose-500 sm:flex">
-                  €
-                </div>
+          <section className="rounded-2xl bg-white/80 p-6 shadow-lg ring-1 ring-white/50">
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-2">
+                <p className="text-sm text-slate-500">Aktuell ausgewähltes Bruttogehalt</p>
+                <p className="text-3xl font-semibold text-rose-600">{previewGross} / Monat</p>
               </div>
-            </section>
+              <div className="hidden h-16 w-16 items-center justify-center rounded-full bg-rose-500/10 text-rose-500 sm:flex">
+                €
+              </div>
+            </div>
+          </section>
 
-            <div className="hidden h-px w-full bg-gradient-to-r from-transparent via-rose-200/70 to-transparent lg:block" />
-          </div>
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-rose-200/70 to-transparent" />
+        </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col gap-8 rounded-2xl bg-white/80 p-6 shadow-lg ring-1 ring-white/50"
-          >
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-8 rounded-2xl bg-white/80 p-6 shadow-lg ring-1 ring-white/50"
+        >
             <div className="grid gap-4">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
                 1. Beschäftigungsform
@@ -378,7 +376,7 @@ export default function Home() {
                 </div>
               </div>
               {usesTaxableBenefits && (
-                <div className="grid gap-4 rounded-2xl bg-rose-50/60 p-6">
+                <div className="grid gap-4 rounded-2xl bg-rose-50/60 p-6 sm:max-w-md">
                   <label className="flex flex-col gap-2 text-sm">
                     <span className="font-medium text-slate-700">Sachbezug (monatlich)</span>
                     <input
@@ -449,7 +447,7 @@ export default function Home() {
                 </div>
               </div>
               {receivesCommuterAllowance && (
-                <div className="grid gap-3 rounded-2xl bg-rose-50/60 p-5 text-sm">
+                <div className="grid gap-3 rounded-2xl bg-rose-50/60 p-5 text-sm sm:max-w-md">
                   <p className="text-slate-600">
                     Zur genauen Berechnung der Pendlerpauschale nutze bitte den&nbsp;
                     <a
@@ -483,13 +481,12 @@ export default function Home() {
 
             <button
               type="submit"
-              className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-rose-500 to-rose-600 px-6 py-3 text-base font-semibold text-white shadow-lg shadow-rose-500/30 transition hover:from-rose-600 hover:to-rose-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-200"
+              className="mt-2 inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-gradient-to-r from-rose-500 to-rose-600 px-6 py-3 text-base font-semibold text-white shadow-lg shadow-rose-500/30 transition hover:from-rose-600 hover:to-rose-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-200"
             >
               Jetzt berechnen
             </button>
-          </form>
-        </div>
+        </form>
       </div>
-    </div>
+    </main>
   );
 }
