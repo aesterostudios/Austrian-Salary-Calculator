@@ -192,7 +192,7 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
           label: "Pendlerpauschale (monatlich)",
           value: payload.receivesCommuterAllowance
             ? formatCurrency(sanitizedCommuterAllowance)
-            : "keine Pendlerpauschale",
+            : formatCurrency(0),
         },
       ],
     },
