@@ -202,7 +202,7 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
     <main className="relative mx-auto min-h-screen w-full max-w-6xl px-6 py-16">
       <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="flex flex-col gap-10">
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="text-center sm:text-left">
               <p className="text-xs font-semibold uppercase tracking-[0.4em] text-rose-400">Ergebnis</p>
               <h1 className="mt-3 text-4xl font-semibold tracking-tight text-slate-900 sm:text-[3rem]">
@@ -305,9 +305,9 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
           </section>
         </div>
 
-        <aside className="flex flex-col gap-6 rounded-[2rem] border border-rose-100/70 bg-white/95 p-8 shadow-lg">
+        <aside className="flex flex-col gap-6 self-start rounded-[2rem] border border-rose-100/70 bg-white/95 p-8 shadow-lg">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-rose-500">
+            <p className="text-xs font-bold uppercase tracking-[0.32em] text-rose-500">
               Deine Angaben
             </p>
             <div className="mt-4 space-y-6 text-sm text-slate-600">

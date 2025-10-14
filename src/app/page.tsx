@@ -118,7 +118,7 @@ export default function Home() {
 
   return (
     <main className="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center gap-12 px-6 py-12">
-      <div className="grid gap-12 lg:grid-cols-[1.2fr_1fr]">
+      <div className="grid gap-12 lg:grid-cols-[1.2fr_auto_1fr]">
         <div className="flex flex-col gap-8">
           <header className="flex flex-col gap-3">
             <span className="inline-flex w-fit items-center gap-2 rounded-full bg-rose-100/80 px-4 py-1 text-sm font-medium text-rose-600">
@@ -141,7 +141,14 @@ export default function Home() {
             </div>
           </section>
 
-          <div className="h-px w-full bg-gradient-to-r from-transparent via-rose-200/70 to-transparent" />
+        </div>
+
+        <div
+          aria-hidden="true"
+          className="flex items-center justify-center py-6 lg:py-4"
+        >
+          <span className="h-px w-full bg-gradient-to-r from-transparent via-rose-200/70 to-transparent lg:hidden" />
+          <span className="hidden h-[72%] w-px bg-gradient-to-b from-transparent via-rose-200/70 to-transparent lg:block" />
         </div>
 
         <form
@@ -376,8 +383,8 @@ export default function Home() {
                 </div>
               </div>
               {usesTaxableBenefits && (
-                <div className="grid gap-4 rounded-2xl bg-rose-50/60 p-6 sm:max-w-md">
-                  <label className="flex flex-col gap-2 text-sm">
+                <div className="grid gap-6 rounded-2xl bg-rose-50/60 p-6">
+                  <label className="flex flex-col gap-2 text-sm sm:max-w-md">
                     <span className="font-medium text-slate-700">Sachbezug (monatlich)</span>
                     <input
                       type="number"
@@ -388,7 +395,7 @@ export default function Home() {
                       className="w-full rounded-xl border border-rose-200/70 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
                     />
                   </label>
-                  <label className="flex flex-col gap-2 text-sm">
+                  <label className="flex flex-col gap-2 text-sm sm:max-w-md">
                     <span className="font-medium text-slate-700">
                       Sachbezug durch Firmen-PKW (monatlich)
                     </span>
@@ -401,7 +408,7 @@ export default function Home() {
                       className="w-full rounded-xl border border-rose-200/70 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
                     />
                   </label>
-                  <label className="flex flex-col gap-2 text-sm">
+                  <label className="flex flex-col gap-2 text-sm sm:max-w-md">
                     <span className="font-medium text-slate-700">Steuerlicher Freibetrag (monatlich)</span>
                     <input
                       type="number"
@@ -447,8 +454,8 @@ export default function Home() {
                 </div>
               </div>
               {receivesCommuterAllowance && (
-                <div className="grid gap-3 rounded-2xl bg-rose-50/60 p-5 text-sm sm:max-w-md">
-                  <p className="text-slate-600">
+                <div className="grid gap-6 rounded-2xl bg-rose-50/60 p-6 text-sm">
+                  <p className="text-slate-600 sm:max-w-md">
                     Zur genauen Berechnung der Pendlerpauschale nutze bitte den&nbsp;
                     <a
                       href="https://pendlerrechner.bmf.gv.at"
@@ -460,7 +467,7 @@ export default function Home() {
                     </a>
                     . Trage anschließend hier den monatlichen Betrag ein.
                   </p>
-                  <label className="flex flex-col gap-2 text-sm">
+                  <label className="flex flex-col gap-2 text-sm sm:max-w-md">
                     <span className="font-medium text-slate-700">
                       Pendlerpauschale (monatlich)
                     </span>
