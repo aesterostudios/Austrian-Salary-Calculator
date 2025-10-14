@@ -129,7 +129,7 @@ export default function Home() {
             </h1>
           </header>
 
-          <section className="rounded-2xl bg-white/70 p-6 shadow-inner ring-1 ring-white/60">
+          <section className="rounded-2xl bg-white/80 p-6 shadow-lg ring-1 ring-white/50">
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-2">
                 <p className="text-sm text-slate-500">Aktuell ausgewähltes Bruttogehalt</p>

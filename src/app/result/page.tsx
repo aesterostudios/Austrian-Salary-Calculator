@@ -265,6 +265,15 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
             <h2 className="text-lg font-semibold text-slate-900">
               Aufschlüsselung monatlich / jährlich
             </h2>
+            <p className="rounded-2xl border border-rose-200/60 bg-rose-50/70 p-4 text-xs leading-relaxed text-rose-600 shadow-sm">
+              Dieser Brutto-Netto-Rechner dient ausschließlich als Orientierungshilfe – Angaben ohne Gewähr, keine Rechtsberatung.
+              <br />
+              Die ausgewiesenen Werte gelten bei 14 gleich hohen Monatsbezügen. Abweichungen sind möglich, z. B. durch Überstunden, steuerfreie Zulagen oder zusätzliche Sonderzahlungen.
+              <br />
+              Für ältere Arbeitnehmer:innen können unter bestimmten Voraussetzungen Begünstigungen bei Arbeitslosen- und Pensionsversicherung gelten; diese werden hier nicht berücksichtigt.
+              <br />
+              Daher kann dein tatsächliches Nettogehalt vom berechneten Betrag abweichen.
+            </p>
             <div className="grid gap-4 md:grid-cols-2">
               {breakdown.map((item) => (
                 <div
@@ -319,16 +328,6 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
                 </div>
               ))}
             </div>
-          </div>
-
-          <div className="rounded-[2rem] bg-gradient-to-br from-rose-500 via-rose-500/95 to-rose-600 p-8 text-white shadow-2xl">
-            <h3 className="text-xl font-semibold tracking-tight">Was wurde berücksichtigt?</h3>
-            <p className="mt-4 text-sm leading-relaxed text-white/85">
-              Wir ziehen Sozialversicherung, progressive Lohnsteuer, Pendlerpauschale, Sachbezug sowie Familienbonus und Alleinverdiener:innen-Absetzbeträge in einer einzigen Berechnung zusammen.
-            </p>
-            <p className="mt-6 text-[0.7rem] font-semibold uppercase tracking-[0.35em] text-white/75">
-              Ergebnis basiert auf deinen Angaben und dient als Orientierung.
-            </p>
           </div>
         </aside>
       </div>
