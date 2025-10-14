@@ -263,7 +263,7 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
 
           <section className="grid gap-5">
             <h2 className="text-lg font-semibold text-slate-900">
-              Aufschlüsselung monatlich / jährlich
+              Steuern & Abgaben
             </h2>
             <div className="grid gap-4 md:grid-cols-2">
               {breakdown.map((item) => (
@@ -296,11 +296,7 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
             <p className="text-xs leading-relaxed text-rose-600">
               Dieser Brutto-Netto-Rechner dient ausschließlich als Orientierungshilfe – Angaben ohne Gewähr, keine Rechtsberatung.
               <br />
-              Die ausgewiesenen Werte gelten bei 14 gleich hohen Monatsbezügen. Abweichungen sind möglich, z. B. durch Überstunden, steuerfreie Zulagen oder zusätzliche Sonderzahlungen.
-              <br />
-              Für ältere Arbeitnehmer:innen können unter bestimmten Voraussetzungen Begünstigungen bei Arbeitslosen- und Pensionsversicherung gelten; diese werden hier nicht berücksichtigt.
-              <br />
-              Daher kann dein tatsächliches Nettogehalt vom berechneten Betrag abweichen.
+              Die ausgewiesenen Werte gelten bei 14 gleich hohen Monatsbezügen. Abweichungen sind möglich, z. B. durch Überstunden, steuerfreie Zulagen oder zusätzliche Sonderzahlungen. Für ältere Arbeitnehmer:innen können unter bestimmten Voraussetzungen Begünstigungen bei Arbeitslosen- und Pensionsversicherung gelten; diese werden hier nicht berücksichtigt. Daher kann dein tatsächliches Nettogehalt vom berechneten Betrag abweichen.
             </p>
           </section>
         </div>
