@@ -141,7 +141,7 @@ export default function Home() {
             </div>
           </section>
 
-          <div className="hidden h-px w-full bg-gradient-to-r from-transparent via-rose-200/70 to-transparent lg:block" />
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-rose-200/70 to-transparent" />
         </div>
 
         <form
@@ -376,7 +376,7 @@ export default function Home() {
                 </div>
               </div>
               {usesTaxableBenefits && (
-                <div className="grid gap-4 rounded-2xl bg-rose-50/60 p-6">
+                <div className="grid gap-4 rounded-2xl bg-rose-50/60 p-6 sm:max-w-md">
                   <label className="flex flex-col gap-2 text-sm">
                     <span className="font-medium text-slate-700">Sachbezug (monatlich)</span>
                     <input
@@ -447,7 +447,7 @@ export default function Home() {
                 </div>
               </div>
               {receivesCommuterAllowance && (
-                <div className="grid gap-3 rounded-2xl bg-rose-50/60 p-5 text-sm">
+                <div className="grid gap-3 rounded-2xl bg-rose-50/60 p-5 text-sm sm:max-w-md">
                   <p className="text-slate-600">
                     Zur genauen Berechnung der Pendlerpauschale nutze bitte den&nbsp;
                     <a

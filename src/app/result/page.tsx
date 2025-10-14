@@ -202,7 +202,7 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
     <main className="relative mx-auto min-h-screen w-full max-w-6xl px-6 py-16">
       <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="flex flex-col gap-10">
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <div className="text-center sm:text-left">
               <p className="text-xs font-semibold uppercase tracking-[0.4em] text-rose-400">Ergebnis</p>
               <h1 className="mt-3 text-4xl font-semibold tracking-tight text-slate-900 sm:text-[3rem]">
@@ -211,7 +211,7 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
             </div>
             <Link
               href="/"
-              className="inline-flex items-center justify-center self-center rounded-full border border-rose-200/70 bg-white/90 px-5 py-2.5 text-sm font-semibold text-rose-600 shadow-[0_12px_30px_rgba(244,114,182,0.15)] transition-all hover:-translate-y-0.5 hover:border-rose-300 hover:text-rose-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200 whitespace-nowrap"
+              className="inline-flex items-center justify-center self-center rounded-full border border-rose-200/70 bg-white/90 px-5 py-2.5 text-sm font-semibold text-rose-600 shadow-[0_12px_30px_rgba(244,114,182,0.15)] transition-all hover:-translate-y-0.5 hover:border-rose-300 hover:text-rose-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200 whitespace-nowrap sm:self-auto"
             >
               Zurück zur Eingabe
             </Link>
@@ -265,15 +265,6 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
             <h2 className="text-lg font-semibold text-slate-900">
               Aufschlüsselung monatlich / jährlich
             </h2>
-            <p className="rounded-2xl border border-rose-200/60 bg-rose-50/70 p-4 text-xs leading-relaxed text-rose-600 shadow-sm">
-              Dieser Brutto-Netto-Rechner dient ausschließlich als Orientierungshilfe – Angaben ohne Gewähr, keine Rechtsberatung.
-              <br />
-              Die ausgewiesenen Werte gelten bei 14 gleich hohen Monatsbezügen. Abweichungen sind möglich, z. B. durch Überstunden, steuerfreie Zulagen oder zusätzliche Sonderzahlungen.
-              <br />
-              Für ältere Arbeitnehmer:innen können unter bestimmten Voraussetzungen Begünstigungen bei Arbeitslosen- und Pensionsversicherung gelten; diese werden hier nicht berücksichtigt.
-              <br />
-              Daher kann dein tatsächliches Nettogehalt vom berechneten Betrag abweichen.
-            </p>
             <div className="grid gap-4 md:grid-cols-2">
               {breakdown.map((item) => (
                 <div
@@ -296,6 +287,21 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
                 </div>
               ))}
             </div>
+          </section>
+
+          <section className="grid gap-3 rounded-2xl border border-rose-200/60 bg-rose-50/70 p-5 shadow-sm">
+            <h2 className="text-xs font-semibold uppercase tracking-[0.35em] text-rose-500">
+              Hinweis zu den Ergebnissen
+            </h2>
+            <p className="text-xs leading-relaxed text-rose-600">
+              Dieser Brutto-Netto-Rechner dient ausschließlich als Orientierungshilfe – Angaben ohne Gewähr, keine Rechtsberatung.
+              <br />
+              Die ausgewiesenen Werte gelten bei 14 gleich hohen Monatsbezügen. Abweichungen sind möglich, z. B. durch Überstunden, steuerfreie Zulagen oder zusätzliche Sonderzahlungen.
+              <br />
+              Für ältere Arbeitnehmer:innen können unter bestimmten Voraussetzungen Begünstigungen bei Arbeitslosen- und Pensionsversicherung gelten; diese werden hier nicht berücksichtigt.
+              <br />
+              Daher kann dein tatsächliches Nettogehalt vom berechneten Betrag abweichen.
+            </p>
           </section>
         </div>
 
