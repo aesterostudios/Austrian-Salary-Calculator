@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { headerLinkClasses } from "@/components/header-link";
 import {
   calculateNetSalary,
   formatCurrency,
@@ -189,6 +190,11 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
 
   return (
     <main className="relative mx-auto min-h-screen w-full max-w-6xl px-6 py-16">
+      <div className="absolute right-6 top-6 flex items-center gap-3">
+        <Link href="/faq" className={headerLinkClasses}>
+          FAQ
+        </Link>
+      </div>
       <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="flex flex-col gap-10">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
