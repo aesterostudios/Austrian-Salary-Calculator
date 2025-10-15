@@ -51,7 +51,7 @@ const faqs = [
         <ul className="list-disc space-y-2 pl-5">
           <li>
             Für volljährige Kinder, solange Familienbeihilfe zusteht, gibt es den reduzierten
-            <strong className="text-slate-900">Familienbonus Plus</strong> von 700 Euro pro Jahr (etwa 58,34 Euro pro Monat).
+            <strong className="text-slate-900"> Familienbonus Plus</strong> von 700 Euro pro Jahr (etwa 58,34 Euro pro Monat).
             Ohne Familienbeihilfe gibt es keinen Familienbonus.
           </li>
         </ul>
@@ -201,7 +201,7 @@ const faqs = [
         <p>
           Die <strong className="text-slate-900">Pendlerpauschale</strong> ist ein pauschaler Steuerabsetzbetrag für den
           Arbeitsweg zwischen Wohnung und Arbeitsstätte. Zusätzlich gibt es den
-          <strong className="text-slate-900">Pendlereuro</strong> (siehe unten).
+          <strong className="text-slate-900"> Pendlereuro</strong> (siehe unten).
         </p>
         <ul className="list-disc space-y-2 pl-5">
           <li>
@@ -249,8 +249,7 @@ export default function FAQPage() {
           Häufig gestellte Fragen
         </h1>
         <p className="text-sm text-slate-500">
-          Entdecke Antworten zu häufigen Themen rund um den Brutto-Netto-Rechner – strukturiert, präzise und schnell
-          nachlesbar.
+          Antworten zu häufigen Fragen rund um dein österreichisches Nettoeinkommen sowie Steuern und Abgaben.
         </p>
       </div>
       <section className="mx-auto flex w-full max-w-3xl flex-col gap-4">
