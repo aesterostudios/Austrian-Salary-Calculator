@@ -83,7 +83,7 @@ const faqs = [
         <p>
           <strong className="text-slate-900">Sozialversicherung:</strong> Nein, die Beiträge bleiben gleich.
         </p>
-        <div>
+        <div className="space-y-3">
           <p>
             <strong className="text-slate-900">Einkommensteuer:</strong> Ja, sie bekommen eigene Steuerabsetzbeträge
             (Alleinverdiener:innen-/Alleinerzieher:innen-Absetzbetrag). Richtwerte 2025:
@@ -99,7 +99,7 @@ const faqs = [
               <strong className="text-slate-900">3 Kinder:</strong> 1.081 Euro/Jahr (jedes weitere Kind: + 268 Euro/Jahr)
             </li>
           </ul>
-          <p>
+          <p className="leading-relaxed">
             Bei sehr niedrigen Einkommen kann es zusätzlich Auszahlungen geben (
             <strong className="text-slate-900">Kindermehrbetrag</strong>).
           </p>
@@ -232,20 +232,6 @@ const faqs = [
       </div>
     ),
   },
-  {
-    question: "Hinweise",
-    answer: (
-      <div className="space-y-2 text-left text-slate-600">
-        <ul className="list-disc space-y-1 pl-5">
-          <li>
-            Die Regeln ändern sich immer wieder. Maßgeblich sind die jeweils geltenden Gesetze und offiziellen Informationen
-            (Finanzamt, Sozialversicherung).
-          </li>
-          <li>Dieses FAQ ist vereinfachend und ersetzt keine Rechtsberatung.</li>
-        </ul>
-      </div>
-    ),
-  },
 ];
 
 export default function FAQPage() {
@@ -283,6 +269,16 @@ export default function FAQPage() {
             <div className="mt-4 border-t border-slate-100 pt-4 text-base leading-relaxed">{faq.answer}</div>
           </details>
         ))}
+      </section>
+      <section className="mx-auto w-full max-w-3xl rounded-2xl border border-rose-200/60 bg-rose-50/70 p-6 shadow-sm">
+        <p className="text-xs font-semibold uppercase tracking-[0.35em] text-rose-500">Hinweise</p>
+        <div className="mt-3 space-y-2 text-sm leading-relaxed text-rose-600">
+          <p>
+            Die Regeln ändern sich immer wieder. Maßgeblich sind die jeweils geltenden Gesetze und offiziellen Informationen
+            (Finanzamt, Sozialversicherung).
+          </p>
+          <p>Dieses FAQ ist vereinfachend und ersetzt keine Rechtsberatung.</p>
+        </div>
       </section>
     </main>
   );
