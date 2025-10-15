@@ -249,8 +249,7 @@ export default function FAQPage() {
           Häufig gestellte Fragen
         </h1>
         <p className="text-sm text-slate-500">
-          Entdecke Antworten zu häufigen Themen rund um den Brutto-Netto-Rechner – strukturiert, präzise und schnell
-          nachlesbar.
+          Antworten zu häufigen Fragen rund um dein österreichisches Nettoeinkommen sowie Steuern und Abgaben.
         </p>
       </div>
       <section className="mx-auto flex w-full max-w-3xl flex-col gap-4">
