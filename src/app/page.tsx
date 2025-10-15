@@ -119,7 +119,7 @@ export default function Home() {
   };
 
   return (
-    <main className="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center gap-12 px-6 py-12">
+    <main className="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center gap-12 px-6 pb-12 pt-28">
       <div className="absolute right-6 top-6 flex items-center gap-3">
         <Link href="/faq" className={headerLinkClasses}>
           FAQ

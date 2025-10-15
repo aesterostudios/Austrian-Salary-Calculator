@@ -189,7 +189,7 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
   ];
 
   return (
-    <main className="relative mx-auto min-h-screen w-full max-w-6xl px-6 py-16">
+    <main className="relative mx-auto min-h-screen w-full max-w-6xl px-6 pb-16 pt-28">
       <div className="absolute right-6 top-6 flex items-center gap-3">
         <Link href="/faq" className={headerLinkClasses}>
           FAQ
