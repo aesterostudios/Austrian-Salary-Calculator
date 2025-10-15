@@ -4,14 +4,14 @@ import { LanguageToggle } from "@/components/language-toggle";
 
 export default function FAQPage() {
   return (
-    <main className="relative mx-auto flex min-h-screen w-full max-w-4xl flex-col items-center justify-center gap-6 px-6 pb-16 pt-28 text-center">
+    <main className="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col items-center justify-center gap-10 px-6 pb-16 pt-28">
       <div className="absolute right-6 top-6 flex items-center gap-3">
         <Link href="/" className={headerLinkClasses}>
           Rechner
         </Link>
         <LanguageToggle />
       </div>
-      <div className="flex flex-col items-center gap-3">
+      <div className="flex max-w-2xl flex-col items-center gap-3 text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.35em] text-rose-400">
           FAQ
         </p>

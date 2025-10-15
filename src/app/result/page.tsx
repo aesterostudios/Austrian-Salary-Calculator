@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { headerLinkClasses } from "@/components/header-link";
+import { headerLinkClasses, headerPrimaryLinkClasses } from "@/components/header-link";
 import { LanguageToggle } from "@/components/language-toggle";
 import {
   calculateNetSalary,
@@ -192,6 +192,9 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
   return (
     <main className="relative mx-auto min-h-screen w-full max-w-6xl px-6 pb-16 pt-28">
       <div className="absolute right-6 top-6 flex items-center gap-3">
+        <Link href="/" className={headerPrimaryLinkClasses}>
+          Zurück zur Eingabe
+        </Link>
         <Link href="/faq" className={headerLinkClasses}>
           FAQ
         </Link>
@@ -206,12 +209,6 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
                 Dein Nettogehalt
               </h1>
             </div>
-            <Link
-              href="/"
-              className="inline-flex items-center justify-center self-center rounded-full border border-rose-200/70 bg-white/90 px-5 py-2.5 text-sm font-semibold text-rose-600 shadow-[0_12px_30px_rgba(244,114,182,0.15)] transition-all hover:-translate-y-0.5 hover:border-rose-300 hover:text-rose-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200 whitespace-nowrap sm:self-end sm:-translate-y-[8px]"
-            >
-              Zurück zur Eingabe
-            </Link>
           </div>
 
           <section className="grid gap-4">
