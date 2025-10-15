@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { headerLinkClasses, headerPrimaryLinkClasses } from "@/components/header-link";
+import { LanguageToggle } from "@/components/language-toggle";
 import {
   calculateNetSalary,
   formatCurrency,
@@ -78,11 +80,13 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
       label: "Netto monatlich",
       value: formatCurrency(result.netMonthly),
       accent: true,
+      footnote: "inkl. 13. und 14. Gehalt",
     },
     {
       label: "Netto jährlich",
       value: formatCurrency(result.netAnnual),
       accent: true,
+      footnote: "inkl. 13. und 14. Gehalt",
     },
     {
       label: "Brutto monatlich",
@@ -109,25 +113,11 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
       description:
         "Progressive Steuer nach österreichischem Tarif abzüglich aller Gutschriften.",
     },
-    {
-      title: "Gutschriften",
-      monthly: formatCurrency(result.creditsMonthly + result.familyBonusMonthly),
-      annual: formatCurrency(result.creditsAnnual + result.familyBonusAnnual),
-      description:
-        "Alleinverdiener:innen-Absetzbetrag, Verkehrsabsetzbetrag sowie Familienbonus Plus.",
-    },
-    {
-      title: "Pendlerpauschale",
-      monthly: formatCurrency(result.commuterAllowanceMonthly),
-      annual: formatCurrency(result.commuterAllowanceMonthly * 12),
-      description:
-        "Vom steuerpflichtigen Einkommen abgezogen – laut Eingabe nach Pendlerrechner.",
-    },
   ];
 
   const contextSections: {
     title: string | null;
-    items: { label: string; value: string }[];
+    items: { label: string; value: string; note?: string }[];
   }[] = [
     {
       title: null as string | null,
@@ -157,6 +147,7 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
         {
           label: "Anzahl Kinder ab 18 Jahre",
           value: hasChildren ? String(sanitizedChildrenOver18) : "0",
+          note: "Für welche Familienbeihilfe bezogen wird",
         },
         {
           label: "Alleinverdiener:in / Alleinerzieher:in",
@@ -199,22 +190,25 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
   ];
 
   return (
-    <main className="relative mx-auto min-h-screen w-full max-w-6xl px-6 py-16">
+    <main className="relative mx-auto min-h-screen w-full max-w-6xl px-6 pb-16 pt-28">
+      <div className="absolute right-6 top-6 flex items-center gap-3">
+        <Link href="/" className={headerPrimaryLinkClasses}>
+          Zurück zur Eingabe
+        </Link>
+        <Link href="/faq" className={headerLinkClasses}>
+          FAQ
+        </Link>
+        <LanguageToggle />
+      </div>
       <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="flex flex-col gap-10">
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <div className="text-center sm:text-left">
               <p className="text-xs font-semibold uppercase tracking-[0.4em] text-rose-400">Ergebnis</p>
               <h1 className="mt-3 text-4xl font-semibold tracking-tight text-slate-900 sm:text-[3rem]">
                 Dein Nettogehalt
               </h1>
             </div>
-            <Link
-              href="/"
-              className="inline-flex items-center justify-center self-center rounded-full border border-rose-200/70 bg-white/90 px-5 py-2.5 text-sm font-semibold text-rose-600 shadow-[0_12px_30px_rgba(244,114,182,0.15)] transition-all hover:-translate-y-0.5 hover:border-rose-300 hover:text-rose-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200 whitespace-nowrap sm:self-auto"
-            >
-              Zurück zur Eingabe
-            </Link>
           </div>
 
           <section className="grid gap-4">
@@ -254,6 +248,15 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
                         >
                           {metric.value}
                         </p>
+                        {metric.footnote ? (
+                          <p
+                            className={`text-[0.7rem] font-medium tracking-wide ${
+                              metric.accent ? "text-white/75" : "text-rose-500"
+                            }`}
+                          >
+                            {metric.footnote}
+                          </p>
+                        ) : null}
                       </div>
                     </div>
                   ))}
@@ -295,7 +298,8 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
             </h2>
             <p className="text-xs leading-relaxed text-rose-600">
               Dieser Brutto-Netto-Rechner dient ausschließlich als Orientierungshilfe – Angaben ohne Gewähr, keine Rechtsberatung.
-              <br />
+            </p>
+            <p className="text-xs leading-relaxed text-rose-600">
               Die ausgewiesenen Werte gelten bei 14 gleich hohen Monatsbezügen. Abweichungen sind möglich, z. B. durch Überstunden, steuerfreie Zulagen oder zusätzliche Sonderzahlungen. Für ältere Arbeitnehmer:innen können unter bestimmten Voraussetzungen Begünstigungen bei Arbeitslosen- und Pensionsversicherung gelten; diese werden hier nicht berücksichtigt. Daher kann dein tatsächliches Nettogehalt vom berechneten Betrag abweichen.
             </p>
           </section>
@@ -324,6 +328,9 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
                           {detail.label}
                         </span>
                         <span className="break-words text-base text-slate-700">{detail.value}</span>
+                        {detail.note ? (
+                          <span className="text-xs text-slate-500">{detail.note}</span>
+                        ) : null}
                       </li>
                     ))}
                   </ul>
