@@ -284,7 +284,7 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
                     </span>
                   </div>
                   <p className="text-sm font-medium text-slate-500">
-                    <span className="font-semibold text-slate-600">{item.annual}</span> pro Jahr
+                    <span className="font-semibold text-slate-600">{item.annual}</span> / Jahr
                   </p>
                   <p className="text-xs leading-relaxed text-slate-500/80">{item.description}</p>
                 </div>
