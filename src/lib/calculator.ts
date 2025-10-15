@@ -39,6 +39,8 @@ export interface CalculationResult {
   commuterAllowanceMonthly: number;
 }
 
+const PAYMENTS_PER_YEAR = 14;
+
 const SOCIAL_INSURANCE_RATES: Record<EmploymentType, number> = {
   employee: 0.1812,
   apprentice: 0.155,
@@ -136,7 +138,7 @@ export function calculateNetSalary(input: CalculatorInput): CalculationResult {
 
   const sanitizedIncome = Math.max(income, 0);
   const grossMonthly =
-    incomePeriod === "monthly" ? sanitizedIncome : sanitizedIncome / 12;
+    incomePeriod === "monthly" ? sanitizedIncome : sanitizedIncome / PAYMENTS_PER_YEAR;
 
   const taxableGrossMonthly =
     grossMonthly +
@@ -153,14 +155,14 @@ export function calculateNetSalary(input: CalculatorInput): CalculationResult {
   const socialInsuranceRate =
     SOCIAL_INSURANCE_RATES[employmentType] ?? SOCIAL_INSURANCE_RATES.employee;
   const socialInsuranceMonthly = taxableGrossMonthly * socialInsuranceRate;
-  const socialInsuranceAnnual = socialInsuranceMonthly * 12;
+  const socialInsuranceAnnual = socialInsuranceMonthly * PAYMENTS_PER_YEAR;
 
   const taxableIncomeMonthly = Math.max(
     0,
     taxableGrossMonthly - socialInsuranceMonthly - allowancesMonthly,
   );
 
-  const taxableIncomeAnnual = taxableIncomeMonthly * 12;
+  const taxableIncomeAnnual = taxableIncomeMonthly * PAYMENTS_PER_YEAR;
 
   const baseTaxAnnual = progressiveIncomeTax(taxableIncomeAnnual);
 
@@ -187,31 +189,31 @@ export function calculateNetSalary(input: CalculatorInput): CalculationResult {
     baseTaxAnnual - creditsAnnual - familyBonusAnnual,
   );
 
-  const incomeTaxMonthly = incomeTaxAnnual / 12;
+  const incomeTaxMonthly = incomeTaxAnnual / PAYMENTS_PER_YEAR;
 
   const netMonthly = Math.max(
     0,
     grossMonthly - socialInsuranceMonthly - incomeTaxMonthly,
   );
 
-  const netAnnual = netMonthly * 12;
+  const netAnnual = netMonthly * PAYMENTS_PER_YEAR;
 
   return {
     grossMonthly,
-    grossAnnual: grossMonthly * 12,
+    grossAnnual: grossMonthly * PAYMENTS_PER_YEAR,
     taxableGrossMonthly,
     socialInsuranceMonthly,
     socialInsuranceAnnual,
     allowancesMonthly,
-    allowancesAnnual: allowancesMonthly * 12,
+    allowancesAnnual: allowancesMonthly * PAYMENTS_PER_YEAR,
     taxableIncomeMonthly,
     taxableIncomeAnnual,
     incomeTaxMonthly,
     incomeTaxAnnual,
     creditsAnnual,
-    creditsMonthly: creditsAnnual / 12,
+    creditsMonthly: creditsAnnual / PAYMENTS_PER_YEAR,
     familyBonusAnnual,
-    familyBonusMonthly: familyBonusAnnual / 12,
+    familyBonusMonthly: familyBonusAnnual / PAYMENTS_PER_YEAR,
     netMonthly,
     netAnnual,
     commuterAllowanceMonthly: sanitizedCommuterAllowance,
