@@ -1,8 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import type { ComponentType, FormEvent, SVGProps } from "react";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { headerLinkClasses } from "@/components/header-link";
 import {
   BuildingOffice2Icon,
   AcademicCapIcon,
@@ -118,6 +120,11 @@ export default function Home() {
 
   return (
     <main className="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center gap-12 px-6 py-12">
+      <div className="absolute right-6 top-6 flex items-center gap-3">
+        <Link href="/faq" className={headerLinkClasses}>
+          FAQ
+        </Link>
+      </div>
       <div className="grid gap-12 lg:grid-cols-[1.2fr_auto_1fr]">
         <div className="flex flex-col gap-8">
           <header className="flex flex-col gap-3">
