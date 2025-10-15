@@ -145,7 +145,7 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
         {
           label: "Anzahl Kinder ab 18 Jahre",
           value: hasChildren ? String(sanitizedChildrenOver18) : "0",
-          note: hasChildren ? "Für welche Familienbeihilfe bezogen wird" : undefined,
+          note: "Für welche Familienbeihilfe bezogen wird",
         },
         {
           label: "Alleinverdiener:in / Alleinerzieher:in",
@@ -200,7 +200,7 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
             </div>
             <Link
               href="/"
-              className="inline-flex items-center justify-center self-center rounded-full border border-rose-200/70 bg-white/90 px-5 py-2.5 text-sm font-semibold text-rose-600 shadow-[0_12px_30px_rgba(244,114,182,0.15)] transition-all hover:-translate-y-0.5 hover:border-rose-300 hover:text-rose-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200 whitespace-nowrap sm:self-end sm:-translate-y-[6px]"
+              className="inline-flex items-center justify-center self-center rounded-full border border-rose-200/70 bg-white/90 px-5 py-2.5 text-sm font-semibold text-rose-600 shadow-[0_12px_30px_rgba(244,114,182,0.15)] transition-all hover:-translate-y-0.5 hover:border-rose-300 hover:text-rose-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200 whitespace-nowrap sm:self-end sm:-translate-y-[8px]"
             >
               Zurück zur Eingabe
             </Link>
