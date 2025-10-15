@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { headerLinkClasses } from "@/components/header-link";
+import { LanguageToggle } from "@/components/language-toggle";
 import {
   calculateNetSalary,
   formatCurrency,
@@ -194,6 +195,7 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
         <Link href="/faq" className={headerLinkClasses}>
           FAQ
         </Link>
+        <LanguageToggle />
       </div>
       <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="flex flex-col gap-10">

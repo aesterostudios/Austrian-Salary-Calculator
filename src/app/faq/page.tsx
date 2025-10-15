@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { headerLinkClasses } from "@/components/header-link";
+import { LanguageToggle } from "@/components/language-toggle";
 
 export default function FAQPage() {
   return (
@@ -8,6 +9,7 @@ export default function FAQPage() {
         <Link href="/" className={headerLinkClasses}>
           Rechner
         </Link>
+        <LanguageToggle />
       </div>
       <div className="flex flex-col items-center gap-3">
         <p className="text-xs font-semibold uppercase tracking-[0.35em] text-rose-400">

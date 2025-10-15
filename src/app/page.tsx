@@ -5,6 +5,7 @@ import type { ComponentType, FormEvent, SVGProps } from "react";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { headerLinkClasses } from "@/components/header-link";
+import { LanguageToggle } from "@/components/language-toggle";
 import {
   BuildingOffice2Icon,
   AcademicCapIcon,
@@ -124,6 +125,7 @@ export default function Home() {
         <Link href="/faq" className={headerLinkClasses}>
           FAQ
         </Link>
+        <LanguageToggle />
       </div>
       <div className="grid gap-12 lg:grid-cols-[1.2fr_auto_1fr]">
         <div className="flex flex-col gap-8">
