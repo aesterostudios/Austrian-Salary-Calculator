@@ -220,8 +220,11 @@ export function calculateNetSalary(input: CalculatorInput): CalculationResult {
   };
 }
 
-export function formatCurrency(value: number): string {
-  return new Intl.NumberFormat("de-AT", {
+export function formatCurrency(
+  value: number,
+  locale: string = "de-AT",
+): string {
+  return new Intl.NumberFormat(locale, {
     style: "currency",
     currency: "EUR",
     maximumFractionDigits: 2,
