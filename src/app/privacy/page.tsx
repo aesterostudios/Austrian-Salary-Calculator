@@ -48,15 +48,6 @@ export default function PrivacyPage() {
         ))}
       </section>
 
-      <div className="flex justify-center">
-        <Link
-          href="/"
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-rose-500 px-5 py-3 text-sm font-semibold text-white shadow-[0_12px_30px_rgba(244,114,182,0.45)] transition hover:-translate-y-0.5 hover:bg-rose-600"
-        >
-          <ArrowLeftIcon className="h-4 w-4" />
-          {privacy.backLink}
-        </Link>
-      </div>
     </main>
   );
 }

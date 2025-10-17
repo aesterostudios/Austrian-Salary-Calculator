@@ -502,7 +502,7 @@ export const translations: Record<Language, Dictionary> = {
     footer: {
       text: "Erstellt von",
       highlight: "Aestero Studios",
-      suffix: "in Österreich.",
+      suffix: "in Austria.",
       privacyLinkLabel: "Datenschutzhinweis",
     },
     privacy: {
