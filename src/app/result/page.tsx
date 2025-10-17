@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { headerLinkClasses, headerPrimaryLinkClasses } from "@/components/header-link";
@@ -197,8 +198,9 @@ export default function ResultPage() {
   return (
     <main className="relative mx-auto min-h-screen w-full max-w-6xl px-6 pb-16 pt-28">
       <div className="absolute right-6 top-6 flex items-center gap-3">
-        <Link href="/" className={headerPrimaryLinkClasses}>
-          {common.nav.backToInput}
+        <Link href="/" className={`${headerPrimaryLinkClasses} gap-2`}>
+          <ArrowLeftIcon className="h-4 w-4" />
+          <span>{common.nav.backToInput}</span>
         </Link>
         <Link href="/faq" className={headerLinkClasses}>
           {common.nav.faq}
