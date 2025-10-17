@@ -114,6 +114,17 @@ export interface Dictionary {
     text: string;
     highlight: string;
     suffix: string;
+    privacyLinkLabel: string;
+  };
+  privacy: {
+    badge: string;
+    title: string;
+    intro: string;
+    sections: {
+      title: string;
+      body: string[];
+    }[];
+    backLink: string;
   };
 }
 
@@ -287,6 +298,44 @@ export const translations: Record<Language, Dictionary> = {
       text: "Created by",
       highlight: "Aestero Studios",
       suffix: "in Austria.",
+      privacyLinkLabel: "Privacy notice",
+    },
+    privacy: {
+      badge: "Privacy",
+      title: "How we handle your data.",
+      intro:
+        "Transparency matters to us. This notice explains the minimal data we process to keep the salary calculator comfortable to use.",
+      sections: [
+        {
+          title: "What we collect",
+          body: [
+            "We store a single first-party cookie named asc_language.",
+            "The cookie remembers which language (German or English) you selected for the interface.",
+          ],
+        },
+        {
+          title: "Why we use it",
+          body: [
+            "The language cookie lets us render each page directly in your preferred language without asking every time.",
+            "We never use it for analytics, advertising, or any cross-site tracking.",
+          ],
+        },
+        {
+          title: "How long we keep it",
+          body: [
+            "The cookie remains stored for one year so your choice stays in place when you come back.",
+            "If you pick a new language, the old value is overwritten immediately.",
+          ],
+        },
+        {
+          title: "Your choices",
+          body: [
+            "You can switch languages at any time using the selector in the top-right corner of every page.",
+            "You may also delete the asc_language cookie in your browser settings; the site will then load in English by default.",
+          ],
+        },
+      ],
+      backLink: "Back to the calculator",
     },
   },
   de: {
@@ -451,9 +500,47 @@ export const translations: Record<Language, Dictionary> = {
       ],
     },
     footer: {
-      text: "Created by",
+      text: "Erstellt von",
       highlight: "Aestero Studios",
-      suffix: "in Austria.",
+      suffix: "in Österreich.",
+      privacyLinkLabel: "Datenschutzhinweis",
+    },
+    privacy: {
+      badge: "Datenschutz",
+      title: "So gehen wir mit deinen Daten um.",
+      intro:
+        "Transparenz ist uns wichtig. Dieser Hinweis erklärt, welche wenigen Daten wir verarbeiten, damit sich der Gehaltsrechner komfortabel nutzen lässt.",
+      sections: [
+        {
+          title: "Welche Daten wir speichern",
+          body: [
+            "Wir setzen genau ein First-Party-Cookie mit dem Namen asc_language.",
+            "Dieses Cookie merkt sich, welche Sprache (Deutsch oder Englisch) du für die Oberfläche ausgewählt hast.",
+          ],
+        },
+        {
+          title: "Warum wir das tun",
+          body: [
+            "Das Sprach-Cookie ermöglicht es uns, jede Seite direkt in deiner bevorzugten Sprache anzuzeigen, ohne jedes Mal nachzufragen.",
+            "Wir verwenden es nicht für Analysen, Werbung oder sonstiges Tracking über Websites hinweg.",
+          ],
+        },
+        {
+          title: "Wie lange wir speichern",
+          body: [
+            "Das Cookie bleibt ein Jahr gespeichert, damit deine Auswahl beim nächsten Besuch noch vorhanden ist.",
+            "Wenn du eine neue Sprache auswählst, wird der bisherige Wert sofort überschrieben.",
+          ],
+        },
+        {
+          title: "Deine Möglichkeiten",
+          body: [
+            "Über den Sprachumschalter rechts oben auf jeder Seite kannst du die Sprache jederzeit ändern.",
+            "Du kannst das Cookie asc_language außerdem in den Browser-Einstellungen löschen; anschließend lädt die Seite standardmäßig auf Englisch.",
+          ],
+        },
+      ],
+      backLink: "Zurück zum Rechner",
     },
   },
 };
