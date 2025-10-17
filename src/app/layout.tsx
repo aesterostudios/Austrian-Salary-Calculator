@@ -23,7 +23,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Austrian Salary Calculator",
   description:
-    "Estimate your Austrian net salary with our gross-to-net calculator (Brutto-Netto-Rechner).",
+    "Calculate your Austrian net salary, taxes, and contributions with our gross-to-net calculator.",
 };
 
 export default async function RootLayout({
