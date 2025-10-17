@@ -198,7 +198,7 @@ export const translations: Record<Language, Dictionary> = {
         allowance: "Tax allowance per month",
       },
       commuter: {
-        question: "Do you claim the commuter allowance?",
+        question: "Do you claim a commuter allowance?",
         helper: (
           <>
             For an exact calculation of the commuter allowance, please use the
