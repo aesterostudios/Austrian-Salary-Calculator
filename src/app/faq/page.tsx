@@ -24,8 +24,7 @@ function getFaqs(language: Language): FaqItem[] {
               <li>
                 <strong className="text-slate-900">Arbeiter:innen und Angestellte:</strong> Die Beiträge zur Sozialversicherung
                 sind derzeit ähnlich hoch. Unterschiede entstehen eher durch Kollektivvertrag, Zuschläge oder Abfertigung
-                (Geldleistung bei Beendigung des Dienstverhältnisses). Für die Nettoberechnung ist es trotzdem wichtig, die
-                korrekte Gruppe anzugeben.
+                (Geldleistung bei Beendigung des Dienstverhältnisses).
               </li>
               <li>
                 <strong className="text-slate-900">Lehrlinge:</strong> Zahlen insgesamt geringere Sozialversicherungsbeiträge.
@@ -254,17 +253,16 @@ function getFaqs(language: Language): FaqItem[] {
         <div className="space-y-3 text-left text-slate-600">
           <ul className="list-disc space-y-2 pl-5">
             <li>
-              <strong className="text-slate-900">Employees (Arbeiter:innen/Angestellte):</strong> The employee share of social
-              insurance is currently similar, but collective agreements, supplements and severance pay (Abfertigung) differ. The
-              calculator needs the correct category to apply the right rates.
+              <strong className="text-slate-900">Employees:</strong> The employee share of social
+              insurance is currently similar between white-collar employees (Angestellte:r) and blue-collar workers (Arbeiter:innen), but collective agreements, supplements and severance pay (Abfertigung) differ.
             </li>
             <li>
               <strong className="text-slate-900">Apprentices (Lehrlinge):</strong> Pay lower social insurance contributions overall,
               so more of the gross salary remains as net.
             </li>
             <li>
-              <strong className="text-slate-900">Pensioners (Pensionist:innen):</strong> Pension payments can be subject to income
-              tax (Lohnsteuer), but special pension tax credits are applied automatically.
+              <strong className="text-slate-900">Pensioners:</strong> Pension payments can be subject to income
+              tax, but special pension tax credits are applied automatically.
             </li>
           </ul>
         </div>
@@ -280,39 +278,39 @@ function getFaqs(language: Language): FaqItem[] {
           <ul className="list-disc space-y-2 pl-5">
             <li>
               <strong className="text-slate-900">Family Bonus Plus:</strong> EUR 2,000 per child and year until the 18th birthday
-              (roughly EUR 166.68 per month). It can reduce your tax to zero but does not touch social insurance (Sozialversicherung).
+              (roughly EUR 166.68 per month). It can reduce your tax to zero but does not touch social insurance.
             </li>
           </ul>
         </div>
       ),
     },
     {
-      question: "What about children aged 18+ who still receive the Familienbeihilfe (family allowance)?",
+      question: "What about children aged 18+ who still receive the family allowance?",
       answer: (
         <div className="space-y-3 text-left text-slate-600">
           <ul className="list-disc space-y-2 pl-5">
             <li>
               As long as the Familienbeihilfe is paid, you receive the reduced
               <strong className="text-slate-900"> Family Bonus Plus</strong> of EUR 700 per year (about EUR 58.34 per month). Without
-              the allowance there is no Family Bonus.
+              the allowance there is no family bonus.
             </li>
           </ul>
         </div>
       ),
     },
     {
-      question: "Who qualifies as a single earner or single parent (Alleinverdiener:in / Alleinerzieher:in)?",
+      question: "Who qualifies as a single earner or single parent?",
       answer: (
         <div className="space-y-3 text-left text-slate-600">
           <ul className="list-disc space-y-2 pl-5">
             <li>
-              <strong className="text-slate-900">Single earner (Alleinverdiener:in):</strong> Married, in a registered partnership or
-              cohabiting for more than six months with at least one child (Familienbeihilfe) while the partner earns no more than
+              <strong className="text-slate-900">Single earner:</strong> Married, in a registered partnership or
+              cohabiting for more than six months with at least one child that receives the family allowance while the partner earns no more than
               EUR 7,284 per year.
             </li>
             <li>
-              <strong className="text-slate-900">Single parent (Alleinerzieher:in):</strong> Living for more than six months with at
-              least one child receiving the Familienbeihilfe, without a partner in the household.
+              <strong className="text-slate-900">Single parent:</strong> Living for more than six months with at
+              least one child receiving the family allowance, without a partner in the household.
             </li>
           </ul>
         </div>
@@ -327,8 +325,7 @@ function getFaqs(language: Language): FaqItem[] {
           </p>
           <div className="space-y-3">
             <p>
-              <strong className="text-slate-900">Income tax:</strong> Yes, specific tax credits apply (Alleinverdiener:innen- /
-              Alleinerzieher:innen-Absetzbetrag). Guide values for 2025:
+              <strong className="text-slate-900">Income tax:</strong> Yes, specific tax credits apply. Guide values for 2025:
             </p>
             <ul className="list-disc space-y-1 pl-5">
               <li>
@@ -343,7 +340,7 @@ function getFaqs(language: Language): FaqItem[] {
             </ul>
             <p className="leading-relaxed">
               Very low incomes can also trigger payments such as the
-              <strong className="text-slate-900"> Kindermehrbetrag</strong> (additional child amount).
+              <strong className="text-slate-900"> Kindermehrbetrag</strong> (additional child allowance).
             </p>
           </div>
         </div>
@@ -358,14 +355,14 @@ function getFaqs(language: Language): FaqItem[] {
           </p>
           <ul className="list-disc space-y-2 pl-5">
             <li>EUR 2,000 per year until the 18th birthday,</li>
-            <li>EUR 700 per year afterwards while the Familienbeihilfe is paid.</li>
+            <li>EUR 700 per year afterwards while the family allowance is paid.</li>
           </ul>
           <p>It directly reduces income tax (not social insurance contributions).</p>
         </div>
       ),
     },
     {
-      question: "When do I receive the full Family Bonus and when the shared bonus?",
+      question: "When do I receive the full family bonus and when the shared bonus?",
       answer: (
         <div className="space-y-3 text-left text-slate-600">
           <ul className="list-disc space-y-2 pl-5">
@@ -381,7 +378,7 @@ function getFaqs(language: Language): FaqItem[] {
       ),
     },
     {
-      question: "What are non-cash benefits (Sachbezüge)?",
+      question: "What are non-cash benefits?",
       answer: (
         <div className="space-y-3 text-left text-slate-600">
           <p>
@@ -396,7 +393,7 @@ function getFaqs(language: Language): FaqItem[] {
       ),
     },
     {
-      question: "What are company car benefits (Firmen-PKW Sachbezug)?",
+      question: "What are company car benefits?",
       answer: (
         <div className="space-y-3 text-left text-slate-600">
           <p>If you also use a company car privately, a monthly non-cash value is applied:</p>
@@ -418,7 +415,7 @@ function getFaqs(language: Language): FaqItem[] {
       ),
     },
     {
-      question: "What is the tax allowance (Freibetrag)?",
+      question: "What is the tax allowance?",
       answer: (
         <div className="space-y-3 text-left text-slate-600">
           <p>
@@ -432,11 +429,11 @@ function getFaqs(language: Language): FaqItem[] {
       ),
     },
     {
-      question: "What is the Pendlerpauschale (commuter allowance) and when can I claim it?",
+      question: "What is the commuter allowance and when can I claim it?",
       answer: (
         <div className="space-y-3 text-left text-slate-600">
           <p>
-            The <strong className="text-slate-900">Pendlerpauschale</strong> is a flat tax credit for commuting between home and
+            The <strong className="text-slate-900">Pendlerpauschale</strong> (commuter allowance) is a flat tax credit for commuting between home and
             workplace. There is also the <strong className="text-slate-900">Pendlereuro</strong> (see below).
           </p>
           <ul className="list-disc space-y-2 pl-5">
