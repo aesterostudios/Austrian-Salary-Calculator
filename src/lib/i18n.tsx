@@ -500,7 +500,7 @@ export const translations: Record<Language, Dictionary> = {
       ],
     },
     footer: {
-      text: "Erstellt von",
+      text: "Created by",
       highlight: "Aestero Studios",
       suffix: "in Austria.",
       privacyLinkLabel: "Datenschutzhinweis",
