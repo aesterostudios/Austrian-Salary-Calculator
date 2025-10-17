@@ -276,7 +276,7 @@ export const translations: Record<Language, Dictionary> = {
       badge: "FAQ",
       title: "Frequently asked questions",
       description:
-        "Answers about Austrian net income, taxes and social security contributions.",
+        "Answers to frequent questions on Austrian net income, taxes and social security contributions.",
       notesTitle: "Notes",
       notes: [
         "Rules change regularly. The relevant law and official information (tax office, social insurance) prevail.",
