@@ -54,7 +54,3 @@ src/
 ├─ components/       # Shared UI components such as the header language toggle and footer
 └─ lib/              # Calculator logic and internationalization helpers
 ```
-
-## Contributing
-
-Contributions are welcome. Please open an issue describing the proposed change before submitting a pull request.
