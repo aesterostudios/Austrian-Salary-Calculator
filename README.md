@@ -36,8 +36,6 @@ npm install
 npm run dev
 ```
 
-The application will be available at <http://localhost:3000>.
-
 ### Building for Production
 
 ```bash
@@ -60,7 +58,3 @@ src/
 ## Contributing
 
 Contributions are welcome. Please open an issue describing the proposed change before submitting a pull request.
-
-## License
-
-This project is proprietary. All rights reserved.
