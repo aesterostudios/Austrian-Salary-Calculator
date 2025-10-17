@@ -1,55 +1,66 @@
+"use client";
+
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { useEffect, useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { headerLinkClasses, headerPrimaryLinkClasses } from "@/components/header-link";
 import { LanguageToggle } from "@/components/language-toggle";
+import { useLanguage } from "@/components/language-provider";
 import {
   calculateNetSalary,
   formatCurrency,
   type CalculatorInput,
 } from "@/lib/calculator";
 
-type SearchParams = Record<string, string | string[] | undefined>;
-
-interface ResultPageProps {
-  searchParams?: Promise<SearchParams> | SearchParams;
-}
-
-function parsePayload(value: string | string[] | undefined): CalculatorInput | null {
+function parsePayload(value: string | null): CalculatorInput | null {
   if (!value) {
     return null;
   }
 
-  const raw = Array.isArray(value) ? value[0] : value;
-
   try {
-    return JSON.parse(decodeURIComponent(raw)) as CalculatorInput;
+    return JSON.parse(decodeURIComponent(value)) as CalculatorInput;
   } catch {
     try {
-      return JSON.parse(raw) as CalculatorInput;
+      return JSON.parse(value) as CalculatorInput;
     } catch {
       return null;
     }
   }
 }
 
-export default async function ResultPage({ searchParams }: ResultPageProps) {
-  const resolvedSearchParams = await searchParams;
-  const payload = parsePayload(resolvedSearchParams?.payload);
+export default function ResultPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const payload = useMemo(
+    () => parsePayload(searchParams.get("payload")),
+    [searchParams],
+  );
 
-  if (!payload) {
-    redirect("/");
+  useEffect(() => {
+    if (!payload) {
+      router.replace("/");
+    }
+  }, [payload, router]);
+
+  const calculation = useMemo(
+    () => (payload ? calculateNetSalary(payload) : null),
+    [payload],
+  );
+
+  const { dictionary } = useLanguage();
+  const { common, result } = dictionary;
+  const currencyLocale = common.currency.locale;
+
+  if (!payload || !calculation) {
+    return null;
   }
 
-  const result = calculateNetSalary(payload);
+  const grossLabel = result.labels.gross[payload.incomePeriod];
+  const grossValue =
+    payload.incomePeriod === "monthly"
+      ? formatCurrency(calculation.grossMonthly, currencyLocale)
+      : formatCurrency(calculation.grossAnnual, currencyLocale);
 
-  const grossInputLabel =
-    payload.incomePeriod === "monthly"
-      ? "Bruttoeinkommen pro Monat"
-      : "Bruttoeinkommen pro Jahr";
-  const grossInputValue =
-    payload.incomePeriod === "monthly"
-      ? formatCurrency(result.grossMonthly)
-      : formatCurrency(result.grossAnnual);
   const sanitizedChildrenUnder18 = Math.max(payload.childrenUnder18 ?? 0, 0);
   const sanitizedChildrenOver18 = Math.max(payload.childrenOver18 ?? 0, 0);
   const totalChildren = sanitizedChildrenUnder18 + sanitizedChildrenOver18;
@@ -67,51 +78,48 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
     0,
   );
   const hasChildren = payload.hasChildren ?? totalChildren > 0;
-  const familyBonusLabels = {
-    none: "kein Familienbonus",
-    shared: "geteilter Familienbonus",
-    full: "voller Familienbonus",
-  } as const;
   const familyBonusLabel =
-    familyBonusLabels[payload.familyBonus] ?? familyBonusLabels.none;
+    common.familyBonusOptions.find((option) => option.id === payload.familyBonus)
+      ?.label ?? common.familyBonusOptions[0]?.label ?? "";
+  const employmentTitle =
+    common.employmentOptions.find((option) => option.id === payload.employmentType)
+      ?.title ?? common.employmentOptions[0]?.title ?? "";
 
   const summaryMetrics = [
     {
-      label: "Netto monatlich",
-      value: formatCurrency(result.netMonthly),
+      label: result.summaryMetrics.netMonthly,
+      value: formatCurrency(calculation.netMonthly, currencyLocale),
       accent: true,
-      footnote: "inkl. 13. und 14. Gehalt",
+      footnote: result.summaryMetrics.footnote,
     },
     {
-      label: "Netto jährlich",
-      value: formatCurrency(result.netAnnual),
+      label: result.summaryMetrics.netAnnual,
+      value: formatCurrency(calculation.netAnnual, currencyLocale),
       accent: true,
-      footnote: "inkl. 13. und 14. Gehalt",
+      footnote: result.summaryMetrics.footnote,
     },
     {
-      label: "Brutto monatlich",
-      value: formatCurrency(result.grossMonthly),
+      label: result.summaryMetrics.grossMonthly,
+      value: formatCurrency(calculation.grossMonthly, currencyLocale),
     },
     {
-      label: "Brutto jährlich",
-      value: formatCurrency(result.grossAnnual),
+      label: result.summaryMetrics.grossAnnual,
+      value: formatCurrency(calculation.grossAnnual, currencyLocale),
     },
   ];
 
   const breakdown = [
     {
-      title: "Sozialversicherung",
-      monthly: formatCurrency(result.socialInsuranceMonthly),
-      annual: formatCurrency(result.socialInsuranceAnnual),
-      description:
-        "Arbeitnehmer:innenanteil inkl. Kranken-, Pensions- und Arbeitslosenversicherung.",
+      title: result.breakdownItems.socialInsurance.title,
+      monthly: formatCurrency(calculation.socialInsuranceMonthly, currencyLocale),
+      annual: formatCurrency(calculation.socialInsuranceAnnual, currencyLocale),
+      description: result.breakdownItems.socialInsurance.description,
     },
     {
-      title: "Lohnsteuer",
-      monthly: formatCurrency(result.incomeTaxMonthly),
-      annual: formatCurrency(result.incomeTaxAnnual),
-      description:
-        "Progressive Steuer nach österreichischem Tarif abzüglich aller Gutschriften.",
+      title: result.breakdownItems.incomeTax.title,
+      monthly: formatCurrency(calculation.incomeTaxMonthly, currencyLocale),
+      annual: formatCurrency(calculation.incomeTaxAnnual, currencyLocale),
+      description: result.breakdownItems.incomeTax.description,
     },
   ];
 
@@ -120,70 +128,67 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
     items: { label: string; value: string; note?: string }[];
   }[] = [
     {
-      title: null as string | null,
+      title: null,
       items: [
         {
-          label: "Beschäftigungsform",
-          value:
-            payload.employmentType === "employee"
-              ? "Arbeiter:in / Angestellte:r"
-              : payload.employmentType === "apprentice"
-                ? "Lehrling"
-                : "Pensionist:in",
+          label: result.labels.employmentType,
+          value: employmentTitle,
         },
         {
-          label: grossInputLabel,
-          value: grossInputValue,
+          label: grossLabel,
+          value: grossValue,
         },
       ],
     },
     {
-      title: "Familiensituation",
+      title: result.sectionTitles.family,
       items: [
         {
-          label: "Anzahl Kinder bis 17 Jahre",
+          label: result.labels.childrenUnder18,
           value: hasChildren ? String(sanitizedChildrenUnder18) : "0",
         },
         {
-          label: "Anzahl Kinder ab 18 Jahre",
+          label: result.labels.childrenOver18,
           value: hasChildren ? String(sanitizedChildrenOver18) : "0",
-          note: "Für welche Familienbeihilfe bezogen wird",
+          note: result.labels.childrenOver18Note,
         },
         {
-          label: "Alleinverdiener:in / Alleinerzieher:in",
-          value: hasChildren && payload.isSingleEarner ? "Ja" : "Nein",
+          label: result.labels.singleEarner,
+          value: hasChildren && payload.isSingleEarner
+            ? common.responses.yes
+            : common.responses.no,
         },
         {
-          label: "Familienbonus Plus",
-          value: hasChildren ? familyBonusLabel : familyBonusLabels.none,
-        },
-      ],
-    },
-    {
-      title: "Sachbezüge & Freibeträge",
-      items: [
-        {
-          label: "Sachbezug (monatlich)",
-          value: formatCurrency(sanitizedTaxableBenefit),
-        },
-        {
-          label: "Sachbezug durch Firmen-PKW (monatlich)",
-          value: formatCurrency(sanitizedCompanyCarValue),
-        },
-        {
-          label: "Steuerlicher Freibetrag (monatlich)",
-          value: formatCurrency(sanitizedAllowance),
+          label: result.labels.familyBonus,
+          value: hasChildren ? familyBonusLabel : common.familyBonusOptions[0]?.label ?? "",
         },
       ],
     },
     {
-      title: "Pendlerpauschale",
+      title: result.sectionTitles.benefits,
       items: [
         {
-          label: "Pendlerpauschale (monatlich)",
+          label: result.labels.taxableBenefit,
+          value: formatCurrency(sanitizedTaxableBenefit, currencyLocale),
+        },
+        {
+          label: result.labels.companyCar,
+          value: formatCurrency(sanitizedCompanyCarValue, currencyLocale),
+        },
+        {
+          label: result.labels.allowance,
+          value: formatCurrency(sanitizedAllowance, currencyLocale),
+        },
+      ],
+    },
+    {
+      title: result.sectionTitles.commuter,
+      items: [
+        {
+          label: result.labels.commuterAllowance,
           value: payload.receivesCommuterAllowance
-            ? formatCurrency(sanitizedCommuterAllowance)
-            : formatCurrency(0),
+            ? formatCurrency(sanitizedCommuterAllowance, currencyLocale)
+            : formatCurrency(0, currencyLocale),
         },
       ],
     },
@@ -193,10 +198,10 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
     <main className="relative mx-auto min-h-screen w-full max-w-6xl px-6 pb-16 pt-28">
       <div className="absolute right-6 top-6 flex items-center gap-3">
         <Link href="/" className={headerPrimaryLinkClasses}>
-          Zurück zur Eingabe
+          {common.nav.backToInput}
         </Link>
         <Link href="/faq" className={headerLinkClasses}>
-          FAQ
+          {common.nav.faq}
         </Link>
         <LanguageToggle />
       </div>
@@ -204,9 +209,11 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
         <div className="flex flex-col gap-10">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <div className="text-center sm:text-left">
-              <p className="text-xs font-semibold uppercase tracking-[0.4em] text-rose-400">Ergebnis</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.4em] text-rose-400">
+                {result.headerBadge}
+              </p>
               <h1 className="mt-3 text-4xl font-semibold tracking-tight text-slate-900 sm:text-[3rem]">
-                Dein Nettogehalt
+                {result.headerTitle}
               </h1>
             </div>
           </div>
@@ -266,7 +273,7 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
 
           <section className="grid gap-5">
             <h2 className="text-lg font-semibold text-slate-900">
-              Steuern & Abgaben
+              {result.breakdownTitle}
             </h2>
             <div className="grid gap-4 md:grid-cols-2">
               {breakdown.map((item) => (
@@ -280,11 +287,11 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
                       {item.monthly}
                     </span>
                     <span className="text-xs font-medium uppercase tracking-[0.2em] text-slate-400">
-                      / Monat
+                      {common.currency.perMonth}
                     </span>
                   </div>
                   <p className="text-sm font-medium text-slate-500">
-                    <span className="font-semibold text-slate-600">{item.annual}</span> / Jahr
+                    <span className="font-semibold text-slate-600">{item.annual}</span> {common.currency.perYear}
                   </p>
                   <p className="text-xs leading-relaxed text-slate-500/80">{item.description}</p>
                 </div>
@@ -294,21 +301,20 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
 
           <section className="grid gap-3 rounded-2xl border border-rose-200/60 bg-rose-50/70 p-5 shadow-sm">
             <h2 className="text-xs font-semibold uppercase tracking-[0.35em] text-rose-500">
-              Hinweis zu den Ergebnissen
+              {result.noteSection.title}
             </h2>
-            <p className="text-xs leading-relaxed text-rose-600">
-              Dieser Brutto-Netto-Rechner dient ausschließlich als Orientierungshilfe – Angaben ohne Gewähr, keine Rechtsberatung.
-            </p>
-            <p className="text-xs leading-relaxed text-rose-600">
-              Die ausgewiesenen Werte gelten bei 14 gleich hohen Monatsbezügen. Abweichungen sind möglich, z. B. durch Überstunden, steuerfreie Zulagen oder zusätzliche Sonderzahlungen. Für ältere Arbeitnehmer:innen können unter bestimmten Voraussetzungen Begünstigungen bei Arbeitslosen- und Pensionsversicherung gelten; diese werden hier nicht berücksichtigt. Daher kann dein tatsächliches Nettogehalt vom berechneten Betrag abweichen.
-            </p>
+            {result.noteSection.paragraphs.map((paragraph) => (
+              <p key={paragraph} className="text-xs leading-relaxed text-rose-600">
+                {paragraph}
+              </p>
+            ))}
           </section>
         </div>
 
         <aside className="flex flex-col gap-6 self-start rounded-[2rem] border border-rose-100/70 bg-white/95 p-8 shadow-lg">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.32em] text-rose-500">
-              Deine Angaben
+              {result.detailsTitle}
             </p>
             <div className="mt-4 space-y-6 text-sm text-slate-600">
               {contextSections.map((section, index) => (
@@ -321,7 +327,7 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
                   <ul className="grid gap-3">
                     {section.items.map((detail) => (
                       <li
-                        key={detail.label}
+                        key={`${section.title ?? "root"}-${detail.label}`}
                         className="flex flex-col gap-1 rounded-2xl border border-rose-100 bg-rose-50/70 p-4 shadow-sm"
                       >
                         <span className="text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-rose-400">
