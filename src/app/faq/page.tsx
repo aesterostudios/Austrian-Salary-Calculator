@@ -257,7 +257,7 @@ function getFaqs(language: Language): FaqItem[] {
               insurance is currently similar between white-collar employees (Angestellte:r) and blue-collar workers (Arbeiter:innen), but collective agreements, supplements and severance pay (Abfertigung) differ.
             </li>
             <li>
-              <strong className="text-slate-900">Apprentices (Lehrlinge):</strong> Pay lower social insurance contributions overall,
+              <strong className="text-slate-900">Apprentices:</strong> Pay lower social insurance contributions overall,
               so more of the gross salary remains as net.
             </li>
             <li>
@@ -290,7 +290,7 @@ function getFaqs(language: Language): FaqItem[] {
         <div className="space-y-3 text-left text-slate-600">
           <ul className="list-disc space-y-2 pl-5">
             <li>
-              As long as the Familienbeihilfe is paid, you receive the reduced
+              As long as the family allowance is paid, you receive the reduced
               <strong className="text-slate-900"> Family Bonus Plus</strong> of EUR 700 per year (about EUR 58.34 per month). Without
               the allowance there is no family bonus.
             </li>
