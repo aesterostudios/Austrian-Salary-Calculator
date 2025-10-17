@@ -13,7 +13,7 @@ export default function PrivacyPage() {
   return (
     <main className="relative mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-12 px-6 pb-16 pt-28">
       <div className="absolute right-6 top-6 flex items-center gap-3">
-        <Link href="/" className={headerLinkClasses}>
+        <Link href="/" className={`${headerLinkClasses} gap-2`}>
           <ArrowLeftIcon className="h-4 w-4" />
           <span>{privacy.backLink}</span>
         </Link>
