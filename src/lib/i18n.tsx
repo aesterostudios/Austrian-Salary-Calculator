@@ -62,11 +62,12 @@ export interface Dictionary {
     headerBadge: string;
     headerTitle: string;
     summaryMetrics: {
-      netMonthly: string;
-      netAnnual: string;
-      grossMonthly: string;
-      grossAnnual: string;
-      footnote: string;
+      netMonthlyAverage: string;
+      netAnnualTotal: string;
+      netMonthlyExcludingSpecial: string;
+      netAnnualExcludingSpecial: string;
+      averageFootnote: string;
+      excludingSpecial: string;
     };
     breakdownTitle: string;
     breakdownItems: {
@@ -77,6 +78,15 @@ export interface Dictionary {
       incomeTax: {
         title: string;
         description: string;
+      };
+    };
+    analysis: {
+      title: string;
+      metrics: {
+        grossMonthly: string;
+        grossAnnual: string;
+        net13th: string;
+        net14th: string;
       };
     };
     noteSection: {
@@ -234,11 +244,12 @@ export const translations: Record<Language, Dictionary> = {
       headerBadge: "Result",
       headerTitle: "Your net salary",
       summaryMetrics: {
-        netMonthly: "Net monthly",
-        netAnnual: "Net annually",
-        grossMonthly: "Gross monthly",
-        grossAnnual: "Gross annually",
-        footnote: "including 13th and 14th salary",
+        netMonthlyAverage: "Average net per month",
+        netAnnualTotal: "Total net per year",
+        netMonthlyExcludingSpecial: "Net monthly",
+        netAnnualExcludingSpecial: "Net annually",
+        averageFootnote: "including 13th and 14th salary",
+        excludingSpecial: "excluding 13th and 14th salary",
       },
       breakdownTitle: "Taxes & contributions",
       breakdownItems: {
@@ -251,6 +262,15 @@ export const translations: Record<Language, Dictionary> = {
           title: "Income tax",
           description:
             "Progressive Austrian income tax (Lohnsteuer) after all credits have been applied.",
+        },
+      },
+      analysis: {
+        title: "Analysis",
+        metrics: {
+          grossMonthly: "Gross monthly",
+          grossAnnual: "Gross annually",
+          net13th: "Net income 13th salary",
+          net14th: "Net income 14th salary",
         },
       },
       noteSection: {
@@ -439,11 +459,12 @@ export const translations: Record<Language, Dictionary> = {
       headerBadge: "Ergebnis",
       headerTitle: "Dein Nettogehalt",
       summaryMetrics: {
-        netMonthly: "Netto monatlich",
-        netAnnual: "Netto jährlich",
-        grossMonthly: "Brutto monatlich",
-        grossAnnual: "Brutto jährlich",
-        footnote: "inkl. 13. und 14. Gehalt",
+        netMonthlyAverage: "Durchschnitt netto pro Monat",
+        netAnnualTotal: "Netto gesamt pro Jahr",
+        netMonthlyExcludingSpecial: "Netto monatlich",
+        netAnnualExcludingSpecial: "Netto jährlich",
+        averageFootnote: "inkl. 13. und 14. Gehalt",
+        excludingSpecial: "exkl. 13. und 14. Gehalt",
       },
       breakdownTitle: "Steuern & Abgaben",
       breakdownItems: {
@@ -456,6 +477,15 @@ export const translations: Record<Language, Dictionary> = {
           title: "Lohnsteuer",
           description:
             "Progressive Steuer nach österreichischem Tarif abzüglich aller Gutschriften.",
+        },
+      },
+      analysis: {
+        title: "Analyse",
+        metrics: {
+          grossMonthly: "Brutto monatlich",
+          grossAnnual: "Brutto jährlich",
+          net13th: "Netto 13. Bezug",
+          net14th: "Netto 14. Bezug",
         },
       },
       noteSection: {

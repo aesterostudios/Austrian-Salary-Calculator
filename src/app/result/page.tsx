@@ -88,24 +88,45 @@ export default function ResultPage() {
 
   const summaryMetrics = [
     {
-      label: result.summaryMetrics.netMonthly,
+      label: result.summaryMetrics.netMonthlyAverage,
       value: formatCurrency(calculation.netMonthly, currencyLocale),
       accent: true,
-      footnote: result.summaryMetrics.footnote,
+      footnote: result.summaryMetrics.averageFootnote,
     },
     {
-      label: result.summaryMetrics.netAnnual,
+      label: result.summaryMetrics.netAnnualTotal,
       value: formatCurrency(calculation.netAnnual, currencyLocale),
       accent: true,
-      footnote: result.summaryMetrics.footnote,
+      footnote: result.summaryMetrics.averageFootnote,
     },
     {
-      label: result.summaryMetrics.grossMonthly,
+      label: result.summaryMetrics.netMonthlyExcludingSpecial,
+      value: formatCurrency(calculation.netRegularMonthly, currencyLocale),
+      annotation: result.summaryMetrics.excludingSpecial,
+    },
+    {
+      label: result.summaryMetrics.netAnnualExcludingSpecial,
+      value: formatCurrency(calculation.netRegularAnnual, currencyLocale),
+      annotation: result.summaryMetrics.excludingSpecial,
+    },
+  ];
+
+  const analysisMetrics = [
+    {
+      label: result.analysis.metrics.grossMonthly,
       value: formatCurrency(calculation.grossMonthly, currencyLocale),
     },
     {
-      label: result.summaryMetrics.grossAnnual,
+      label: result.analysis.metrics.grossAnnual,
       value: formatCurrency(calculation.grossAnnual, currencyLocale),
+    },
+    {
+      label: result.analysis.metrics.net13th,
+      value: formatCurrency(calculation.netSpecial13th, currencyLocale),
+    },
+    {
+      label: result.analysis.metrics.net14th,
+      value: formatCurrency(calculation.netSpecial14th, currencyLocale),
     },
   ];
 
@@ -225,11 +246,18 @@ export default function ResultPage() {
           </div>
 
           <section className="grid gap-4">
-            {["accent", "standard"].map((group) => (
-              <div key={group} className="grid gap-4 sm:grid-cols-2">
-                {summaryMetrics
-                  .filter((metric) => (group === "accent" ? metric.accent : !metric.accent))
-                  .map((metric) => (
+            {["accent", "standard"].map((group) => {
+              const filtered = summaryMetrics.filter((metric) =>
+                group === "accent" ? metric.accent : !metric.accent,
+              );
+
+              if (filtered.length === 0) {
+                return null;
+              }
+
+              return (
+                <div key={group} className="grid gap-4 sm:grid-cols-2">
+                  {filtered.map((metric) => (
                     <div
                       key={metric.label}
                       className={`group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-rose-100/60 bg-white/95 p-[1px] shadow transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl ${
@@ -245,13 +273,24 @@ export default function ResultPage() {
                             : "bg-white/95 text-slate-700"
                         }`}
                       >
-                        <p
-                          className={`text-[0.65rem] font-semibold uppercase tracking-[0.38em] text-rose-400 ${
-                            metric.accent ? "text-white/70" : ""
-                          }`}
-                        >
-                          {metric.label}
-                        </p>
+                        <div className="flex flex-col gap-1">
+                          <p
+                            className={`text-[0.65rem] font-semibold uppercase tracking-[0.38em] text-rose-400 ${
+                              metric.accent ? "text-white/70" : ""
+                            }`}
+                          >
+                            {metric.label}
+                          </p>
+                          {metric.annotation ? (
+                            <p
+                              className={`text-[0.65rem] font-medium uppercase tracking-[0.32em] ${
+                                metric.accent ? "text-white/60" : "text-slate-500"
+                              }`}
+                            >
+                              {metric.annotation}
+                            </p>
+                          ) : null}
+                        </div>
                         <p
                           className={`font-semibold leading-tight tracking-tight text-balance ${
                             metric.accent
@@ -273,8 +312,9 @@ export default function ResultPage() {
                       </div>
                     </div>
                   ))}
-              </div>
-            ))}
+                </div>
+              );
+            })}
           </section>
 
           <section className="grid gap-5">
@@ -300,6 +340,29 @@ export default function ResultPage() {
                     <span className="font-semibold text-slate-600">{item.annual}</span> {common.currency.perYear}
                   </p>
                   <p className="text-xs leading-relaxed text-slate-500/80">{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="grid gap-5">
+            <h2 className="text-lg font-semibold text-slate-900">
+              {result.analysis.title}
+            </h2>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {analysisMetrics.map((metric) => (
+                <div
+                  key={metric.label}
+                  className="group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-rose-100/60 bg-white/95 p-[1px] shadow transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl"
+                >
+                  <div className="relative flex flex-1 flex-col justify-between gap-4 rounded-[1.7rem] bg-white/95 p-6 text-slate-700 sm:p-7">
+                    <p className="text-[0.65rem] font-semibold uppercase tracking-[0.38em] text-rose-400">
+                      {metric.label}
+                    </p>
+                    <p className="text-[clamp(1.55rem,1.1rem+0.8vw,2.05rem)] font-semibold leading-tight tracking-tight text-slate-900">
+                      {metric.value}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
