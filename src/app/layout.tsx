@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { SiteFooter } from "@/components/site-footer";
 import { LanguageProvider } from "@/components/language-provider";
@@ -48,6 +49,7 @@ export default async function RootLayout({
             <SiteFooter />
           </div>
         </LanguageProvider>
+        <Analytics />
       </body>
     </html>
   );
