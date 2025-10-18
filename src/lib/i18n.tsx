@@ -88,6 +88,17 @@ export interface Dictionary {
         net13th: string;
         net14th: string;
       };
+      chart: {
+        title: string;
+        description: string;
+        totalGross: string;
+        emptyState: string;
+        legend: {
+          socialInsurance: string;
+          incomeTax: string;
+          netIncome: string;
+        };
+      };
     };
     noteSection: {
       title: string;
@@ -271,6 +282,18 @@ export const translations: Record<Language, Dictionary> = {
           grossAnnual: "Gross annually",
           net13th: "Net income 13th salary",
           net14th: "Net income 14th salary",
+        },
+        chart: {
+          title: "Where your annual gross salary goes",
+          description:
+            "How social insurance contributions and income tax compare to your yearly gross income.",
+          totalGross: "Total gross per year",
+          emptyState: "Enter a salary to see how it's distributed.",
+          legend: {
+            socialInsurance: "Social insurance",
+            incomeTax: "Income tax",
+            netIncome: "Take-home pay",
+          },
         },
       },
       noteSection: {
@@ -486,6 +509,18 @@ export const translations: Record<Language, Dictionary> = {
           grossAnnual: "Brutto jährlich",
           net13th: "Netto 13. Bezug",
           net14th: "Netto 14. Bezug",
+        },
+        chart: {
+          title: "So verteilt sich dein Jahresbrutto",
+          description:
+            "Vergleich der Abzüge für Sozialversicherung und Lohnsteuer mit deinem gesamten Jahresbrutto.",
+          totalGross: "Brutto gesamt pro Jahr",
+          emptyState: "Bitte gib ein Gehalt ein, um die Verteilung zu sehen.",
+          legend: {
+            socialInsurance: "Sozialversicherung",
+            incomeTax: "Lohnsteuer",
+            netIncome: "Ausbezahltes Netto",
+          },
         },
       },
       noteSection: {
