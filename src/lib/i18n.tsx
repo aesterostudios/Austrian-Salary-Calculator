@@ -198,7 +198,7 @@ export const translations: Record<Language, Dictionary> = {
         childrenOver18:
           "Children from 18 years",
         childrenOver18Note:
-          "For whom family allowance (Familienbeihilfe) is paid",
+          "For whom family allowance (Familienbeihilfe) is received",
         singleEarnerQuestion: "Single earner or single parent?",
         familyBonusTitle: "Family Bonus Plus",
       },
@@ -274,7 +274,7 @@ export const translations: Record<Language, Dictionary> = {
         },
         childrenUnder18: "Children up to 17 years",
         childrenOver18: "Children from 18 years",
-        childrenOver18Note: "For whom family allowance (Familienbeihilfe) is paid",
+        childrenOver18Note: "For whom family allowance (Familienbeihilfe) is received",
         singleEarner: "Single earner / single parent",
         familyBonus: "Family Bonus Plus",
         taxableBenefit: "Non-cash benefit per month",
