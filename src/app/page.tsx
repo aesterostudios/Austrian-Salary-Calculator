@@ -123,7 +123,7 @@ export default function Home() {
         </Link>
         <LanguageToggle />
       </div>
-      <div className="grid gap-12 lg:grid-cols-[1.2fr_auto_1fr]">
+      <div className="grid gap-8 lg:grid-cols-[1.2fr_auto_1fr] lg:gap-12">
         <div className="flex flex-col gap-8">
           <header className="flex flex-col gap-3">
             <span className="inline-flex w-fit items-center gap-2 rounded-full bg-rose-100/80 px-4 py-1 text-sm font-medium text-rose-600">
@@ -151,7 +151,7 @@ export default function Home() {
 
         <div
           aria-hidden="true"
-          className="flex items-center justify-center py-6 lg:py-4"
+          className="flex items-center justify-center py-3 lg:py-4"
         >
           <span className="h-px w-full bg-gradient-to-r from-transparent via-rose-200/70 to-transparent lg:hidden" />
           <span className="hidden h-[72%] w-px bg-gradient-to-b from-transparent via-rose-200/70 to-transparent lg:block" />
