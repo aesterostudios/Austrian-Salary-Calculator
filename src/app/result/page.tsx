@@ -597,13 +597,18 @@ export default function ResultPage() {
                                 r={donutOuterRadius}
                                 fill={singleDonutSegment.color}
                                 stroke={isActive ? singleDonutSegment.color : "transparent"}
-                                strokeWidth={isActive ? 2 : 0}
-                                className="cursor-pointer transition-[opacity,filter] duration-300"
+                                strokeWidth={isActive ? 4 : 0}
+                                strokeLinejoin="round"
+                                strokeLinecap="round"
+                                className="cursor-pointer transition-[opacity,filter,transform] duration-300"
                                 style={{
                                   opacity: isDimmed ? 0.35 : 1,
                                   filter: isActive
                                     ? `drop-shadow(0 10px 30px ${hexToRgba(singleDonutSegment.color, 0.35)})`
                                     : undefined,
+                                  transform: isActive ? "scale(1.05)" : undefined,
+                                  transformOrigin: `${donutCenter}px ${donutCenter}px`,
+                                  transformBox: "fill-box",
                                 }}
                                 tabIndex={0}
                                 aria-label={`${singleDonutSegment.label}: ${formatCurrency(
@@ -647,13 +652,18 @@ export default function ResultPage() {
                                 d={segment.path}
                                 fill={segment.color}
                                 stroke={isActive ? segment.color : "transparent"}
-                                strokeWidth={isActive ? 2 : 0}
-                                className="cursor-pointer transition-[opacity,filter] duration-300 focus:outline-none"
+                                strokeWidth={isActive ? 4 : 0}
+                                strokeLinejoin="round"
+                                strokeLinecap="round"
+                                className="cursor-pointer transition-[opacity,filter,transform] duration-300 focus:outline-none"
                                 style={{
                                   opacity: isDimmed ? 0.35 : 1,
                                   filter: isActive
                                     ? `drop-shadow(0 10px 30px ${hexToRgba(segment.color, 0.35)})`
                                     : undefined,
+                                  transform: isActive ? "scale(1.05)" : undefined,
+                                  transformOrigin: `${donutCenter}px ${donutCenter}px`,
+                                  transformBox: "fill-box",
                                 }}
                                 tabIndex={isInteractive ? 0 : -1}
                                 aria-label={`${segment.label}: ${formatCurrency(
@@ -738,7 +748,7 @@ export default function ResultPage() {
                                 />
                                 <span className="text-rose-600">{segment.label}</span>
                               </span>
-                              <span className="rounded-full bg-white/80 px-3 py-1 text-[0.55rem] font-semibold uppercase tracking-[0.24em] text-rose-500">
+                              <span className="inline-flex items-center justify-center rounded-full bg-rose-500 px-3 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.24em] text-white">
                                 {percentLabel}
                               </span>
                             </span>
