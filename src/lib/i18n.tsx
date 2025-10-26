@@ -69,6 +69,7 @@ export interface Dictionary {
       averageFootnote: string;
       excludingSpecial: string;
     };
+    specialPaymentsTitle: string;
     breakdownTitle: string;
     breakdownItems: {
       socialInsurance: {
@@ -262,6 +263,7 @@ export const translations: Record<Language, Dictionary> = {
         averageFootnote: "incl. 13th and 14th salary",
         excludingSpecial: "excl. 13th and 14th salary",
       },
+      specialPaymentsTitle: "13th and 14th salary",
       breakdownTitle: "Taxes & contributions",
       breakdownItems: {
         socialInsurance: {
@@ -489,6 +491,7 @@ export const translations: Record<Language, Dictionary> = {
         averageFootnote: "inkl. 13. und 14. Gehalt",
         excludingSpecial: "exkl. 13. und 14. Gehalt",
       },
+      specialPaymentsTitle: "13. und 14. Gehalt",
       breakdownTitle: "Steuern & Abgaben",
       breakdownItems: {
         socialInsurance: {

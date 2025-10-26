@@ -182,6 +182,9 @@ export default function ResultPage() {
       label: result.analysis.metrics.grossAnnual,
       value: formatCurrency(calculation.grossAnnual, currencyLocale),
     },
+  ];
+
+  const specialSalaryMetrics = [
     {
       label: result.analysis.metrics.net13th,
       value: formatCurrency(calculation.netSpecial13th, currencyLocale),
@@ -454,6 +457,29 @@ export default function ResultPage() {
                 </div>
               );
             })}
+          </section>
+
+          <section className="grid gap-5">
+            <h2 className="text-lg font-semibold text-slate-900">
+              {result.specialPaymentsTitle}
+            </h2>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {specialSalaryMetrics.map((metric) => (
+                <div
+                  key={metric.label}
+                  className="group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-rose-100/60 bg-white/95 p-[1px] shadow transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl"
+                >
+                  <div className="relative flex flex-1 flex-col justify-between gap-4 rounded-[1.7rem] bg-white/95 p-6 text-slate-700 sm:p-7">
+                    <p className="text-[0.65rem] font-semibold uppercase tracking-[0.38em] text-rose-400">
+                      {metric.label}
+                    </p>
+                    <p className="text-[clamp(1.55rem,1.1rem+0.8vw,2.05rem)] font-semibold leading-tight tracking-tight text-slate-900">
+                      {metric.value}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </section>
 
           <section className="grid gap-5">
