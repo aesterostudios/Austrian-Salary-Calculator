@@ -5,6 +5,7 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { headerLinkClasses, headerPrimaryLinkClasses } from "@/components/header-link";
+import { InfoTooltip } from "@/components/info-tooltip";
 import { LanguageToggle } from "@/components/language-toggle";
 import { useLanguage } from "@/components/language-provider";
 import {
@@ -153,23 +154,27 @@ export default function ResultPage() {
       label: result.summaryMetrics.netMonthlyAverage,
       value: formatCurrency(calculation.netMonthly, currencyLocale),
       accent: true,
-      footnote: result.summaryMetrics.averageFootnote,
+      info: result.summaryMetrics.info.netMonthlyAverage,
+      footnote: result.summaryMetrics.footnotes.netMonthlyAverage,
     },
     {
       label: result.summaryMetrics.netAnnualTotal,
       value: formatCurrency(calculation.netAnnual, currencyLocale),
       accent: true,
-      footnote: result.summaryMetrics.averageFootnote,
+      info: result.summaryMetrics.info.netAnnualTotal,
+      footnote: result.summaryMetrics.footnotes.netAnnualTotal,
     },
     {
       label: result.summaryMetrics.netMonthlyExcludingSpecial,
       value: formatCurrency(calculation.netRegularMonthly, currencyLocale),
-      footnote: result.summaryMetrics.excludingSpecial,
+      info: result.summaryMetrics.info.netMonthlyExcludingSpecial,
+      footnote: result.summaryMetrics.footnotes.netMonthlyExcludingSpecial,
     },
     {
       label: result.summaryMetrics.netAnnualExcludingSpecial,
       value: formatCurrency(calculation.netRegularAnnual, currencyLocale),
-      footnote: result.summaryMetrics.excludingSpecial,
+      info: result.summaryMetrics.info.netAnnualExcludingSpecial,
+      footnote: result.summaryMetrics.footnotes.netAnnualExcludingSpecial,
     },
   ];
 
@@ -411,20 +416,20 @@ export default function ResultPage() {
                   {filtered.map((metric) => (
                     <div
                       key={metric.label}
-                      className={`group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-rose-100/60 bg-white/95 p-[1px] shadow transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl ${
+                      className={`group relative flex h-full flex-col overflow-visible rounded-[2rem] border border-rose-100/60 bg-white/95 p-[1px] shadow transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl ${
                         metric.accent
                           ? "border-transparent bg-gradient-to-br from-rose-500 to-rose-600 shadow-rose-500/40"
                           : ""
                       }`}
                     >
                       <div
-                        className={`relative flex flex-1 flex-col justify-between gap-4 rounded-[1.7rem] p-6 sm:p-7 ${
+                        className={`relative flex flex-1 flex-col justify-between gap-4 overflow-visible rounded-[1.7rem] p-6 sm:p-7 ${
                           metric.accent
                             ? "bg-gradient-to-br from-rose-500 via-rose-500/95 to-rose-600 text-white"
                             : "bg-white/95 text-slate-700"
                         }`}
                       >
-                        <div className="flex flex-col gap-1">
+                        <div className="flex items-start justify-between gap-3">
                           <p
                             className={`text-[0.65rem] font-semibold uppercase tracking-[0.38em] text-rose-400 ${
                               metric.accent ? "text-white/70" : ""
@@ -432,6 +437,11 @@ export default function ResultPage() {
                           >
                             {metric.label}
                           </p>
+                          <InfoTooltip
+                            content={metric.info}
+                            accent={metric.accent}
+                            label={metric.label}
+                          />
                         </div>
                         <p
                           className={`font-semibold leading-tight tracking-tight text-balance ${
