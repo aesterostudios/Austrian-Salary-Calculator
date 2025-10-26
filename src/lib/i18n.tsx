@@ -282,8 +282,8 @@ export const translations: Record<Language, Dictionary> = {
         metrics: {
           grossMonthly: "Gross / month",
           grossAnnual: "Gross / year",
-          net13th: "Net income 13th salary",
-          net14th: "Net income 14th salary",
+          net13th: "Net 13th salary",
+          net14th: "Net 14th salary",
         },
         chart: {
           title: "Where your annual gross salary goes",
@@ -302,7 +302,7 @@ export const translations: Record<Language, Dictionary> = {
         title: "Notes on the results",
         paragraphs: [
           "This gross-to-net calculator is for orientation only – no guarantee, no legal advice.",
-          "The displayed values assume 14 equal salary payments per year. Deviations are possible, e.g. through overtime, tax-free allowances or additional special payments. Certain reductions for older employees regarding unemployment or pension insurance are not considered. Your actual net salary may therefore differ from the calculated amount.",
+          "The displayed values assume 14 equal gross monthly salary payments per year. Deviations are possible, e.g. through overtime, tax-free allowances or additional special payments. Certain reductions for older employees regarding unemployment or pension insurance are not considered. Your actual net salary may therefore differ from the calculated amount.",
         ],
       },
       detailsTitle: "Your inputs",
@@ -530,7 +530,7 @@ export const translations: Record<Language, Dictionary> = {
         title: "Hinweis zu den Ergebnissen",
         paragraphs: [
           "Dieser Brutto-Netto-Rechner dient ausschließlich als Orientierungshilfe – Angaben ohne Gewähr, keine Rechtsberatung.",
-          "Die ausgewiesenen Werte gelten bei 14 gleich hohen Monatsbezügen. Abweichungen sind möglich, z. B. durch Überstunden, steuerfreie Zulagen oder zusätzliche Sonderzahlungen. Für ältere Arbeitnehmer:innen können unter bestimmten Voraussetzungen Begünstigungen bei Arbeitslosen- und Pensionsversicherung gelten; diese werden hier nicht berücksichtigt. Daher kann dein tatsächliches Nettogehalt vom berechneten Betrag abweichen.",
+          "Die ausgewiesenen Werte gelten bei 14 gleich hohen Brutto-Monatsbezügen. Abweichungen sind möglich, z. B. durch Überstunden, steuerfreie Zulagen oder zusätzliche Sonderzahlungen. Für ältere Arbeitnehmer:innen können unter bestimmten Voraussetzungen Begünstigungen bei Arbeitslosen- und Pensionsversicherung gelten; diese werden hier nicht berücksichtigt. Daher kann dein tatsächliches Nettogehalt vom berechneten Betrag abweichen.",
         ],
       },
       detailsTitle: "Deine Angaben",
