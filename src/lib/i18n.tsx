@@ -219,7 +219,7 @@ export const translations: Record<Language, Dictionary> = {
         childrenOver18:
           "Children from 18 years",
         childrenOver18Note:
-          "For whom family allowance (Familienbeihilfe) is received",
+          "For whom family allowance is received",
         singleEarnerQuestion: "Single earner or single parent?",
         familyBonusTitle: "Family Bonus Plus",
       },
@@ -317,7 +317,7 @@ export const translations: Record<Language, Dictionary> = {
         },
         childrenUnder18: "Children up to 17 years",
         childrenOver18: "Children from 18 years",
-        childrenOver18Note: "For whom family allowance (Familienbeihilfe) is received",
+        childrenOver18Note: "For whom family allowance is received",
         singleEarner: "Single earner / single parent",
         familyBonus: "Family Bonus Plus",
         taxableBenefit: "Non-cash benefit per month",
@@ -482,8 +482,8 @@ export const translations: Record<Language, Dictionary> = {
       headerBadge: "Ergebnis",
       headerTitle: "Dein Nettogehalt",
       summaryMetrics: {
-        netMonthlyAverage: "Durchschnitt netto / Monat",
-        netAnnualTotal: "Netto gesamt / Jahr",
+        netMonthlyAverage: "⌀ Netto / Monat",
+        netAnnualTotal: "Gesamt Netto / Jahr",
         netMonthlyExcludingSpecial: "Netto / Monat",
         netAnnualExcludingSpecial: "Netto / Jahr",
         averageFootnote: "inkl. 13. und 14. Gehalt",
