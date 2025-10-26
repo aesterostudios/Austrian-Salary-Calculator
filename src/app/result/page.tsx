@@ -5,6 +5,7 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { headerLinkClasses, headerPrimaryLinkClasses } from "@/components/header-link";
+import { InfoTooltip } from "@/components/info-tooltip";
 import { LanguageToggle } from "@/components/language-toggle";
 import { useLanguage } from "@/components/language-provider";
 import {
@@ -23,9 +24,9 @@ type AnalysisChartSegment = {
 };
 
 const ANALYSIS_CHART_COLORS: Record<AnalysisChartSegmentId, string> = {
-  socialInsurance: "#b91c1c",
-  incomeTax: "#f87171",
-  netIncome: "#ffe4e6",
+  socialInsurance: "#fecdd3",
+  incomeTax: "#fda4af",
+  netIncome: "#f43f5e",
 };
 
 function polarToCartesian(
@@ -153,23 +154,27 @@ export default function ResultPage() {
       label: result.summaryMetrics.netMonthlyAverage,
       value: formatCurrency(calculation.netMonthly, currencyLocale),
       accent: true,
-      footnote: result.summaryMetrics.averageFootnote,
+      info: result.summaryMetrics.info.netMonthlyAverage,
+      footnote: result.summaryMetrics.footnotes.netMonthlyAverage,
     },
     {
       label: result.summaryMetrics.netAnnualTotal,
       value: formatCurrency(calculation.netAnnual, currencyLocale),
       accent: true,
-      footnote: result.summaryMetrics.averageFootnote,
+      info: result.summaryMetrics.info.netAnnualTotal,
+      footnote: result.summaryMetrics.footnotes.netAnnualTotal,
     },
     {
       label: result.summaryMetrics.netMonthlyExcludingSpecial,
       value: formatCurrency(calculation.netRegularMonthly, currencyLocale),
-      footnote: result.summaryMetrics.excludingSpecial,
+      info: result.summaryMetrics.info.netMonthlyExcludingSpecial,
+      footnote: result.summaryMetrics.footnotes.netMonthlyExcludingSpecial,
     },
     {
       label: result.summaryMetrics.netAnnualExcludingSpecial,
       value: formatCurrency(calculation.netRegularAnnual, currencyLocale),
-      footnote: result.summaryMetrics.excludingSpecial,
+      info: result.summaryMetrics.info.netAnnualExcludingSpecial,
+      footnote: result.summaryMetrics.footnotes.netAnnualExcludingSpecial,
     },
   ];
 
@@ -240,8 +245,8 @@ export default function ResultPage() {
   const hasChartData = totalGrossAnnual > 0 && positiveSegments.length > 0;
 
   const donutCenter = 100;
-  const donutOuterRadius = 88;
-  const donutInnerRadius = 52;
+  const donutOuterRadius = 94;
+  const donutInnerRadius = 56;
 
   let currentAngle = -Math.PI / 2;
   const donutArcSegments =
@@ -279,7 +284,7 @@ export default function ResultPage() {
     ? percentFormatter.format(activeSegmentData.percentage / 100)
     : null;
 
-  const highlightStrokeColor = "#fb7185";
+  const highlightStrokeColor = "#f43f5e";
 
   const breakdown = [
     {
@@ -411,20 +416,20 @@ export default function ResultPage() {
                   {filtered.map((metric) => (
                     <div
                       key={metric.label}
-                      className={`group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-rose-100/60 bg-white/95 p-[1px] shadow transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl ${
+                      className={`group relative flex h-full flex-col overflow-visible rounded-[2rem] border border-rose-100/60 bg-white/95 p-[1px] shadow transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl ${
                         metric.accent
                           ? "border-transparent bg-gradient-to-br from-rose-500 to-rose-600 shadow-rose-500/40"
                           : ""
                       }`}
                     >
                       <div
-                        className={`relative flex flex-1 flex-col justify-between gap-4 rounded-[1.7rem] p-6 sm:p-7 ${
+                        className={`relative flex flex-1 flex-col justify-between gap-4 overflow-visible rounded-[1.7rem] p-6 sm:p-7 ${
                           metric.accent
                             ? "bg-gradient-to-br from-rose-500 via-rose-500/95 to-rose-600 text-white"
                             : "bg-white/95 text-slate-700"
                         }`}
                       >
-                        <div className="flex flex-col gap-1">
+                        <div className="flex items-start justify-between gap-3">
                           <p
                             className={`text-[0.65rem] font-semibold uppercase tracking-[0.38em] text-rose-400 ${
                               metric.accent ? "text-white/70" : ""
@@ -432,6 +437,11 @@ export default function ResultPage() {
                           >
                             {metric.label}
                           </p>
+                          <InfoTooltip
+                            content={metric.info}
+                            accent={metric.accent}
+                            label={metric.label}
+                          />
                         </div>
                         <p
                           className={`font-semibold leading-tight tracking-tight text-balance ${
@@ -444,8 +454,8 @@ export default function ResultPage() {
                         </p>
                         {metric.footnote ? (
                           <p
-                            className={`text-[0.7rem] font-medium tracking-wide ${
-                              metric.accent ? "text-white/75" : "text-rose-500"
+                            className={`pt-1 text-[0.6rem] font-semibold uppercase tracking-[0.32em] ${
+                              metric.accent ? "text-white/90" : "text-rose-500"
                             }`}
                           >
                             {metric.footnote}
@@ -541,14 +551,14 @@ export default function ResultPage() {
                 </p>
               </div>
               {hasChartData ? (
-                <div className="flex flex-col items-center gap-8">
-                  <div className="relative h-72 w-72 sm:h-80 sm:w-80">
+                <div className="flex flex-col items-center gap-10">
+                  <div className="relative h-80 w-80 sm:h-96 sm:w-96">
                     <svg viewBox="0 0 200 200" className="h-full w-full">
                       <circle
                         cx={donutCenter}
                         cy={donutCenter}
                         r={donutOuterRadius}
-                        fill="#fff1f2"
+                        fill="#ffe4e6"
                         className="opacity-80"
                       />
                       {singleDonutSegment ? (
@@ -665,7 +675,7 @@ export default function ResultPage() {
                       ) : null}
                     </div>
                   </div>
-                  <ul className="flex w-full flex-wrap items-center justify-center gap-3">
+                  <ul className="grid w-full gap-3 sm:grid-cols-3">
                     {segmentsWithPercentages.map((segment) => {
                       const isInteractive = segment.value > 0 && hasChartData;
                       const isActive = activeSegment === segment.id;
@@ -689,27 +699,29 @@ export default function ResultPage() {
                             onBlur={
                               isInteractive ? () => setActiveSegment(null) : undefined
                             }
-                            className={`flex min-w-[9rem] flex-col items-center gap-2 rounded-full border border-rose-200/70 bg-white/85 px-5 py-3 text-center shadow-sm transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300/80 ${
+                            className={`flex h-full w-full flex-col items-start gap-3 rounded-2xl border border-rose-100/80 bg-rose-50/80 px-5 py-4 text-left shadow-sm transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300/80 ${
                               !isInteractive
                                 ? "cursor-default opacity-50"
                                 : isActive
-                                  ? "shadow-md ring-2 ring-rose-200/80"
+                                  ? "bg-white shadow-md ring-2 ring-rose-200/80"
                                   : "hover:-translate-y-0.5 hover:shadow-md"
                             } ${isDimmed ? "opacity-60" : "opacity-100"}`}
                           >
-                            <span className="flex items-center gap-2 text-[0.6rem] font-semibold uppercase tracking-[0.32em] text-rose-500">
-                              <span
-                                className="h-2.5 w-2.5 rounded-full"
-                                style={{ backgroundColor: segment.color }}
-                                aria-hidden
-                              />
-                              <span className="text-rose-600">{segment.label}</span>
+                            <span className="flex w-full items-center justify-between gap-3">
+                              <span className="flex items-center gap-2 text-[0.6rem] font-semibold uppercase tracking-[0.32em] text-rose-500">
+                                <span
+                                  className="h-2.5 w-2.5 rounded-full"
+                                  style={{ backgroundColor: segment.color }}
+                                  aria-hidden
+                                />
+                                <span className="text-rose-600">{segment.label}</span>
+                              </span>
+                              <span className="rounded-full bg-white/80 px-3 py-1 text-[0.55rem] font-semibold uppercase tracking-[0.24em] text-rose-500">
+                                {percentLabel}
+                              </span>
                             </span>
-                            <span className="text-sm font-semibold text-slate-900">
+                            <span className="text-base font-semibold text-slate-900">
                               {formatCurrency(segment.value, currencyLocale)}
-                            </span>
-                            <span className="text-xs font-semibold text-rose-500">
-                              {percentLabel}
                             </span>
                           </button>
                         </li>
