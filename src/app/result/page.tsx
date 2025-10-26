@@ -5,6 +5,7 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { headerLinkClasses, headerPrimaryLinkClasses } from "@/components/header-link";
+import { InfoTooltip } from "@/components/info-tooltip";
 import { LanguageToggle } from "@/components/language-toggle";
 import { useLanguage } from "@/components/language-provider";
 import {
@@ -153,23 +154,23 @@ export default function ResultPage() {
       label: result.summaryMetrics.netMonthlyAverage,
       value: formatCurrency(calculation.netMonthly, currencyLocale),
       accent: true,
-      footnote: result.summaryMetrics.averageFootnote,
+      info: result.summaryMetrics.info.netMonthlyAverage,
     },
     {
       label: result.summaryMetrics.netAnnualTotal,
       value: formatCurrency(calculation.netAnnual, currencyLocale),
       accent: true,
-      footnote: result.summaryMetrics.averageFootnote,
+      info: result.summaryMetrics.info.netAnnualTotal,
     },
     {
       label: result.summaryMetrics.netMonthlyExcludingSpecial,
       value: formatCurrency(calculation.netRegularMonthly, currencyLocale),
-      footnote: result.summaryMetrics.excludingSpecial,
+      info: result.summaryMetrics.info.netMonthlyExcludingSpecial,
     },
     {
       label: result.summaryMetrics.netAnnualExcludingSpecial,
       value: formatCurrency(calculation.netRegularAnnual, currencyLocale),
-      footnote: result.summaryMetrics.excludingSpecial,
+      info: result.summaryMetrics.info.netAnnualExcludingSpecial,
     },
   ];
 
@@ -424,7 +425,7 @@ export default function ResultPage() {
                             : "bg-white/95 text-slate-700"
                         }`}
                       >
-                        <div className="flex flex-col gap-1">
+                        <div className="flex items-start justify-between gap-3">
                           <p
                             className={`text-[0.65rem] font-semibold uppercase tracking-[0.38em] text-rose-400 ${
                               metric.accent ? "text-white/70" : ""
@@ -432,6 +433,11 @@ export default function ResultPage() {
                           >
                             {metric.label}
                           </p>
+                          <InfoTooltip
+                            content={metric.info}
+                            accent={metric.accent}
+                            label={metric.label}
+                          />
                         </div>
                         <p
                           className={`font-semibold leading-tight tracking-tight text-balance ${
@@ -442,15 +448,6 @@ export default function ResultPage() {
                         >
                           {metric.value}
                         </p>
-                        {metric.footnote ? (
-                          <p
-                            className={`text-[0.7rem] font-medium tracking-wide ${
-                              metric.accent ? "text-white/75" : "text-rose-500"
-                            }`}
-                          >
-                            {metric.footnote}
-                          </p>
-                        ) : null}
                       </div>
                     </div>
                   ))}

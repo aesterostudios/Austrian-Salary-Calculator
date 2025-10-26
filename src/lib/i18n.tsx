@@ -66,8 +66,12 @@ export interface Dictionary {
       netAnnualTotal: string;
       netMonthlyExcludingSpecial: string;
       netAnnualExcludingSpecial: string;
-      averageFootnote: string;
-      excludingSpecial: string;
+      info: {
+        netMonthlyAverage: string;
+        netAnnualTotal: string;
+        netMonthlyExcludingSpecial: string;
+        netAnnualExcludingSpecial: string;
+      };
     };
     specialPaymentsTitle: string;
     breakdownTitle: string;
@@ -260,8 +264,16 @@ export const translations: Record<Language, Dictionary> = {
         netAnnualTotal: "Total net / year",
         netMonthlyExcludingSpecial: "Net / month",
         netAnnualExcludingSpecial: "Net / year",
-        averageFootnote: "incl. 13th and 14th salary",
-        excludingSpecial: "excl. 13th and 14th salary",
+        info: {
+          netMonthlyAverage:
+            "Average of all 14 net payments spread across 12 calendar months.",
+          netAnnualTotal:
+            "Sum of the net amount of all 14 salary payments including holiday and Christmas bonuses.",
+          netMonthlyExcludingSpecial:
+            "Regular monthly net pay without the 13th and 14th salary.",
+          netAnnualExcludingSpecial:
+            "Sum of the 12 regular net salaries, excluding the 13th and 14th salary.",
+        },
       },
       specialPaymentsTitle: "13th and 14th salary",
       breakdownTitle: "Taxes & contributions",
@@ -488,8 +500,16 @@ export const translations: Record<Language, Dictionary> = {
         netAnnualTotal: "Gesamt Netto / Jahr",
         netMonthlyExcludingSpecial: "Netto / Monat",
         netAnnualExcludingSpecial: "Netto / Jahr",
-        averageFootnote: "inkl. 13. und 14. Gehalt",
-        excludingSpecial: "exkl. 13. und 14. Gehalt",
+        info: {
+          netMonthlyAverage:
+            "Durchschnitt aller 14 Nettobezüge auf 12 Kalendermonate verteilt.",
+          netAnnualTotal:
+            "Summe der Nettobeträge aller 14 Gehaltszahlungen inkl. Urlaubs- und Weihnachtsgeld.",
+          netMonthlyExcludingSpecial:
+            "Regulärer Monatsnetto ohne 13. und 14. Gehalt.",
+          netAnnualExcludingSpecial:
+            "Summe der 12 regulären Nettogehälter ohne 13. und 14. Gehalt.",
+        },
       },
       specialPaymentsTitle: "13. und 14. Gehalt",
       breakdownTitle: "Steuern & Abgaben",
