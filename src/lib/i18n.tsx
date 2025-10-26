@@ -72,6 +72,12 @@ export interface Dictionary {
         netMonthlyExcludingSpecial: string;
         netAnnualExcludingSpecial: string;
       };
+      footnotes: {
+        netMonthlyAverage: string;
+        netAnnualTotal: string;
+        netMonthlyExcludingSpecial: string;
+        netAnnualExcludingSpecial: string;
+      };
     };
     specialPaymentsTitle: string;
     breakdownTitle: string;
@@ -273,6 +279,12 @@ export const translations: Record<Language, Dictionary> = {
             "Regular monthly net pay without the 13th and 14th salary.",
           netAnnualExcludingSpecial:
             "Sum of the 12 regular net salaries, excluding the 13th and 14th salary.",
+        },
+        footnotes: {
+          netMonthlyAverage: "incl. 13th and 14th salary",
+          netAnnualTotal: "incl. 13th and 14th salary",
+          netMonthlyExcludingSpecial: "excl. 13th and 14th salary",
+          netAnnualExcludingSpecial: "excl. 13th and 14th salary",
         },
       },
       specialPaymentsTitle: "13th and 14th salary",
@@ -509,6 +521,12 @@ export const translations: Record<Language, Dictionary> = {
             "Regulärer Monatsnetto ohne 13. und 14. Gehalt.",
           netAnnualExcludingSpecial:
             "Summe der 12 regulären Nettogehälter ohne 13. und 14. Gehalt.",
+        },
+        footnotes: {
+          netMonthlyAverage: "inkl. 13. und 14. Gehalt",
+          netAnnualTotal: "inkl. 13. und 14. Gehalt",
+          netMonthlyExcludingSpecial: "exkl. 13. und 14. Gehalt",
+          netAnnualExcludingSpecial: "exkl. 13. und 14. Gehalt",
         },
       },
       specialPaymentsTitle: "13. und 14. Gehalt",

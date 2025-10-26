@@ -77,10 +77,7 @@ export function InfoTooltip({ content, accent = false, label }: InfoTooltipProps
         role="tooltip"
         id={tooltipId}
         className={clsx(
-          "absolute right-0 top-9 z-30 w-60 rounded-2xl border p-4 text-[0.75rem] leading-relaxed shadow-xl backdrop-blur transition-all duration-150",
-          accent
-            ? "border-white/20 bg-slate-900/95 text-rose-100"
-            : "border-rose-100/80 bg-white/95 text-slate-600",
+          "absolute right-0 top-9 z-30 w-60 rounded-2xl border border-white/10 bg-slate-900/95 p-4 text-[0.75rem] leading-relaxed text-rose-100 shadow-xl backdrop-blur transition-all duration-150",
           isOpen
             ? "pointer-events-auto translate-y-0 opacity-100"
             : "pointer-events-none -translate-y-1 opacity-0",

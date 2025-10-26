@@ -155,22 +155,26 @@ export default function ResultPage() {
       value: formatCurrency(calculation.netMonthly, currencyLocale),
       accent: true,
       info: result.summaryMetrics.info.netMonthlyAverage,
+      footnote: result.summaryMetrics.footnotes.netMonthlyAverage,
     },
     {
       label: result.summaryMetrics.netAnnualTotal,
       value: formatCurrency(calculation.netAnnual, currencyLocale),
       accent: true,
       info: result.summaryMetrics.info.netAnnualTotal,
+      footnote: result.summaryMetrics.footnotes.netAnnualTotal,
     },
     {
       label: result.summaryMetrics.netMonthlyExcludingSpecial,
       value: formatCurrency(calculation.netRegularMonthly, currencyLocale),
       info: result.summaryMetrics.info.netMonthlyExcludingSpecial,
+      footnote: result.summaryMetrics.footnotes.netMonthlyExcludingSpecial,
     },
     {
       label: result.summaryMetrics.netAnnualExcludingSpecial,
       value: formatCurrency(calculation.netRegularAnnual, currencyLocale),
       info: result.summaryMetrics.info.netAnnualExcludingSpecial,
+      footnote: result.summaryMetrics.footnotes.netAnnualExcludingSpecial,
     },
   ];
 
@@ -412,14 +416,14 @@ export default function ResultPage() {
                   {filtered.map((metric) => (
                     <div
                       key={metric.label}
-                      className={`group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-rose-100/60 bg-white/95 p-[1px] shadow transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl ${
+                      className={`group relative flex h-full flex-col overflow-visible rounded-[2rem] border border-rose-100/60 bg-white/95 p-[1px] shadow transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl ${
                         metric.accent
                           ? "border-transparent bg-gradient-to-br from-rose-500 to-rose-600 shadow-rose-500/40"
                           : ""
                       }`}
                     >
                       <div
-                        className={`relative flex flex-1 flex-col justify-between gap-4 rounded-[1.7rem] p-6 sm:p-7 ${
+                        className={`relative flex flex-1 flex-col justify-between gap-4 overflow-visible rounded-[1.7rem] p-6 sm:p-7 ${
                           metric.accent
                             ? "bg-gradient-to-br from-rose-500 via-rose-500/95 to-rose-600 text-white"
                             : "bg-white/95 text-slate-700"
