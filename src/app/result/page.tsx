@@ -452,15 +452,6 @@ export default function ResultPage() {
                         >
                           {metric.value}
                         </p>
-                        {metric.footnote ? (
-                          <p
-                            className={`text-[0.7rem] font-medium tracking-wide ${
-                              metric.accent ? "text-white/75" : "text-rose-500"
-                            }`}
-                          >
-                            {metric.footnote}
-                          </p>
-                        ) : null}
                       </div>
                     </div>
                   ))}
