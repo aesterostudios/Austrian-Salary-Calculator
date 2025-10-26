@@ -482,7 +482,7 @@ export const translations: Record<Language, Dictionary> = {
       headerBadge: "Ergebnis",
       headerTitle: "Dein Nettogehalt",
       summaryMetrics: {
-        netMonthlyAverage: "⌀ Netto / Monat",
+        netMonthlyAverage: "Durchschn. Netto / Monat",
         netAnnualTotal: "Gesamt Netto / Jahr",
         netMonthlyExcludingSpecial: "Netto / Monat",
         netAnnualExcludingSpecial: "Netto / Jahr",
