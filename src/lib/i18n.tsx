@@ -276,9 +276,9 @@ export const translations: Record<Language, Dictionary> = {
           netAnnualTotal:
             "Sum of the net amount of all 14 salary payments (incl. 13th and 14th salary).",
           netMonthlyExcludingSpecial:
-            "Regular monthly net pay (excl. the 13th and 14th salary).",
+            "Regular monthly net pay (excl. 13th and 14th salary).",
           netAnnualExcludingSpecial:
-            "Sum of the 12 regular net salaries (excl. the 13th and 14th salary).",
+            "Sum of the 12 regular net salaries (excl. 13th and 14th salary).",
         },
         footnotes: {
           netMonthlyAverage: "incl. 13th and 14th salary",
