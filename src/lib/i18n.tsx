@@ -313,7 +313,7 @@ export const translations: Record<Language, Dictionary> = {
           title: "Where your annual gross salary goes",
           description:
             "How social insurance contributions and income tax compare to your yearly gross income.",
-          totalGross: "Total gross / year",
+          totalGross: "Gross / year",
           emptyState: "Enter a salary to see how it's distributed.",
           legend: {
             socialInsurance: "Social insurance",
@@ -555,7 +555,7 @@ export const translations: Record<Language, Dictionary> = {
           title: "So verteilt sich dein Jahresbrutto",
           description:
             "Vergleich der Abzüge für Sozialversicherung und Lohnsteuer mit deinem gesamten Jahresbrutto.",
-          totalGross: "Brutto gesamt / Jahr",
+          totalGross: "Brutto / Jahr",
           emptyState: "Bitte gib ein Gehalt ein, um die Verteilung zu sehen.",
           legend: {
             socialInsurance: "Sozialversicherung",
