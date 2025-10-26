@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { ComponentType, FormEvent, SVGProps } from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { headerLinkClasses } from "@/components/header-link";
 import { LanguageToggle } from "@/components/language-toggle";
@@ -32,6 +32,25 @@ const employmentIcons: Record<EmploymentType, ComponentType<SVGProps<SVGSVGEleme
   pensioner: UserIcon,
 };
 
+const FORM_STATE_STORAGE_KEY = "salary-calculator:form-state";
+
+type StoredFormState = {
+  employmentType: EmploymentType;
+  incomePeriod: IncomePeriod;
+  income: string;
+  hasChildren: boolean;
+  childrenUnder18: string;
+  childrenOver18: string;
+  isSingleEarner: boolean;
+  familyBonus: FamilyBonusOption;
+  usesTaxableBenefits: boolean;
+  taxableBenefit: string;
+  companyCarValue: string;
+  allowance: string;
+  receivesCommuterAllowance: boolean;
+  commuterAllowanceValue: string;
+};
+
 export default function Home() {
   const router = useRouter();
   const { dictionary } = useLanguage();
@@ -57,6 +76,114 @@ export default function Home() {
     useState<boolean>(false);
   const [commuterAllowanceValue, setCommuterAllowanceValue] =
     useState<string>("0");
+  const [isRestoredFromStorage, setIsRestoredFromStorage] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const stored = window.sessionStorage.getItem(FORM_STATE_STORAGE_KEY);
+    if (!stored) {
+      setIsRestoredFromStorage(true);
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(stored) as Partial<StoredFormState>;
+
+      if (parsed.employmentType) {
+        setEmploymentType(parsed.employmentType);
+      }
+      if (parsed.incomePeriod) {
+        setIncomePeriod(parsed.incomePeriod);
+      }
+      if (parsed.income) {
+        setIncome(parsed.income);
+      }
+      if (typeof parsed.hasChildren === "boolean") {
+        setHasChildren(parsed.hasChildren);
+      }
+      if (typeof parsed.childrenUnder18 === "string") {
+        setChildrenUnder18(parsed.childrenUnder18);
+      }
+      if (typeof parsed.childrenOver18 === "string") {
+        setChildrenOver18(parsed.childrenOver18);
+      }
+      if (typeof parsed.isSingleEarner === "boolean") {
+        setIsSingleEarner(parsed.isSingleEarner);
+      }
+      if (parsed.familyBonus) {
+        setFamilyBonus(parsed.familyBonus);
+      }
+      if (typeof parsed.usesTaxableBenefits === "boolean") {
+        setUsesTaxableBenefits(parsed.usesTaxableBenefits);
+      }
+      if (typeof parsed.taxableBenefit === "string") {
+        setTaxableBenefit(parsed.taxableBenefit);
+      }
+      if (typeof parsed.companyCarValue === "string") {
+        setCompanyCarValue(parsed.companyCarValue);
+      }
+      if (typeof parsed.allowance === "string") {
+        setAllowance(parsed.allowance);
+      }
+      if (typeof parsed.receivesCommuterAllowance === "boolean") {
+        setReceivesCommuterAllowance(parsed.receivesCommuterAllowance);
+      }
+      if (typeof parsed.commuterAllowanceValue === "string") {
+        setCommuterAllowanceValue(parsed.commuterAllowanceValue);
+      }
+    } catch {
+      window.sessionStorage.removeItem(FORM_STATE_STORAGE_KEY);
+    } finally {
+      setIsRestoredFromStorage(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !isRestoredFromStorage) {
+      return;
+    }
+
+    const stateToPersist: StoredFormState = {
+      employmentType,
+      incomePeriod,
+      income,
+      hasChildren,
+      childrenUnder18,
+      childrenOver18,
+      isSingleEarner,
+      familyBonus,
+      usesTaxableBenefits,
+      taxableBenefit,
+      companyCarValue,
+      allowance,
+      receivesCommuterAllowance,
+      commuterAllowanceValue,
+    };
+
+    window.sessionStorage.setItem(
+      FORM_STATE_STORAGE_KEY,
+      JSON.stringify(stateToPersist),
+    );
+  }, [
+    allowance,
+    childrenOver18,
+    childrenUnder18,
+    commuterAllowanceValue,
+    employmentType,
+    familyBonus,
+    hasChildren,
+    income,
+    incomePeriod,
+    isRestoredFromStorage,
+    isSingleEarner,
+    receivesCommuterAllowance,
+    taxableBenefit,
+    companyCarValue,
+    usesTaxableBenefits,
+  ]);
 
   const employmentOptions: EmploymentOption[] = useMemo(
     () =>
