@@ -255,31 +255,31 @@ export const translations: Record<Language, Dictionary> = {
       headerBadge: "Result",
       headerTitle: "Your net salary",
       summaryMetrics: {
-        netMonthlyAverage: "Average net per month",
-        netAnnualTotal: "Total net per year",
-        netMonthlyExcludingSpecial: "Net monthly",
-        netAnnualExcludingSpecial: "Net annually",
-        averageFootnote: "including 13th and 14th salary",
-        excludingSpecial: "excluding 13th and 14th salary",
+        netMonthlyAverage: "Avg. net / month",
+        netAnnualTotal: "Total net / year",
+        netMonthlyExcludingSpecial: "Net / month",
+        netAnnualExcludingSpecial: "Net / year",
+        averageFootnote: "incl. 13th and 14th salary",
+        excludingSpecial: "excl. 13th and 14th salary",
       },
       breakdownTitle: "Taxes & contributions",
       breakdownItems: {
         socialInsurance: {
           title: "Social insurance",
           description:
-            "Employee share including health, pension and unemployment insurance (Sozialversicherung).",
+            "Employee share including health, pension and unemployment insurance.",
         },
         incomeTax: {
           title: "Income tax",
           description:
-            "Progressive Austrian income tax (Lohnsteuer) after all credits have been applied.",
+            "Progressive Austrian income tax after all credits have been applied.",
         },
       },
       analysis: {
         title: "Analysis",
         metrics: {
-          grossMonthly: "Gross monthly",
-          grossAnnual: "Gross annually",
+          grossMonthly: "Gross / month",
+          grossAnnual: "Gross / year",
           net13th: "Net income 13th salary",
           net14th: "Net income 14th salary",
         },
@@ -287,12 +287,12 @@ export const translations: Record<Language, Dictionary> = {
           title: "Where your annual gross salary goes",
           description:
             "How social insurance contributions and income tax compare to your yearly gross income.",
-          totalGross: "Total gross per year",
+          totalGross: "Total gross / year",
           emptyState: "Enter a salary to see how it's distributed.",
           legend: {
             socialInsurance: "Social insurance",
             incomeTax: "Income tax",
-            netIncome: "Take-home pay",
+            netIncome: "Net income",
           },
         },
       },
@@ -482,10 +482,10 @@ export const translations: Record<Language, Dictionary> = {
       headerBadge: "Ergebnis",
       headerTitle: "Dein Nettogehalt",
       summaryMetrics: {
-        netMonthlyAverage: "Durchschnitt netto pro Monat",
-        netAnnualTotal: "Netto gesamt pro Jahr",
-        netMonthlyExcludingSpecial: "Netto monatlich",
-        netAnnualExcludingSpecial: "Netto jährlich",
+        netMonthlyAverage: "Durchschnitt netto / Monat",
+        netAnnualTotal: "Netto gesamt / Jahr",
+        netMonthlyExcludingSpecial: "Netto / Monat",
+        netAnnualExcludingSpecial: "Netto / Jahr",
         averageFootnote: "inkl. 13. und 14. Gehalt",
         excludingSpecial: "exkl. 13. und 14. Gehalt",
       },
@@ -505,21 +505,21 @@ export const translations: Record<Language, Dictionary> = {
       analysis: {
         title: "Analyse",
         metrics: {
-          grossMonthly: "Brutto monatlich",
-          grossAnnual: "Brutto jährlich",
-          net13th: "Netto 13. Bezug",
-          net14th: "Netto 14. Bezug",
+          grossMonthly: "Brutto / Monat",
+          grossAnnual: "Brutto / jahr",
+          net13th: "Netto 13. Gehalt",
+          net14th: "Netto 14. Gehalt",
         },
         chart: {
           title: "So verteilt sich dein Jahresbrutto",
           description:
             "Vergleich der Abzüge für Sozialversicherung und Lohnsteuer mit deinem gesamten Jahresbrutto.",
-          totalGross: "Brutto gesamt pro Jahr",
+          totalGross: "Brutto gesamt / Jahr",
           emptyState: "Bitte gib ein Gehalt ein, um die Verteilung zu sehen.",
           legend: {
             socialInsurance: "Sozialversicherung",
             incomeTax: "Lohnsteuer",
-            netIncome: "Ausbezahltes Netto",
+            netIncome: "Nettoeinkommen",
           },
         },
       },
