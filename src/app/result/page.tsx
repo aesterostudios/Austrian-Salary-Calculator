@@ -64,6 +64,27 @@ function describeDonutSlice(
   ].join(" ");
 }
 
+function hexToRgba(hex: string, alpha: number) {
+  let normalized = hex.replace("#", "");
+
+  if (normalized.length === 3) {
+    normalized = normalized
+      .split("")
+      .map((char) => char + char)
+      .join("");
+  }
+
+  if (normalized.length !== 6) {
+    return `rgba(0, 0, 0, ${alpha})`;
+  }
+
+  const r = Number.parseInt(normalized.slice(0, 2), 16);
+  const g = Number.parseInt(normalized.slice(2, 4), 16);
+  const b = Number.parseInt(normalized.slice(4, 6), 16);
+
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
 function parsePayload(value: string | null): CalculatorInput | null {
   if (!value) {
     return null;
@@ -208,10 +229,10 @@ export default function ResultPage() {
 
   const analysisChartSegments: AnalysisChartSegment[] = [
     {
-      id: "socialInsurance",
-      label: result.analysis.chart.legend.socialInsurance,
-      value: Math.max(calculation.socialInsuranceAnnual, 0),
-      color: ANALYSIS_CHART_COLORS.socialInsurance,
+      id: "netIncome",
+      label: result.analysis.chart.legend.netIncome,
+      value: netAnnualPortion,
+      color: ANALYSIS_CHART_COLORS.netIncome,
     },
     {
       id: "incomeTax",
@@ -220,10 +241,10 @@ export default function ResultPage() {
       color: ANALYSIS_CHART_COLORS.incomeTax,
     },
     {
-      id: "netIncome",
-      label: result.analysis.chart.legend.netIncome,
-      value: netAnnualPortion,
-      color: ANALYSIS_CHART_COLORS.netIncome,
+      id: "socialInsurance",
+      label: result.analysis.chart.legend.socialInsurance,
+      value: Math.max(calculation.socialInsuranceAnnual, 0),
+      color: ANALYSIS_CHART_COLORS.socialInsurance,
     },
   ];
 
@@ -283,8 +304,6 @@ export default function ResultPage() {
   const centerPercent = activeSegmentData
     ? percentFormatter.format(activeSegmentData.percentage / 100)
     : null;
-
-  const highlightStrokeColor = "#f43f5e";
 
   const breakdown = [
     {
@@ -577,13 +596,13 @@ export default function ResultPage() {
                                 cy={donutCenter}
                                 r={donutOuterRadius}
                                 fill={singleDonutSegment.color}
-                                stroke={isActive ? highlightStrokeColor : "transparent"}
+                                stroke={isActive ? singleDonutSegment.color : "transparent"}
                                 strokeWidth={isActive ? 2 : 0}
                                 className="cursor-pointer transition-[opacity,filter] duration-300"
                                 style={{
                                   opacity: isDimmed ? 0.35 : 1,
                                   filter: isActive
-                                    ? "drop-shadow(0 10px 30px rgba(244,63,94,0.35))"
+                                    ? `drop-shadow(0 10px 30px ${hexToRgba(singleDonutSegment.color, 0.35)})`
                                     : undefined,
                                 }}
                                 tabIndex={0}
@@ -627,13 +646,13 @@ export default function ResultPage() {
                                 key={segment.id}
                                 d={segment.path}
                                 fill={segment.color}
-                                stroke={isActive ? highlightStrokeColor : "transparent"}
+                                stroke={isActive ? segment.color : "transparent"}
                                 strokeWidth={isActive ? 2 : 0}
                                 className="cursor-pointer transition-[opacity,filter] duration-300 focus:outline-none"
                                 style={{
                                   opacity: isDimmed ? 0.35 : 1,
                                   filter: isActive
-                                    ? "drop-shadow(0 10px 30px rgba(244,63,94,0.35))"
+                                    ? `drop-shadow(0 10px 30px ${hexToRgba(segment.color, 0.35)})`
                                     : undefined,
                                 }}
                                 tabIndex={isInteractive ? 0 : -1}
@@ -675,7 +694,7 @@ export default function ResultPage() {
                       ) : null}
                     </div>
                   </div>
-                  <ul className="grid w-full gap-3 sm:grid-cols-3">
+                  <ul className="flex w-full flex-wrap gap-3 sm:flex-col">
                     {segmentsWithPercentages.map((segment) => {
                       const isInteractive = segment.value > 0 && hasChartData;
                       const isActive = activeSegment === segment.id;
@@ -683,7 +702,10 @@ export default function ResultPage() {
                       const percentLabel = percentFormatter.format(segment.percentage / 100);
 
                       return (
-                        <li key={segment.id}>
+                        <li
+                          key={segment.id}
+                          className="flex min-w-[min(100%,12rem)] flex-1 sm:min-w-0"
+                        >
                           <button
                             type="button"
                             disabled={!isInteractive}
