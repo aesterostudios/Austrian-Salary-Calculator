@@ -272,13 +272,13 @@ export const translations: Record<Language, Dictionary> = {
         netAnnualExcludingSpecial: "Net / year",
         info: {
           netMonthlyAverage:
-            "Average of all 14 net payments spread across 12 calendar months.",
+            "Average of all 14 net payments (incl. 13th and 14th salary) spread across 12 calendar months.",
           netAnnualTotal:
-            "Sum of the net amount of all 14 salary payments including holiday and Christmas bonuses.",
+            "Sum of the net amount of all 14 salary payments (incl. 13th and 14th salary).",
           netMonthlyExcludingSpecial:
-            "Regular monthly net pay without the 13th and 14th salary.",
+            "Regular monthly net pay (excl. the 13th and 14th salary).",
           netAnnualExcludingSpecial:
-            "Sum of the 12 regular net salaries, excluding the 13th and 14th salary.",
+            "Sum of the 12 regular net salaries (excl. the 13th and 14th salary).",
         },
         footnotes: {
           netMonthlyAverage: "incl. 13th and 14th salary",
@@ -313,7 +313,7 @@ export const translations: Record<Language, Dictionary> = {
           title: "Where your annual gross salary goes",
           description:
             "How social insurance contributions and income tax compare to your yearly gross income.",
-          totalGross: "Total gross / year",
+          totalGross: "Gross / year",
           emptyState: "Enter a salary to see how it's distributed.",
           legend: {
             socialInsurance: "Social insurance",
@@ -514,13 +514,13 @@ export const translations: Record<Language, Dictionary> = {
         netAnnualExcludingSpecial: "Netto / Jahr",
         info: {
           netMonthlyAverage:
-            "Durchschnitt aller 14 Nettobezüge auf 12 Kalendermonate verteilt.",
+            "Durchschnitt aller 14 Nettoeinkommen (inkl. 13. und 14. Gehalt) auf 12 Kalendermonate verteilt.",
           netAnnualTotal:
-            "Summe der Nettobeträge aller 14 Gehaltszahlungen inkl. Urlaubs- und Weihnachtsgeld.",
+            "Summe der Nettoeinkommen aller 14 Gehaltszahlungen (inkl. 13. und 14. Gehalt).",
           netMonthlyExcludingSpecial:
-            "Regulärer Monatsnetto ohne 13. und 14. Gehalt.",
+            "Reguläres monatliches Nettoeinkommen (exkl. 13. und 14. Gehalt).",
           netAnnualExcludingSpecial:
-            "Summe der 12 regulären Nettogehälter ohne 13. und 14. Gehalt.",
+            "Summe der 12 regulären Nettoeinkommen (exkl. 13. und 14. Gehalt).",
         },
         footnotes: {
           netMonthlyAverage: "inkl. 13. und 14. Gehalt",
@@ -555,7 +555,7 @@ export const translations: Record<Language, Dictionary> = {
           title: "So verteilt sich dein Jahresbrutto",
           description:
             "Vergleich der Abzüge für Sozialversicherung und Lohnsteuer mit deinem gesamten Jahresbrutto.",
-          totalGross: "Brutto gesamt / Jahr",
+          totalGross: "Brutto / Jahr",
           emptyState: "Bitte gib ein Gehalt ein, um die Verteilung zu sehen.",
           legend: {
             socialInsurance: "Sozialversicherung",
