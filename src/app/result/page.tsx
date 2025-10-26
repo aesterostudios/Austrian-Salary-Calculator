@@ -164,12 +164,12 @@ export default function ResultPage() {
     {
       label: result.summaryMetrics.netMonthlyExcludingSpecial,
       value: formatCurrency(calculation.netRegularMonthly, currencyLocale),
-      annotation: result.summaryMetrics.excludingSpecial,
+      footnote: result.summaryMetrics.excludingSpecial,
     },
     {
       label: result.summaryMetrics.netAnnualExcludingSpecial,
       value: formatCurrency(calculation.netRegularAnnual, currencyLocale),
-      annotation: result.summaryMetrics.excludingSpecial,
+      footnote: result.summaryMetrics.excludingSpecial,
     },
   ];
 
@@ -429,15 +429,6 @@ export default function ResultPage() {
                           >
                             {metric.label}
                           </p>
-                          {metric.annotation ? (
-                            <p
-                              className={`text-[0.65rem] font-medium uppercase tracking-[0.32em] ${
-                                metric.accent ? "text-white/60" : "text-slate-500"
-                              }`}
-                            >
-                              {metric.annotation}
-                            </p>
-                          ) : null}
                         </div>
                         <p
                           className={`font-semibold leading-tight tracking-tight text-balance ${
