@@ -11,14 +11,17 @@ import {
   BuildingOffice2Icon,
   AcademicCapIcon,
   UserIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
 } from "@heroicons/react/24/outline";
 import type {
   CalculatorInput,
   EmploymentType,
   FamilyBonusOption,
   IncomePeriod,
+  CalculationMode,
 } from "@/lib/calculator";
-import { formatCurrency } from "@/lib/calculator";
+import { formatCurrency, calculateGrossFromNet, calculateNetSalary } from "@/lib/calculator";
 
 type EmploymentOption = {
   id: EmploymentType;
@@ -78,6 +81,23 @@ export default function Home() {
     useState<string>("0");
   const [isRestoredFromStorage, setIsRestoredFromStorage] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [calculationMode, setCalculationMode] = useState<CalculationMode>("gross-to-net");
+  const [familyExpanded, setFamilyExpanded] = useState(false);
+  const [benefitsExpanded, setBenefitsExpanded] = useState(false);
+  const [commuterExpanded, setCommuterExpanded] = useState(false);
+
+  // Auto-expand sections if they have data
+  useEffect(() => {
+    if (hasChildren) setFamilyExpanded(true);
+  }, [hasChildren]);
+
+  useEffect(() => {
+    if (usesTaxableBenefits) setBenefitsExpanded(true);
+  }, [usesTaxableBenefits]);
+
+  useEffect(() => {
+    if (receivesCommuterAllowance) setCommuterExpanded(true);
+  }, [receivesCommuterAllowance]);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -195,7 +215,7 @@ export default function Home() {
     [common.employmentOptions],
   );
 
-  const previewGross = useMemo(() => {
+  const previewValue = useMemo(() => {
     const parsedIncome = Number.parseFloat(income);
     if (Number.isNaN(parsedIncome)) {
       return formatCurrency(0, currencyLocale);
@@ -221,6 +241,7 @@ export default function Home() {
       employmentType,
       incomePeriod,
       income: Number.parseFloat(income) || 0,
+      calculationMode,
       hasChildren,
       childrenUnder18: sanitizedChildrenUnder18,
       childrenOver18: sanitizedChildrenOver18,
@@ -262,430 +283,510 @@ export default function Home() {
   };
 
   return (
-    <main className="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center gap-12 px-6 pb-12 pt-28">
+    <main className="relative mx-auto min-h-screen w-full px-4 pb-20 pt-6 sm:px-6">
       {isNavigating && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-rose-50/80 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-rose-50/90 backdrop-blur-md">
           <div className="flex flex-col items-center gap-6">
-            <div className="relative h-24 w-24">
+            <div className="relative h-20 w-20">
               <div className="absolute inset-0 animate-spin rounded-full border-4 border-rose-200"></div>
-              <div className="absolute inset-0 animate-spin rounded-full border-4 border-transparent border-t-rose-500" style={{ animationDuration: "1s" }}></div>
+              <div className="absolute inset-0 animate-spin rounded-full border-4 border-transparent border-t-rose-500" style={{ animationDuration: "0.8s" }}></div>
             </div>
-            <p className="text-lg font-semibold text-rose-600">
-              {common.nav.calculator === "Calculator" ? "Calculating your net salary..." : "Berechne dein Nettogehalt..."}
+            <p className="text-base font-medium text-rose-600">
+              {common.nav.calculator === "Calculator" ? "Calculating..." : "Berechne..."}
             </p>
           </div>
         </div>
       )}
-      <div className="absolute right-6 top-6 flex items-center gap-3">
-        <Link href="/faq" className={headerLinkClasses}>
-          {common.nav.faq}
-        </Link>
-        <LanguageToggle />
-      </div>
-      <div className="grid gap-8 lg:grid-cols-[1.2fr_auto_1fr] lg:gap-12">
-        <div className="flex flex-col gap-8">
-          <header className="flex flex-col gap-3">
-            <span className="inline-flex w-fit items-center gap-2 rounded-full bg-rose-100/80 px-4 py-1 text-sm font-medium text-rose-600">
-              {home.badge}
-            </span>
-            <h1 className="text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
-              {home.headline}
-            </h1>
-          </header>
 
-          <section className="rounded-2xl bg-white/80 p-6 shadow-lg ring-1 ring-white/50">
-            <div className="flex items-center justify-between">
-              <div className="flex flex-col gap-2">
-                <p className="text-sm text-slate-500">{home.summaryLabel}</p>
-                <p className="text-3xl font-semibold text-rose-600">
-                  {previewGross} {home.summarySuffix}
-                </p>
-              </div>
-              <div className="hidden h-16 w-16 items-center justify-center rounded-full bg-rose-500/10 text-rose-500 sm:flex">
-                €
-              </div>
+      {/* Sticky Header */}
+      <div className="sticky top-0 z-40 -mx-4 mb-8 border-b border-rose-100/50 bg-white/80 backdrop-blur-xl sm:-mx-6">
+        <div className="mx-auto flex max-w-4xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
+          <div className="flex items-center gap-3">
+            <Link href="/faq" className={`${headerLinkClasses} text-sm`}>
+              {common.nav.faq}
+            </Link>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 rounded-full border border-rose-100 bg-rose-50/50 p-0.5 shadow-sm">
+              <button
+                type="button"
+                onClick={() => setCalculationMode('gross-to-net')}
+                className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-all sm:px-4 sm:text-sm ${
+                  calculationMode === 'gross-to-net'
+                    ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-md'
+                    : 'text-rose-600 hover:bg-rose-100/50'
+                }`}
+              >
+                <span className="whitespace-nowrap">
+                  {common.nav.calculator === "Calculator" ? "Gross → Net" : "Brutto → Netto"}
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setCalculationMode('net-to-gross')}
+                className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-all sm:px-4 sm:text-sm ${
+                  calculationMode === 'net-to-gross'
+                    ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-md'
+                    : 'text-rose-600 hover:bg-rose-100/50'
+                }`}
+              >
+                <span className="whitespace-nowrap">
+                  {common.nav.calculator === "Calculator" ? "Net → Gross" : "Netto → Brutto"}
+                </span>
+              </button>
             </div>
-          </section>
+            <LanguageToggle />
+          </div>
         </div>
+      </div>
 
-        <div
-          aria-hidden="true"
-          className="flex items-center justify-center py-3 lg:py-4"
-        >
-          <span className="h-px w-full bg-gradient-to-r from-transparent via-rose-200/70 to-transparent lg:hidden" />
-          <span className="hidden h-[72%] w-px bg-gradient-to-b from-transparent via-rose-200/70 to-transparent lg:block" />
-        </div>
+      {/* Centered Content */}
+      <div className="mx-auto max-w-4xl space-y-8">
+        {/* Hero */}
+        <header className="text-center">
+          <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
+            {home.headline}
+          </h1>
+          <p className="mt-4 text-base text-slate-600 sm:text-lg">
+            {calculationMode === 'gross-to-net'
+              ? (common.nav.calculator === "Calculator"
+                ? "Calculate your net take-home pay from your gross salary"
+                : "Berechne dein Nettogehalt aus deinem Bruttogehalt")
+              : (common.nav.calculator === "Calculator"
+                ? "Find out what gross salary you need for your desired net income"
+                : "Finde heraus, welches Bruttogehalt du für dein gewünschtes Nettogehalt benötigst")
+            }
+          </p>
+        </header>
 
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col gap-8 rounded-2xl bg-white/80 p-6 shadow-lg ring-1 ring-white/50"
-        >
-          <div className="grid gap-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
-              {home.stepTitles[0]}
-            </p>
-            <div className="grid gap-3 sm:grid-cols-3">
-              {employmentOptions.map((option) => {
-                const Icon = option.icon;
-                const active = employmentType === option.id;
+        {/* Main Form */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Section 1: Basic Information */}
+          <div className="overflow-hidden rounded-3xl border border-rose-100/60 bg-white shadow-lg">
+            <div className="bg-gradient-to-r from-rose-50 to-pink-50 px-6 py-5 sm:px-8">
+              <h2 className="text-lg font-semibold text-slate-900">
+                {common.nav.calculator === "Calculator" ? "📊 Basic Information" : "📊 Grundinformationen"}
+              </h2>
+              <p className="mt-1 text-sm text-slate-600">
+                {common.nav.calculator === "Calculator" ? "Employment type and salary" : "Beschäftigungsart und Gehalt"}
+              </p>
+            </div>
+            <div className="space-y-6 px-6 py-6 sm:px-8">
+              {/* Employment Type */}
+              <div className="grid gap-3 sm:grid-cols-3">
+                {employmentOptions.map((option) => {
+                  const Icon = option.icon;
+                  const active = employmentType === option.id;
 
-                return (
-                  <button
-                    key={option.id}
-                    type="button"
-                    onClick={() => setEmploymentType(option.id)}
-                    className={`group flex flex-col items-center gap-3 rounded-xl border p-5 text-center transition-all ${
-                      active
-                        ? "border-rose-500 bg-rose-500/10 shadow-lg"
-                        : "border-transparent bg-white/70 hover:border-rose-200 hover:bg-rose-50/80"
-                    }`}
-                  >
-                    <span
-                      className={`inline-flex h-12 w-12 items-center justify-center rounded-full border ${
+                  return (
+                    <button
+                      key={option.id}
+                      type="button"
+                      onClick={() => setEmploymentType(option.id)}
+                      className={`group relative flex flex-col items-center gap-3 rounded-2xl border-2 p-6 text-center transition-all duration-200 ${
                         active
-                          ? "border-rose-500 bg-rose-500 text-white"
-                          : "border-rose-100 bg-rose-50 text-rose-600"
+                          ? "border-rose-500 bg-gradient-to-br from-rose-50 to-pink-50 shadow-xl shadow-rose-500/10"
+                          : "border-rose-100 bg-white hover:border-rose-300 hover:shadow-lg"
                       }`}
                     >
-                      <Icon className="h-6 w-6" />
-                    </span>
-                    <p className="text-sm font-semibold text-slate-900">
-                      {option.title}
-                    </p>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="grid gap-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
-              {home.stepTitles[1]}
-            </p>
-            <label className="flex flex-col gap-2 text-sm">
-              <span className="font-medium text-slate-700">
-                {home.incomeLabels[incomePeriod]}
-              </span>
-              <div className="relative rounded-2xl bg-white/90 px-4 py-3 shadow-inner ring-1 ring-rose-100/70 focus-within:ring-rose-300">
-                <input
-                  type="number"
-                  min="0"
-                  step="100"
-                  value={income}
-                  onChange={(event) => setIncome(event.target.value)}
-                  className="w-full border-none bg-transparent text-base font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none"
-                  placeholder={home.incomePlaceholder}
-                  required
-                />
-              </div>
-            </label>
-            <div className="flex flex-wrap gap-3">
-              {["monthly", "yearly"].map((period) => {
-                const periodId = period as IncomePeriod;
-                const isActive = incomePeriod === periodId;
-                return (
-                  <button
-                    key={periodId}
-                    type="button"
-                    onClick={() => setIncomePeriod(periodId)}
-                    className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-                      isActive
-                        ? "bg-rose-500 text-white shadow"
-                        : "bg-rose-100/70 text-rose-600 hover:bg-rose-200"
-                    }`}
-                    aria-pressed={isActive}
-                  >
-                    {home.incomePeriodLabels[periodId]}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="grid gap-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
-              {home.stepTitles[2]}
-            </p>
-            <div className="flex flex-col gap-4 text-sm">
-              <p className="font-medium text-slate-700">{home.family.question}</p>
-              <div className="grid grid-cols-2 gap-3 sm:max-w-xs">
-                <button
-                  type="button"
-                  onClick={() => setHasChildren(true)}
-                  className={`rounded-xl border px-5 py-3 text-sm font-medium transition ${
-                    hasChildren
-                      ? "border-rose-500 bg-rose-500/10 text-rose-600"
-                      : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"
-                  }`}
-                  aria-pressed={hasChildren}
-                >
-                  {common.responses.yes}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setHasChildren(false);
-                    setChildrenUnder18("0");
-                    setChildrenOver18("0");
-                    setIsSingleEarner(false);
-                    setFamilyBonus("none");
-                  }}
-                  className={`rounded-xl border px-5 py-3 text-sm font-medium transition ${
-                    !hasChildren
-                      ? "border-rose-500 bg-rose-500/10 text-rose-600"
-                      : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"
-                  }`}
-                  aria-pressed={!hasChildren}
-                >
-                  {common.responses.no}
-                </button>
-              </div>
-            </div>
-            {hasChildren && (
-              <div className="grid gap-6 rounded-2xl bg-rose-50/60 p-6">
-                <div className="grid gap-4 sm:max-w-md">
-                  <label className="flex flex-col gap-2 text-sm">
-                    <span className="font-medium text-slate-700">
-                      {home.family.childrenUnder18}
-                    </span>
-                    <input
-                      type="number"
-                      min="0"
-                      value={childrenUnder18}
-                      onChange={(event) => setChildrenUnder18(event.target.value)}
-                      className="w-full rounded-xl border border-rose-200/70 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
-                    />
-                  </label>
-                  <label className="flex flex-col gap-2 text-sm">
-                    <span className="font-medium text-slate-700">
-                      {home.family.childrenOver18}
-                    </span>
-                    <input
-                      type="number"
-                      min="0"
-                      value={childrenOver18}
-                      onChange={(event) => setChildrenOver18(event.target.value)}
-                      className="w-full rounded-xl border border-rose-200/70 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
-                    />
-                    <span className="text-xs text-slate-500">
-                      {home.family.childrenOver18Note}
-                    </span>
-                  </label>
-                </div>
-                <div className="grid gap-6">
-                  <div className="flex flex-col gap-3 text-sm">
-                    <span className="font-medium text-slate-700">
-                      {home.family.singleEarnerQuestion}
-                    </span>
-                    <div className="grid gap-3 sm:max-w-md sm:grid-cols-2">
-                      <button
-                        type="button"
-                        onClick={() => setIsSingleEarner(true)}
-                        className={`w-full rounded-xl border px-6 py-3 text-center text-sm font-semibold transition ${
-                          isSingleEarner
-                            ? "border-rose-500 bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/30"
-                            : "border-rose-200 bg-white/85 text-rose-600 hover:border-rose-300 hover:bg-rose-50"
+                      <div
+                        className={`inline-flex h-14 w-14 items-center justify-center rounded-2xl transition-all ${
+                          active
+                            ? "bg-gradient-to-br from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/30"
+                            : "bg-rose-50 text-rose-600 group-hover:bg-rose-100"
                         }`}
-                        aria-pressed={isSingleEarner}
                       >
-                        {common.responses.yes}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setIsSingleEarner(false)}
-                        className={`w-full rounded-xl border px-6 py-3 text-center text-sm font-semibold transition ${
-                          !isSingleEarner
-                            ? "border-rose-500 bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/30"
-                            : "border-rose-200 bg-white/85 text-rose-600 hover:border-rose-300 hover:bg-rose-50"
-                        }`}
-                        aria-pressed={!isSingleEarner}
-                      >
-                        {common.responses.no}
-                      </button>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-3 text-sm">
-                    <span className="font-medium text-slate-700">
-                      {home.family.familyBonusTitle}
-                    </span>
-                    <div className="grid gap-3 sm:max-w-md">
-                      {common.familyBonusOptions.map((option) => {
-                        const active = familyBonus === option.id;
-                        return (
-                          <button
-                            key={option.id}
-                            type="button"
-                            onClick={() =>
-                              setFamilyBonus(option.id as FamilyBonusOption)
-                            }
-                            className={`w-full rounded-xl border px-6 py-3 text-left text-sm font-semibold leading-snug transition ${
-                              active
-                                ? "border-rose-500 bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/30"
-                                : "border-rose-200 bg-white/85 text-rose-600 hover:border-rose-300 hover:bg-rose-50"
-                            }`}
-                            aria-pressed={active}
-                          >
-                            {option.label}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
+                        <Icon className="h-7 w-7" />
+                      </div>
+                      <p className={`text-sm font-semibold ${active ? 'text-rose-700' : 'text-slate-900'}`}>
+                        {option.title}
+                      </p>
+                      {active && (
+                        <div className="absolute right-3 top-3 h-2 w-2 rounded-full bg-rose-500"></div>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
-            )}
-          </div>
 
-          <div className="grid gap-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
-              {home.stepTitles[3]}
-            </p>
-            <div className="flex flex-col gap-4 text-sm">
-              <p className="font-medium text-slate-700">{home.benefits.question}</p>
-              <div className="grid grid-cols-2 gap-3 sm:max-w-xs">
-                <button
-                  type="button"
-                  onClick={() => setUsesTaxableBenefits(true)}
-                  className={`rounded-xl border px-5 py-3 text-sm font-medium transition ${
-                    usesTaxableBenefits
-                      ? "border-rose-500 bg-rose-500/10 text-rose-600"
-                      : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"
-                  }`}
-                  aria-pressed={usesTaxableBenefits}
-                >
-                  {common.responses.yes}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setUsesTaxableBenefits(false);
-                    setTaxableBenefit("0");
-                    setCompanyCarValue("0");
-                    setAllowance("0");
-                  }}
-                  className={`rounded-xl border px-5 py-3 text-sm font-medium transition ${
-                    !usesTaxableBenefits
-                      ? "border-rose-500 bg-rose-500/10 text-rose-600"
-                      : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"
-                  }`}
-                  aria-pressed={!usesTaxableBenefits}
-                >
-                  {common.responses.no}
-                </button>
-              </div>
-            </div>
-            {usesTaxableBenefits && (
-              <div className="grid gap-6 rounded-2xl bg-rose-50/60 p-6">
-                <label className="flex flex-col gap-2 text-sm sm:max-w-md">
-                  <span className="font-medium text-slate-700">{home.benefits.taxableBenefit}</span>
-                  <input
-                    type="number"
-                    min="0"
-                    step="10"
-                    value={taxableBenefit}
-                    onChange={(event) => setTaxableBenefit(event.target.value)}
-                    className="w-full rounded-xl border border-rose-200/70 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
-                  />
-                </label>
-                <label className="flex flex-col gap-2 text-sm sm:max-w-md">
-                  <span className="font-medium text-slate-700">
-                    {home.benefits.companyCar}
-                  </span>
-                  <input
-                    type="number"
-                    min="0"
-                    step="10"
-                    value={companyCarValue}
-                    onChange={(event) => setCompanyCarValue(event.target.value)}
-                    className="w-full rounded-xl border border-rose-200/70 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
-                  />
-                </label>
-                <label className="flex flex-col gap-2 text-sm sm:max-w-md">
-                  <span className="font-medium text-slate-700">{home.benefits.allowance}</span>
-                  <input
-                    type="number"
-                    min="0"
-                    step="10"
-                    value={allowance}
-                    onChange={(event) => setAllowance(event.target.value)}
-                    className="w-full rounded-xl border border-rose-200/70 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
-                  />
-                </label>
-              </div>
-            )}
-          </div>
-
-          <div className="grid gap-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
-              {home.stepTitles[4]}
-            </p>
-            <div className="flex flex-col gap-3 text-sm">
-              <p className="font-medium text-slate-700">{home.commuter.question}</p>
-              <div className="grid grid-cols-2 gap-3 sm:max-w-xs">
-                <button
-                  type="button"
-                  onClick={() => setReceivesCommuterAllowance(true)}
-                  className={`rounded-xl border px-4 py-3 text-sm font-medium transition ${
-                    receivesCommuterAllowance
-                      ? "border-rose-500 bg-rose-500/10 text-rose-600"
-                      : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"
-                  }`}
-                  aria-pressed={receivesCommuterAllowance}
-                >
-                  {common.responses.yes}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setReceivesCommuterAllowance(false);
-                    setCommuterAllowanceValue("0");
-                  }}
-                  className={`rounded-xl border px-4 py-3 text-sm font-medium transition ${
-                    !receivesCommuterAllowance
-                      ? "border-rose-500 bg-rose-500/10 text-rose-600"
-                      : "border-transparent bg-rose-100/60 text-rose-600 hover:border-rose-200"
-                  }`}
-                  aria-pressed={!receivesCommuterAllowance}
-                >
-                  {common.responses.no}
-                </button>
-              </div>
-            </div>
-            {receivesCommuterAllowance && (
-              <div className="grid gap-6 rounded-2xl bg-rose-50/60 p-6 text-sm">
-                <p className="text-slate-600 sm:max-w-md">{home.commuter.helper}</p>
-                <label className="flex flex-col gap-2 text-sm sm:max-w-md">
-                  <span className="font-medium text-slate-700">
-                    {home.commuter.inputLabel}
-                  </span>
-                  <input
-                    type="number"
-                    min="0"
-                    step="10"
-                    value={commuterAllowanceValue}
-                    onChange={(event) =>
-                      setCommuterAllowanceValue(event.target.value)
+              {/* Salary Input */}
+              <div className="space-y-4">
+                <label className="block">
+                  <span className="block text-sm font-medium text-slate-700">
+                    {calculationMode === 'gross-to-net'
+                      ? home.incomeLabels[incomePeriod]
+                      : (incomePeriod === 'monthly'
+                        ? (common.nav.calculator === "Calculator" ? "Desired Net Monthly Salary" : "Gewünschtes Netto Monatsgehalt")
+                        : (common.nav.calculator === "Calculator" ? "Desired Net Annual Salary" : "Gewünschtes Netto Jahresgehalt"))
                     }
-                    className="w-full rounded-xl border border-rose-200/70 bg-white/90 px-4 py-3 text-base text-slate-900 shadow-inner focus:border-rose-400 focus:outline-none focus:ring-2 focus:ring-rose-200"
-                  />
+                  </span>
+                  <div className="relative mt-2">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                      <span className="text-lg font-semibold text-rose-500">€</span>
+                    </div>
+                    <input
+                      type="number"
+                      min="0"
+                      step="100"
+                      value={income}
+                      onChange={(event) => setIncome(event.target.value)}
+                      className="block w-full rounded-2xl border-2 border-rose-100 bg-white py-4 pl-10 pr-4 text-lg font-semibold text-slate-900 placeholder:text-slate-400 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
+                      placeholder="3000"
+                      required
+                    />
+                  </div>
                 </label>
+                <div className="flex gap-2">
+                  {["monthly", "yearly"].map((period) => {
+                    const periodId = period as IncomePeriod;
+                    const isActive = incomePeriod === periodId;
+                    return (
+                      <button
+                        key={periodId}
+                        type="button"
+                        onClick={() => setIncomePeriod(periodId)}
+                        className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
+                          isActive
+                            ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20"
+                            : "bg-rose-50 text-rose-600 hover:bg-rose-100"
+                        }`}
+                        aria-pressed={isActive}
+                      >
+                        {home.incomePeriodLabels[periodId]}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 2: Family (Collapsible) */}
+          <div className="overflow-hidden rounded-3xl border border-rose-100/60 bg-white shadow-lg">
+            <button
+              type="button"
+              onClick={() => setFamilyExpanded(!familyExpanded)}
+              className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
+            >
+              <div>
+                <h2 className="text-lg font-semibold text-slate-900">
+                  {common.nav.calculator === "Calculator" ? "👨‍👩‍👧‍👦 Family & Tax Credits" : "👨‍👩‍👧‍👦 Familie & Steuerabsetzbeträge"}
+                </h2>
+                <p className="mt-1 text-sm text-slate-600">
+                  {common.nav.calculator === "Calculator" ? "Optional - Add if applicable" : "Optional - Falls zutreffend"}
+                </p>
+              </div>
+              <div className={`transform transition-transform duration-200 ${familyExpanded ? 'rotate-180' : ''}`}>
+                <ChevronDownIcon className="h-5 w-5 text-rose-500" />
+              </div>
+            </button>
+            {familyExpanded && (
+              <div className="space-y-6 px-6 py-6 sm:px-8">
+                <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                  <span>{home.family.question}</span>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setHasChildren(true)}
+                    className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
+                      hasChildren
+                        ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20"
+                        : "bg-rose-50 text-rose-600 hover:bg-rose-100"
+                    }`}
+                  >
+                    {common.responses.yes}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setHasChildren(false);
+                      setChildrenUnder18("0");
+                      setChildrenOver18("0");
+                      setIsSingleEarner(false);
+                      setFamilyBonus("none");
+                    }}
+                    className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
+                      !hasChildren
+                        ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20"
+                        : "bg-rose-50 text-rose-600 hover:bg-rose-100"
+                    }`}
+                  >
+                    {common.responses.no}
+                  </button>
+                </div>
+                {hasChildren && (
+                  <div className="space-y-6 rounded-2xl bg-gradient-to-br from-rose-50/50 to-pink-50/50 p-6">
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <label className="block">
+                        <span className="block text-sm font-medium text-slate-700">
+                          {home.family.childrenUnder18}
+                        </span>
+                        <input
+                          type="number"
+                          min="0"
+                          value={childrenUnder18}
+                          onChange={(event) => setChildrenUnder18(event.target.value)}
+                          className="mt-2 block w-full rounded-xl border-2 border-rose-100 bg-white px-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
+                        />
+                      </label>
+                      <label className="block">
+                        <span className="block text-sm font-medium text-slate-700">
+                          {home.family.childrenOver18}
+                        </span>
+                        <input
+                          type="number"
+                          min="0"
+                          value={childrenOver18}
+                          onChange={(event) => setChildrenOver18(event.target.value)}
+                          className="mt-2 block w-full rounded-xl border-2 border-rose-100 bg-white px-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
+                        />
+                        <span className="mt-1 block text-xs text-slate-500">
+                          {home.family.childrenOver18Note}
+                        </span>
+                      </label>
+                    </div>
+                    <div className="space-y-3">
+                      <span className="block text-sm font-medium text-slate-700">
+                        {home.family.singleEarnerQuestion}
+                      </span>
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setIsSingleEarner(true)}
+                          className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
+                            isSingleEarner
+                              ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg"
+                              : "border-2 border-rose-100 bg-white text-rose-600 hover:border-rose-300"
+                          }`}
+                        >
+                          {common.responses.yes}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setIsSingleEarner(false)}
+                          className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
+                            !isSingleEarner
+                              ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg"
+                              : "border-2 border-rose-100 bg-white text-rose-600 hover:border-rose-300"
+                          }`}
+                        >
+                          {common.responses.no}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <span className="block text-sm font-medium text-slate-700">
+                        {home.family.familyBonusTitle}
+                      </span>
+                      <div className="space-y-2">
+                        {common.familyBonusOptions.map((option) => {
+                          const active = familyBonus === option.id;
+                          return (
+                            <button
+                              key={option.id}
+                              type="button"
+                              onClick={() => setFamilyBonus(option.id as FamilyBonusOption)}
+                              className={`block w-full rounded-xl px-4 py-3 text-left text-sm font-semibold transition-all ${
+                                active
+                                  ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg"
+                                  : "border-2 border-rose-100 bg-white text-rose-600 hover:border-rose-300"
+                              }`}
+                            >
+                              {option.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
 
-          <div className="mt-2 flex flex-col gap-3 sm:flex-row">
+          {/* Section 3: Benefits (Collapsible) */}
+          <div className="overflow-hidden rounded-3xl border border-rose-100/60 bg-white shadow-lg">
+            <button
+              type="button"
+              onClick={() => setBenefitsExpanded(!benefitsExpanded)}
+              className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
+            >
+              <div>
+                <h2 className="text-lg font-semibold text-slate-900">
+                  {common.nav.calculator === "Calculator" ? "🚗 Taxable Benefits" : "🚗 Sachbezüge"}
+                </h2>
+                <p className="mt-1 text-sm text-slate-600">
+                  {common.nav.calculator === "Calculator" ? "Optional - Company car, allowances" : "Optional - Firmenauto, Zulagen"}
+                </p>
+              </div>
+              <div className={`transform transition-transform duration-200 ${benefitsExpanded ? 'rotate-180' : ''}`}>
+                <ChevronDownIcon className="h-5 w-5 text-rose-500" />
+              </div>
+            </button>
+            {benefitsExpanded && (
+              <div className="space-y-6 px-6 py-6 sm:px-8">
+                <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                  <span>{home.benefits.question}</span>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setUsesTaxableBenefits(true)}
+                    className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
+                      usesTaxableBenefits
+                        ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20"
+                        : "bg-rose-50 text-rose-600 hover:bg-rose-100"
+                    }`}
+                  >
+                    {common.responses.yes}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setUsesTaxableBenefits(false);
+                      setTaxableBenefit("0");
+                      setCompanyCarValue("0");
+                      setAllowance("0");
+                    }}
+                    className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
+                      !usesTaxableBenefits
+                        ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20"
+                        : "bg-rose-50 text-rose-600 hover:bg-rose-100"
+                    }`}
+                  >
+                    {common.responses.no}
+                  </button>
+                </div>
+                {usesTaxableBenefits && (
+                  <div className="space-y-4 rounded-2xl bg-gradient-to-br from-rose-50/50 to-pink-50/50 p-6">
+                    <label className="block">
+                      <span className="block text-sm font-medium text-slate-700">{home.benefits.taxableBenefit}</span>
+                      <input
+                        type="number"
+                        min="0"
+                        step="10"
+                        value={taxableBenefit}
+                        onChange={(event) => setTaxableBenefit(event.target.value)}
+                        className="mt-2 block w-full rounded-xl border-2 border-rose-100 bg-white px-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
+                      />
+                    </label>
+                    <label className="block">
+                      <span className="block text-sm font-medium text-slate-700">{home.benefits.companyCar}</span>
+                      <input
+                        type="number"
+                        min="0"
+                        step="10"
+                        value={companyCarValue}
+                        onChange={(event) => setCompanyCarValue(event.target.value)}
+                        className="mt-2 block w-full rounded-xl border-2 border-rose-100 bg-white px-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
+                      />
+                    </label>
+                    <label className="block">
+                      <span className="block text-sm font-medium text-slate-700">{home.benefits.allowance}</span>
+                      <input
+                        type="number"
+                        min="0"
+                        step="10"
+                        value={allowance}
+                        onChange={(event) => setAllowance(event.target.value)}
+                        className="mt-2 block w-full rounded-xl border-2 border-rose-100 bg-white px-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
+                      />
+                    </label>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Section 4: Commuter (Collapsible) */}
+          <div className="overflow-hidden rounded-3xl border border-rose-100/60 bg-white shadow-lg">
+            <button
+              type="button"
+              onClick={() => setCommuterExpanded(!commuterExpanded)}
+              className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
+            >
+              <div>
+                <h2 className="text-lg font-semibold text-slate-900">
+                  {common.nav.calculator === "Calculator" ? "🚌 Commuter Allowance" : "🚌 Pendlerpauschale"}
+                </h2>
+                <p className="mt-1 text-sm text-slate-600">
+                  {common.nav.calculator === "Calculator" ? "Optional - Travel deductions" : "Optional - Fahrtkosten"}
+                </p>
+              </div>
+              <div className={`transform transition-transform duration-200 ${commuterExpanded ? 'rotate-180' : ''}`}>
+                <ChevronDownIcon className="h-5 w-5 text-rose-500" />
+              </div>
+            </button>
+            {commuterExpanded && (
+              <div className="space-y-6 px-6 py-6 sm:px-8">
+                <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                  <span>{home.commuter.question}</span>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setReceivesCommuterAllowance(true)}
+                    className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
+                      receivesCommuterAllowance
+                        ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20"
+                        : "bg-rose-50 text-rose-600 hover:bg-rose-100"
+                    }`}
+                  >
+                    {common.responses.yes}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setReceivesCommuterAllowance(false);
+                      setCommuterAllowanceValue("0");
+                    }}
+                    className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
+                      !receivesCommuterAllowance
+                        ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20"
+                        : "bg-rose-50 text-rose-600 hover:bg-rose-100"
+                    }`}
+                  >
+                    {common.responses.no}
+                  </button>
+                </div>
+                {receivesCommuterAllowance && (
+                  <div className="space-y-4 rounded-2xl bg-gradient-to-br from-rose-50/50 to-pink-50/50 p-6">
+                    <p className="text-sm text-slate-600">{home.commuter.helper}</p>
+                    <label className="block">
+                      <span className="block text-sm font-medium text-slate-700">{home.commuter.inputLabel}</span>
+                      <input
+                        type="number"
+                        min="0"
+                        step="10"
+                        value={commuterAllowanceValue}
+                        onChange={(event) => setCommuterAllowanceValue(event.target.value)}
+                        className="mt-2 block w-full rounded-xl border-2 border-rose-100 bg-white px-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
+                      />
+                    </label>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex flex-col gap-3 pt-4 sm:flex-row">
             <button
               type="submit"
               disabled={isNavigating}
-              className="flex-1 inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-gradient-to-r from-rose-500 to-rose-600 px-6 py-3 text-base font-semibold text-white shadow-lg shadow-rose-500/30 transition hover:from-rose-600 hover:to-rose-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-200 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex-1 rounded-2xl bg-gradient-to-r from-rose-500 to-rose-600 px-8 py-4 text-lg font-bold text-white shadow-xl shadow-rose-500/30 transition-all hover:from-rose-600 hover:to-rose-700 hover:shadow-2xl hover:shadow-rose-500/40 focus:outline-none focus-visible:ring-4 focus-visible:ring-rose-500/20 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {home.calculateButton}
+              {calculationMode === 'gross-to-net'
+                ? home.calculateButton
+                : (common.nav.calculator === "Calculator" ? "Calculate Required Gross" : "Benötigtes Brutto berechnen")
+              }
             </button>
             <button
               type="button"
               onClick={handleReset}
               disabled={isNavigating}
-              className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-rose-200 bg-white px-6 py-3 text-base font-semibold text-rose-600 shadow transition hover:border-rose-300 hover:bg-rose-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-200 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-2xl border-2 border-rose-200 bg-white px-8 py-4 text-lg font-bold text-rose-600 shadow-lg transition-all hover:border-rose-300 hover:bg-rose-50 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-rose-500/20 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {common.nav.calculator === "Calculator" ? "Reset" : "Zurücksetzen"}
             </button>

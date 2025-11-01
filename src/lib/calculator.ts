@@ -1,11 +1,13 @@
 export type EmploymentType = "employee" | "apprentice" | "pensioner";
 export type IncomePeriod = "monthly" | "yearly";
 export type FamilyBonusOption = "none" | "shared" | "full";
+export type CalculationMode = "gross-to-net" | "net-to-gross";
 
 export interface CalculatorInput {
   employmentType: EmploymentType;
   incomePeriod: IncomePeriod;
   income: number;
+  calculationMode?: CalculationMode;
   hasChildren: boolean;
   childrenUnder18: number;
   childrenOver18: number;
@@ -383,4 +385,67 @@ export function formatCurrency(
     currency: "EUR",
     maximumFractionDigits: 2,
   }).format(value);
+}
+
+/**
+ * Reverse calculator: finds the gross salary needed to achieve a target net salary
+ * Uses binary search algorithm for efficiency
+ */
+export function calculateGrossFromNet(input: CalculatorInput): CalculationResult {
+  const targetNet = input.income;
+  const isMonthly = input.incomePeriod === "monthly";
+
+  // Convert target to annual net if needed
+  const targetNetAnnual = isMonthly ? targetNet * REGULAR_PAYMENTS_PER_YEAR : targetNet;
+
+  // Binary search bounds (gross is always higher than net)
+  let minGross = targetNetAnnual; // Lower bound
+  let maxGross = targetNetAnnual * 3; // Upper bound (gross can be up to ~2x net, 3x is safe)
+
+  const tolerance = 0.5; // Tolerance of €0.50
+  const maxIterations = 50;
+  let iterations = 0;
+
+  let bestResult: CalculationResult | null = null;
+  let bestDifference = Number.POSITIVE_INFINITY;
+
+  while (iterations < maxIterations && (maxGross - minGross) > tolerance) {
+    const midGross = (minGross + maxGross) / 2;
+
+    // Create input for forward calculation
+    const testInput: CalculatorInput = {
+      ...input,
+      income: isMonthly ? midGross / PAYMENTS_PER_YEAR : midGross,
+      incomePeriod: isMonthly ? "monthly" : "yearly",
+    };
+
+    const result = calculateNetSalary(testInput);
+    const resultNetAnnual = result.netAnnual;
+    const difference = Math.abs(resultNetAnnual - targetNetAnnual);
+
+    // Track best result
+    if (difference < bestDifference) {
+      bestDifference = difference;
+      bestResult = result;
+    }
+
+    // Adjust search bounds
+    if (resultNetAnnual < targetNetAnnual) {
+      minGross = midGross;
+    } else {
+      maxGross = midGross;
+    }
+
+    iterations++;
+
+    // If we're within tolerance, we're done
+    if (difference < tolerance) {
+      break;
+    }
+  }
+
+  return bestResult || calculateNetSalary({
+    ...input,
+    income: isMonthly ? targetNetAnnual / PAYMENTS_PER_YEAR : targetNetAnnual,
+  });
 }
