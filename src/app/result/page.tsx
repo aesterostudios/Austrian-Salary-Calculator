@@ -413,13 +413,16 @@ export default function ResultPage() {
   const isNetToGross = payload.calculationMode === 'net-to-gross';
   const primaryResultLabel = isNetToGross
     ? (common.nav.calculator === "Calculator" ? "Required Gross Salary" : "Benötigtes Bruttogehalt")
-    : (common.nav.calculator === "Calculator" ? "Your Net Salary" : "Dein Nettogehalt");
+    : result.summaryMetrics.netMonthlyExcludingSpecial;
   const primaryResultValue = isNetToGross
     ? formatCurrency(calculation.grossMonthly, currencyLocale)
-    : formatCurrency(calculation.netMonthly, currencyLocale);
+    : formatCurrency(calculation.netRegularMonthly, currencyLocale);
   const primaryResultAnnual = isNetToGross
     ? formatCurrency(calculation.grossAnnual, currencyLocale)
-    : formatCurrency(calculation.netAnnual, currencyLocale);
+    : formatCurrency(calculation.netRegularAnnual, currencyLocale);
+  const primaryResultNote = isNetToGross
+    ? null
+    : result.summaryMetrics.footnotes.netMonthlyExcludingSpecial;
 
   return (
     <main className="relative mx-auto min-h-screen w-full px-4 pb-20 pt-6 sm:px-6">
@@ -490,6 +493,11 @@ export default function ResultPage() {
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-white/80 sm:text-base">
               {common.currency.perMonth}
             </p>
+            {primaryResultNote && (
+              <div className="mx-auto mt-2 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 backdrop-blur-sm">
+                <span className="text-xs font-medium text-white/90">{primaryResultNote}</span>
+              </div>
+            )}
             <p className="mt-4 text-5xl font-bold text-white sm:text-6xl lg:text-7xl">
               {primaryResultValue}
             </p>
@@ -501,37 +509,62 @@ export default function ResultPage() {
         </div>
 
         {/* Quick Summary Cards */}
-        <div className="grid gap-4 sm:grid-cols-2">
-          {/* Complementary Result Card */}
-          <div className="rounded-2xl border-2 border-rose-100 bg-white p-6 shadow-lg">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
-              {isNetToGross
-                ? (common.nav.calculator === "Calculator" ? "Target Net Salary" : "Ziel Nettogehalt")
-                : (common.nav.calculator === "Calculator" ? "From Gross Salary" : "Von Bruttogehalt")}
-            </p>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Average Monthly Net Card */}
+          <div className="group relative rounded-2xl border-2 border-rose-100 bg-white p-6 shadow-lg transition-all hover:border-rose-300 hover:shadow-xl">
+            <div className="flex items-start justify-between gap-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
+                {result.summaryMetrics.netMonthlyAverage}
+              </p>
+              <InfoTooltip content={result.summaryMetrics.info.netMonthlyAverage} />
+            </div>
             <p className="mt-3 text-3xl font-bold text-slate-900">
-              {isNetToGross
-                ? formatCurrency(calculation.netMonthly, currencyLocale)
-                : formatCurrency(calculation.grossMonthly, currencyLocale)}
+              {formatCurrency(calculation.netMonthly, currencyLocale)}
             </p>
-            <p className="mt-2 text-sm text-slate-600">
-              {common.currency.perMonth}
+            <p className="mt-2 text-xs text-slate-500">
+              {result.summaryMetrics.footnotes.netMonthlyAverage}
             </p>
           </div>
 
-          {/* Special Payments Card */}
-          <div className="rounded-2xl border-2 border-rose-100 bg-white p-6 shadow-lg">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
-              {common.nav.calculator === "Calculator" ? "13th & 14th Salary" : "13. & 14. Gehalt"}
-            </p>
-            <div className="mt-3 flex items-baseline gap-2">
-              <p className="text-2xl font-bold text-slate-900">
-                {formatCurrency(calculation.netSpecial13th, currencyLocale)}
+          {/* Annual Total Card */}
+          <div className="group relative rounded-2xl border-2 border-rose-100 bg-white p-6 shadow-lg transition-all hover:border-rose-300 hover:shadow-xl">
+            <div className="flex items-start justify-between gap-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
+                {result.summaryMetrics.netAnnualTotal}
               </p>
-              <span className="text-sm text-slate-500">{common.nav.calculator === "Calculator" ? "each" : "je"}</span>
+              <InfoTooltip content={result.summaryMetrics.info.netAnnualTotal} />
             </div>
-            <p className="mt-2 text-sm text-slate-600">
-              {formatCurrency(calculation.netSpecial13th + calculation.netSpecial14th, currencyLocale)} {common.nav.calculator === "Calculator" ? "total" : "gesamt"}
+            <p className="mt-3 text-3xl font-bold text-slate-900">
+              {formatCurrency(calculation.netAnnual, currencyLocale)}
+            </p>
+            <p className="mt-2 text-xs text-slate-500">
+              {result.summaryMetrics.footnotes.netAnnualTotal}
+            </p>
+          </div>
+
+          {/* 13th Salary Card */}
+          <div className="rounded-2xl border-2 border-emerald-100 bg-gradient-to-br from-emerald-50/50 to-teal-50/50 p-6 shadow-lg">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-600">
+              {result.analysis.metrics.net13th}
+            </p>
+            <p className="mt-3 text-3xl font-bold text-slate-900">
+              {formatCurrency(calculation.netSpecial13th, currencyLocale)}
+            </p>
+            <p className="mt-2 text-xs text-slate-500">
+              {common.nav.calculator === "Calculator" ? "Special payment" : "Sonderzahlung"}
+            </p>
+          </div>
+
+          {/* 14th Salary Card */}
+          <div className="rounded-2xl border-2 border-emerald-100 bg-gradient-to-br from-emerald-50/50 to-teal-50/50 p-6 shadow-lg">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-600">
+              {result.analysis.metrics.net14th}
+            </p>
+            <p className="mt-3 text-3xl font-bold text-slate-900">
+              {formatCurrency(calculation.netSpecial14th, currencyLocale)}
+            </p>
+            <p className="mt-2 text-xs text-slate-500">
+              {common.nav.calculator === "Calculator" ? "Special payment" : "Sonderzahlung"}
             </p>
           </div>
         </div>
@@ -557,7 +590,7 @@ export default function ResultPage() {
           </button>
           {breakdownExpanded && (
             <div className="space-y-6 px-6 py-6 sm:px-8">
-              {/* Breakdown Cards */}
+              {/* Main Breakdown Cards */}
               <div className="grid gap-4 sm:grid-cols-2">
                 {breakdown.map((item) => (
                   <div
@@ -575,6 +608,58 @@ export default function ResultPage() {
                     <p className="text-xs leading-relaxed text-slate-500">{item.description}</p>
                   </div>
                 ))}
+              </div>
+
+              {/* Detailed Social Insurance Breakdown */}
+              <div className="rounded-2xl border border-rose-100/60 bg-white p-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500 mb-4">
+                  {common.nav.calculator === "Calculator" ? "Social Insurance Details" : "Sozialversicherung Details"}
+                </p>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between items-baseline">
+                    <span className="text-slate-600">
+                      {common.nav.calculator === "Calculator" ? "Regular months (rate):" : "Reguläre Monate (Satz):"}
+                    </span>
+                    <span className="font-semibold text-slate-900">
+                      {payload.employmentType === "employee" ? "18.07%" : payload.employmentType === "apprentice" ? "15.50%" : "5.10%"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-baseline">
+                    <span className="text-slate-600">
+                      {common.nav.calculator === "Calculator" ? "Special payments (rate):" : "Sonderzahlungen (Satz):"}
+                    </span>
+                    <span className="font-semibold text-slate-900">
+                      {payload.employmentType === "employee" ? "17.07%" : payload.employmentType === "apprentice" ? "14.45%" : "5.10%"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-baseline pt-2 border-t border-rose-100">
+                    <span className="text-slate-600">
+                      {common.nav.calculator === "Calculator" ? "Special payment deduction:" : "Sonderzahlung Abzug:"}
+                    </span>
+                    <span className="font-semibold text-slate-900">
+                      {formatCurrency(calculation.socialInsuranceSpecial, currencyLocale)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Why 13th and 14th are Different */}
+              <div className="rounded-2xl border border-amber-200/60 bg-gradient-to-br from-amber-50/50 to-yellow-50/50 p-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-700 mb-3">
+                  {common.nav.calculator === "Calculator" ? "💡 Why 13th ≠ 14th salary?" : "💡 Warum 13. ≠ 14. Gehalt?"}
+                </p>
+                <div className="space-y-2 text-xs leading-relaxed text-slate-700">
+                  <p>
+                    {common.nav.calculator === "Calculator"
+                      ? "Even though both have the same gross amount, the 13th and 14th salaries are taxed differently due to progressive tax brackets with annual caps."
+                      : "Obwohl beide den gleichen Bruttobetrag haben, werden das 13. und 14. Gehalt unterschiedlich besteuert aufgrund progressiver Steuerstufen mit Jahresobergrenzen."}
+                  </p>
+                  <p className="font-medium text-amber-900">
+                    {common.nav.calculator === "Calculator"
+                      ? "The 13th payment uses lower tax brackets first, leaving higher brackets for the 14th payment."
+                      : "Die 13. Zahlung nutzt zuerst niedrigere Steuerstufen, wodurch höhere Stufen für die 14. Zahlung übrig bleiben."}
+                  </p>
+                </div>
               </div>
             </div>
           )}
