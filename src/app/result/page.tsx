@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeftIcon, PrinterIcon, ChartPieIcon, ChartBarIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, PrinterIcon, ChartPieIcon, ChartBarIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { headerLinkClasses, headerPrimaryLinkClasses } from "@/components/header-link";
@@ -146,6 +146,9 @@ export default function ResultPage() {
 
   const [activeSegment, setActiveSegment] = useState<AnalysisChartSegmentId | null>(null);
   const [chartType, setChartType] = useState<'donut' | 'bar'>('donut');
+  const [breakdownExpanded, setBreakdownExpanded] = useState(true);
+  const [chartExpanded, setChartExpanded] = useState(true);
+  const [inputsExpanded, setInputsExpanded] = useState(false);
 
   const handlePrint = () => {
     window.print();
@@ -406,8 +409,21 @@ export default function ResultPage() {
     },
   ];
 
+  // Determine the primary result to show prominently
+  const isNetToGross = payload.calculationMode === 'net-to-gross';
+  const primaryResultLabel = isNetToGross
+    ? (common.nav.calculator === "Calculator" ? "Required Gross Salary" : "Benötigtes Bruttogehalt")
+    : (common.nav.calculator === "Calculator" ? "Your Net Salary" : "Dein Nettogehalt");
+  const primaryResultValue = isNetToGross
+    ? formatCurrency(calculation.grossMonthly, currencyLocale)
+    : formatCurrency(calculation.netMonthly, currencyLocale);
+  const primaryResultAnnual = isNetToGross
+    ? formatCurrency(calculation.grossAnnual, currencyLocale)
+    : formatCurrency(calculation.netAnnual, currencyLocale);
+
   return (
-    <main className="relative mx-auto min-h-screen w-full max-w-6xl px-6 pb-16 pt-28 print:pt-0">
+    <main className="relative mx-auto min-h-screen w-full px-4 pb-20 pt-6 sm:px-6">
+      {/* Print Header */}
       <header className="hidden print:flex print:mb-8 print:border-b-2 print:border-rose-500 print:pb-4">
         <div className="flex w-full items-center justify-between">
           <div>
@@ -419,190 +435,188 @@ export default function ResultPage() {
           </div>
         </div>
       </header>
-      <div className="absolute right-6 top-6 flex items-center gap-3 print:hidden">
-        <button
-          onClick={handlePrint}
-          className="inline-flex items-center gap-2 rounded-full border-2 border-rose-500 bg-gradient-to-r from-rose-500 to-rose-600 px-3 py-2 text-sm font-semibold text-white shadow-lg shadow-rose-500/30 transition hover:from-rose-600 hover:to-rose-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-200 sm:px-4"
-          aria-label={common.nav.calculator === "Calculator" ? "Print or save as PDF" : "Drucken oder als PDF speichern"}
-        >
-          <PrinterIcon className="h-4 w-4" />
-          <span className="hidden sm:inline">
-            {common.nav.calculator === "Calculator" ? "Print / PDF" : "Drucken / PDF"}
-          </span>
-        </button>
-        <Link
-          href="/"
-          aria-label={common.nav.backToInput}
-          className={`${headerPrimaryLinkClasses} gap-2 px-3 sm:px-4`}
-        >
-          <ArrowLeftIcon className="h-4 w-4" />
-          <span className="hidden sm:inline">{common.nav.backToInput}</span>
-        </Link>
-        <Link href="/faq" className={headerLinkClasses}>
-          {common.nav.faq}
-        </Link>
-        <LanguageToggle />
+
+      {/* Sticky Header */}
+      <div className="sticky top-0 z-40 -mx-4 mb-8 border-b border-rose-100/50 bg-white/80 backdrop-blur-xl print:hidden sm:-mx-6">
+        <div className="mx-auto flex max-w-4xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
+          <div className="flex items-center gap-3">
+            <Link href="/" className={`inline-flex items-center gap-2 ${headerPrimaryLinkClasses} text-sm`}>
+              <ArrowLeftIcon className="h-4 w-4" />
+              <span className="hidden sm:inline">{common.nav.backToInput}</span>
+              <span className="sm:hidden">{common.nav.calculator === "Calculator" ? "Back" : "Zurück"}</span>
+            </Link>
+            <Link href="/faq" className={`${headerLinkClasses} text-sm`}>
+              {common.nav.faq}
+            </Link>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handlePrint}
+              className="inline-flex items-center gap-2 rounded-full border-2 border-rose-200 bg-white px-3 py-2 text-sm font-semibold text-rose-600 shadow-sm transition-all hover:border-rose-300 hover:bg-rose-50 hover:shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-200"
+              aria-label={common.nav.calculator === "Calculator" ? "Print or save as PDF" : "Drucken oder als PDF speichern"}
+            >
+              <PrinterIcon className="h-4 w-4" />
+            </button>
+            <LanguageToggle />
+          </div>
+        </div>
       </div>
-      <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="flex flex-col gap-10">
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-            <div className="text-center sm:text-left">
-              <div className="flex flex-wrap items-center gap-2">
-                <p className="text-xs font-semibold uppercase tracking-[0.4em] text-rose-400">
-                  {result.headerBadge}
-                </p>
-                {payload.calculationMode === 'net-to-gross' && (
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-300 bg-rose-100/80 px-3 py-1 text-xs font-semibold text-rose-700">
-                    <span>{common.nav.calculator === "Calculator" ? "Net → Gross" : "Netto → Brutto"}</span>
-                  </span>
-                )}
-              </div>
-              <h1 className="mt-3 text-4xl font-semibold tracking-tight text-slate-900 sm:text-[3rem]">
-                {result.headerTitle}
-              </h1>
+
+      {/* Centered Content */}
+      <div className="mx-auto max-w-4xl space-y-6">
+        {/* Hero Section - The Main Answer */}
+        <div className="text-center">
+          <div className="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-rose-50/50 px-4 py-2 mb-4">
+            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-600">
+              {result.headerBadge}
+            </span>
+            {isNetToGross && (
+              <>
+                <span className="text-rose-300">•</span>
+                <span className="text-xs font-semibold text-rose-700">
+                  {common.nav.calculator === "Calculator" ? "Net → Gross" : "Netto → Brutto"}
+                </span>
+              </>
+            )}
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+            {primaryResultLabel}
+          </h1>
+        </div>
+
+        {/* Primary Result Card - The Big Answer */}
+        <div className="overflow-hidden rounded-3xl border-2 border-rose-500 bg-gradient-to-br from-rose-500 via-rose-500/95 to-rose-600 shadow-2xl shadow-rose-500/30">
+          <div className="px-8 py-10 text-center sm:px-12 sm:py-14">
+            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-white/80 sm:text-base">
+              {common.currency.perMonth}
+            </p>
+            <p className="mt-4 text-5xl font-bold text-white sm:text-6xl lg:text-7xl">
+              {primaryResultValue}
+            </p>
+            <div className="mt-6 inline-flex items-center gap-2 rounded-full border-2 border-white/30 bg-white/10 px-6 py-3 backdrop-blur-sm">
+              <span className="text-sm font-medium text-white/90">{common.currency.perYear}:</span>
+              <span className="text-lg font-bold text-white">{primaryResultAnnual}</span>
             </div>
           </div>
+        </div>
 
-          <section className="grid gap-4">
-            {["accent", "standard"].map((group) => {
-              const filtered = summaryMetrics.filter((metric) =>
-                group === "accent" ? metric.accent : !metric.accent,
-              );
+        {/* Quick Summary Cards */}
+        <div className="grid gap-4 sm:grid-cols-2">
+          {/* Complementary Result Card */}
+          <div className="rounded-2xl border-2 border-rose-100 bg-white p-6 shadow-lg">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
+              {isNetToGross
+                ? (common.nav.calculator === "Calculator" ? "Target Net Salary" : "Ziel Nettogehalt")
+                : (common.nav.calculator === "Calculator" ? "From Gross Salary" : "Von Bruttogehalt")}
+            </p>
+            <p className="mt-3 text-3xl font-bold text-slate-900">
+              {isNetToGross
+                ? formatCurrency(calculation.netMonthly, currencyLocale)
+                : formatCurrency(calculation.grossMonthly, currencyLocale)}
+            </p>
+            <p className="mt-2 text-sm text-slate-600">
+              {common.currency.perMonth}
+            </p>
+          </div>
 
-              if (filtered.length === 0) {
-                return null;
-              }
+          {/* Special Payments Card */}
+          <div className="rounded-2xl border-2 border-rose-100 bg-white p-6 shadow-lg">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
+              {common.nav.calculator === "Calculator" ? "13th & 14th Salary" : "13. & 14. Gehalt"}
+            </p>
+            <div className="mt-3 flex items-baseline gap-2">
+              <p className="text-2xl font-bold text-slate-900">
+                {formatCurrency(calculation.netSpecial13th, currencyLocale)}
+              </p>
+              <span className="text-sm text-slate-500">{common.nav.calculator === "Calculator" ? "each" : "je"}</span>
+            </div>
+            <p className="mt-2 text-sm text-slate-600">
+              {formatCurrency(calculation.netSpecial13th + calculation.netSpecial14th, currencyLocale)} {common.nav.calculator === "Calculator" ? "total" : "gesamt"}
+            </p>
+          </div>
+        </div>
 
-              return (
-                <div key={group} className="grid gap-4 sm:grid-cols-2">
-                  {filtered.map((metric) => (
-                    <div
-                      key={metric.label}
-                      className={`group relative flex h-full flex-col overflow-visible rounded-[2rem] border border-rose-100/60 bg-white/95 p-[1px] shadow transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl ${
-                        metric.accent
-                          ? "border-transparent bg-gradient-to-br from-rose-500 to-rose-600 shadow-rose-500/40"
-                          : ""
-                      }`}
-                    >
-                      <div
-                        className={`relative flex flex-1 flex-col justify-between gap-4 overflow-visible rounded-[1.7rem] p-6 sm:p-7 ${
-                          metric.accent
-                            ? "bg-gradient-to-br from-rose-500 via-rose-500/95 to-rose-600 text-white"
-                            : "bg-white/95 text-slate-700"
-                        }`}
-                      >
-                        <div className="flex items-start justify-between gap-3">
-                          <p
-                            className={`text-[0.65rem] font-semibold uppercase tracking-[0.38em] text-rose-400 ${
-                              metric.accent ? "text-white/70" : ""
-                            }`}
-                          >
-                            {metric.label}
-                          </p>
-                          <InfoTooltip
-                            content={metric.info}
-                            accent={metric.accent}
-                            label={metric.label}
-                          />
-                        </div>
-                        <p
-                          className={`font-semibold leading-tight tracking-tight text-balance ${
-                            metric.accent
-                              ? "text-[clamp(1.7rem,1.2rem+0.9vw,2.25rem)] text-white"
-                              : "text-[clamp(1.55rem,1.1rem+0.8vw,2.05rem)] text-slate-900"
-                          }`}
-                        >
-                          {metric.value}
-                        </p>
-                        {metric.footnote ? (
-                          <p
-                            className={`pt-1 text-[0.6rem] font-semibold uppercase tracking-[0.32em] ${
-                              metric.accent ? "text-white/90" : "text-rose-500"
-                            }`}
-                          >
-                            {metric.footnote}
-                          </p>
-                        ) : null}
-                      </div>
+        {/* Collapsible Section: Detailed Breakdown */}
+        <div className="overflow-hidden rounded-3xl border border-rose-100/60 bg-white shadow-lg">
+          <button
+            type="button"
+            onClick={() => setBreakdownExpanded(!breakdownExpanded)}
+            className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
+          >
+            <div>
+              <h2 className="text-lg font-semibold text-slate-900">
+                {common.nav.calculator === "Calculator" ? "💰 Detailed Breakdown" : "💰 Detaillierte Aufschlüsselung"}
+              </h2>
+              <p className="mt-1 text-sm text-slate-600">
+                {common.nav.calculator === "Calculator" ? "Taxes, deductions, and payments" : "Steuern, Abzüge und Zahlungen"}
+              </p>
+            </div>
+            <div className={`transform transition-transform duration-200 ${breakdownExpanded ? 'rotate-180' : ''}`}>
+              <ChevronDownIcon className="h-5 w-5 text-rose-500" />
+            </div>
+          </button>
+          {breakdownExpanded && (
+            <div className="space-y-6 px-6 py-6 sm:px-8">
+              {/* Breakdown Cards */}
+              <div className="grid gap-4 sm:grid-cols-2">
+                {breakdown.map((item) => (
+                  <div
+                    key={item.title}
+                    className="flex flex-col gap-3 rounded-2xl border-2 border-rose-100 bg-gradient-to-br from-rose-50/30 to-pink-50/30 p-5"
+                  >
+                    <p className="text-sm font-semibold text-rose-600">{item.title}</p>
+                    <div className="flex items-baseline gap-2">
+                      <p className="text-2xl font-bold text-slate-900">{item.monthly}</p>
+                      <span className="text-xs text-slate-500">{common.currency.perMonth}</span>
                     </div>
-                  ))}
-                </div>
-              );
-            })}
-          </section>
+                    <p className="text-sm text-slate-600">
+                      <span className="font-semibold">{item.annual}</span> {common.currency.perYear}
+                    </p>
+                    <p className="text-xs leading-relaxed text-slate-500">{item.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
 
-          <section className="grid gap-5">
-            <h2 className="text-lg font-semibold text-slate-900">
-              {result.specialPaymentsTitle}
-            </h2>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {specialSalaryMetrics.map((metric) => (
-                <div
-                  key={metric.label}
-                  className="group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-rose-100/60 bg-white/95 p-[1px] shadow transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl"
-                >
-                  <div className="relative flex flex-1 flex-col justify-between gap-4 rounded-[1.7rem] bg-white/95 p-6 text-slate-700 sm:p-7">
-                    <p className="text-[0.65rem] font-semibold uppercase tracking-[0.38em] text-rose-400">
+        {/* Collapsible Section: Visual Analysis & Chart */}
+        <div className="overflow-hidden rounded-3xl border border-rose-100/60 bg-white shadow-lg">
+          <button
+            type="button"
+            onClick={() => setChartExpanded(!chartExpanded)}
+            className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
+          >
+            <div>
+              <h2 className="text-lg font-semibold text-slate-900">
+                {common.nav.calculator === "Calculator" ? "📊 Visual Analysis" : "📊 Visuelle Analyse"}
+              </h2>
+              <p className="mt-1 text-sm text-slate-600">
+                {common.nav.calculator === "Calculator" ? "Charts and detailed analysis" : "Diagramme und detaillierte Analyse"}
+              </p>
+            </div>
+            <div className={`transform transition-transform duration-200 ${chartExpanded ? 'rotate-180' : ''}`}>
+              <ChevronDownIcon className="h-5 w-5 text-rose-500" />
+            </div>
+          </button>
+          {chartExpanded && (
+            <div className="space-y-6 px-6 py-6 sm:px-8">
+              {/* Analysis Metrics */}
+              <div className="grid gap-4 sm:grid-cols-2">
+                {analysisMetrics.map((metric) => (
+                  <div
+                    key={metric.label}
+                    className="rounded-2xl border-2 border-rose-100 bg-white p-5"
+                  >
+                    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
                       {metric.label}
                     </p>
-                    <p className="text-[clamp(1.55rem,1.1rem+0.8vw,2.05rem)] font-semibold leading-tight tracking-tight text-slate-900">
+                    <p className="mt-3 text-2xl font-bold text-slate-900">
                       {metric.value}
                     </p>
                   </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          <section className="grid gap-5">
-            <h2 className="text-lg font-semibold text-slate-900">
-              {result.breakdownTitle}
-            </h2>
-            <div className="grid gap-4 md:grid-cols-2">
-              {breakdown.map((item) => (
-                <div
-                  key={item.title}
-                  className="flex h-full flex-col gap-4 rounded-2xl border border-rose-100/70 bg-white/85 p-6 shadow transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
-                >
-                  <p className="text-sm font-semibold text-rose-600">{item.title}</p>
-                  <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-2xl font-semibold text-slate-900">
-                    <span className="text-[clamp(1.6rem,1.9vw,2.1rem)] leading-tight tracking-tight">
-                      {item.monthly}
-                    </span>
-                    <span className="text-xs font-medium uppercase tracking-[0.2em] text-slate-400">
-                      {common.currency.perMonth}
-                    </span>
-                  </div>
-                  <p className="text-sm font-medium text-slate-500">
-                    <span className="font-semibold text-slate-600">{item.annual}</span> {common.currency.perYear}
-                  </p>
-                  <p className="text-xs leading-relaxed text-slate-500/80">{item.description}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          <section className="grid gap-5">
-            <h2 className="text-lg font-semibold text-slate-900">
-              {result.analysis.title}
-            </h2>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {analysisMetrics.map((metric) => (
-                <div
-                  key={metric.label}
-                  className="group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-rose-100/60 bg-white/95 p-[1px] shadow transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl"
-                >
-                  <div className="relative flex flex-1 flex-col justify-between gap-4 rounded-[1.7rem] bg-white/95 p-6 text-slate-700 sm:p-7">
-                    <p className="text-[0.65rem] font-semibold uppercase tracking-[0.38em] text-rose-400">
-                      {metric.label}
-                    </p>
-                    <p className="text-[clamp(1.55rem,1.1rem+0.8vw,2.05rem)] font-semibold leading-tight tracking-tight text-slate-900">
-                      {metric.value}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
             <div className="flex flex-col gap-6 rounded-[2rem] border border-rose-100/60 bg-white/95 p-6 shadow transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl sm:p-8">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div className="flex flex-col gap-2">
@@ -935,54 +949,71 @@ export default function ResultPage() {
                 </p>
               )}
             </div>
-          </section>
 
-          <section className="grid gap-3 rounded-2xl border border-rose-200/60 bg-rose-50/70 p-5 shadow-sm">
-            <h2 className="text-xs font-semibold uppercase tracking-[0.35em] text-rose-500">
-              {result.noteSection.title}
-            </h2>
-            {result.noteSection.paragraphs.map((paragraph) => (
-              <p key={paragraph} className="text-xs leading-relaxed text-rose-600">
-                {paragraph}
-              </p>
-            ))}
-          </section>
+              {/* Note Section */}
+              <div className="grid gap-3 rounded-2xl border border-rose-200/60 bg-rose-50/70 p-5 shadow-sm">
+                <h2 className="text-xs font-semibold uppercase tracking-[0.35em] text-rose-500">
+                  {result.noteSection.title}
+                </h2>
+                {result.noteSection.paragraphs.map((paragraph) => (
+                  <p key={paragraph} className="text-xs leading-relaxed text-rose-600">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
-        <aside className="flex flex-col gap-6 self-start rounded-[2rem] border border-rose-100/70 bg-white/95 p-8 shadow-lg">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.32em] text-rose-500">
-              {result.detailsTitle}
-            </p>
-            <div className="mt-4 space-y-6 text-sm text-slate-600">
+        {/* Collapsible Section: Your Inputs */}
+        <div className="overflow-hidden rounded-3xl border border-rose-100/60 bg-white shadow-lg">
+          <button
+            type="button"
+            onClick={() => setInputsExpanded(!inputsExpanded)}
+            className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
+          >
+            <div>
+              <h2 className="text-lg font-semibold text-slate-900">
+                {common.nav.calculator === "Calculator" ? "📝 Your Inputs" : "📝 Deine Eingaben"}
+              </h2>
+              <p className="mt-1 text-sm text-slate-600">
+                {common.nav.calculator === "Calculator" ? "Input summary and calculation details" : "Eingabezusammenfassung und Berechnungsdetails"}
+              </p>
+            </div>
+            <div className={`transform transition-transform duration-200 ${inputsExpanded ? 'rotate-180' : ''}`}>
+              <ChevronDownIcon className="h-5 w-5 text-rose-500" />
+            </div>
+          </button>
+          {inputsExpanded && (
+            <div className="space-y-6 px-6 py-6 sm:px-8">
               {contextSections.map((section, index) => (
-                <div key={section.title ?? index} className="grid gap-3">
+                <div key={section.title ?? index} className="space-y-3">
                   {section.title ? (
-                    <p className="text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-rose-500">
+                    <p className="text-xs font-semibold uppercase tracking-[0.35em] text-rose-500">
                       {section.title}
                     </p>
                   ) : null}
-                  <ul className="grid gap-3">
+                  <div className="grid gap-3 sm:grid-cols-2">
                     {section.items.map((detail) => (
-                      <li
+                      <div
                         key={`${section.title ?? "root"}-${detail.label}`}
                         className="flex flex-col gap-1 rounded-2xl border border-rose-100 bg-rose-50/70 p-4 shadow-sm"
                       >
                         <span className="text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-rose-400">
                           {detail.label}
                         </span>
-                        <span className="break-words text-base text-slate-700">{detail.value}</span>
+                        <span className="break-words text-base font-semibold text-slate-700">{detail.value}</span>
                         {detail.note ? (
                           <span className="text-xs text-slate-500">{detail.note}</span>
                         ) : null}
-                      </li>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 </div>
               ))}
             </div>
-          </div>
-        </aside>
+          )}
+        </div>
       </div>
     </main>
   );
