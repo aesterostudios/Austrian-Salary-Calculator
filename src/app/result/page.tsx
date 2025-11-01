@@ -10,6 +10,7 @@ import { LanguageToggle } from "@/components/language-toggle";
 import { useLanguage } from "@/components/language-provider";
 import {
   calculateNetSalary,
+  calculateGrossFromNet,
   formatCurrency,
   type CalculatorInput,
 } from "@/lib/calculator";
@@ -116,7 +117,16 @@ export default function ResultPage() {
   }, [payload, router]);
 
   const calculation = useMemo(
-    () => (payload ? calculateNetSalary(payload) : null),
+    () => {
+      if (!payload) return null;
+
+      // Use the appropriate calculator based on mode
+      if (payload.calculationMode === 'net-to-gross') {
+        return calculateGrossFromNet(payload);
+      }
+
+      return calculateNetSalary(payload);
+    },
     [payload],
   );
 
@@ -437,9 +447,16 @@ export default function ResultPage() {
         <div className="flex flex-col gap-10">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <div className="text-center sm:text-left">
-              <p className="text-xs font-semibold uppercase tracking-[0.4em] text-rose-400">
-                {result.headerBadge}
-              </p>
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="text-xs font-semibold uppercase tracking-[0.4em] text-rose-400">
+                  {result.headerBadge}
+                </p>
+                {payload.calculationMode === 'net-to-gross' && (
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-300 bg-rose-100/80 px-3 py-1 text-xs font-semibold text-rose-700">
+                    <span>{common.nav.calculator === "Calculator" ? "Net → Gross" : "Netto → Brutto"}</span>
+                  </span>
+                )}
+              </div>
               <h1 className="mt-3 text-4xl font-semibold tracking-tight text-slate-900 sm:text-[3rem]">
                 {result.headerTitle}
               </h1>

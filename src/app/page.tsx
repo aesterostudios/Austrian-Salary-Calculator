@@ -17,8 +17,9 @@ import type {
   EmploymentType,
   FamilyBonusOption,
   IncomePeriod,
+  CalculationMode,
 } from "@/lib/calculator";
-import { formatCurrency } from "@/lib/calculator";
+import { formatCurrency, calculateGrossFromNet, calculateNetSalary } from "@/lib/calculator";
 
 type EmploymentOption = {
   id: EmploymentType;
@@ -78,6 +79,7 @@ export default function Home() {
     useState<string>("0");
   const [isRestoredFromStorage, setIsRestoredFromStorage] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [calculationMode, setCalculationMode] = useState<CalculationMode>("gross-to-net");
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -195,7 +197,7 @@ export default function Home() {
     [common.employmentOptions],
   );
 
-  const previewGross = useMemo(() => {
+  const previewValue = useMemo(() => {
     const parsedIncome = Number.parseFloat(income);
     if (Number.isNaN(parsedIncome)) {
       return formatCurrency(0, currencyLocale);
@@ -221,6 +223,7 @@ export default function Home() {
       employmentType,
       incomePeriod,
       income: Number.parseFloat(income) || 0,
+      calculationMode,
       hasChildren,
       childrenUnder18: sanitizedChildrenUnder18,
       childrenOver18: sanitizedChildrenOver18,
@@ -284,21 +287,67 @@ export default function Home() {
       </div>
       <div className="grid gap-8 lg:grid-cols-[1.2fr_auto_1fr] lg:gap-12">
         <div className="flex flex-col gap-8">
-          <header className="flex flex-col gap-3">
-            <span className="inline-flex w-fit items-center gap-2 rounded-full bg-rose-100/80 px-4 py-1 text-sm font-medium text-rose-600">
-              {home.badge}
-            </span>
-            <h1 className="text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
-              {home.headline}
-            </h1>
+          <header className="flex flex-col gap-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-col gap-2">
+                <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+                  {home.headline}
+                </h1>
+              </div>
+              <div className="flex items-center gap-2 rounded-full border-2 border-rose-100 bg-rose-50/50 p-1 shadow-sm">
+                <button
+                  type="button"
+                  onClick={() => setCalculationMode('gross-to-net')}
+                  className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition-all sm:text-sm ${
+                    calculationMode === 'gross-to-net'
+                      ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/30'
+                      : 'text-rose-600 hover:bg-rose-100/50'
+                  }`}
+                  aria-pressed={calculationMode === 'gross-to-net'}
+                >
+                  <span className="whitespace-nowrap">
+                    {common.nav.calculator === "Calculator" ? "Gross → Net" : "Brutto → Netto"}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCalculationMode('net-to-gross')}
+                  className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition-all sm:text-sm ${
+                    calculationMode === 'net-to-gross'
+                      ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/30'
+                      : 'text-rose-600 hover:bg-rose-100/50'
+                  }`}
+                  aria-pressed={calculationMode === 'net-to-gross'}
+                >
+                  <span className="whitespace-nowrap">
+                    {common.nav.calculator === "Calculator" ? "Net → Gross" : "Netto → Brutto"}
+                  </span>
+                </button>
+              </div>
+            </div>
+            <p className="text-sm text-slate-600 sm:text-base">
+              {calculationMode === 'gross-to-net'
+                ? (common.nav.calculator === "Calculator"
+                  ? "Calculate your net take-home pay from your gross salary"
+                  : "Berechne dein Nettogehalt aus deinem Bruttogehalt")
+                : (common.nav.calculator === "Calculator"
+                  ? "Find out what gross salary you need for your desired net income"
+                  : "Finde heraus, welches Bruttogehalt du für dein gewünschtes Nettogehalt benötigst")
+              }
+            </p>
           </header>
 
           <section className="rounded-2xl bg-white/80 p-6 shadow-lg ring-1 ring-white/50">
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-2">
-                <p className="text-sm text-slate-500">{home.summaryLabel}</p>
+                <p className="text-sm text-slate-500">
+                  {calculationMode === 'gross-to-net'
+                    ? home.summaryLabel
+                    : (common.nav.calculator === "Calculator" ? "Desired Net Monthly" : "Gewünschtes Netto (Monat)")
+                  }
+                </p>
                 <p className="text-3xl font-semibold text-rose-600">
-                  {previewGross} {home.summarySuffix}
+                  {previewValue} {home.summarySuffix}
                 </p>
               </div>
               <div className="hidden h-16 w-16 items-center justify-center rounded-full bg-rose-500/10 text-rose-500 sm:flex">
@@ -364,7 +413,12 @@ export default function Home() {
             </p>
             <label className="flex flex-col gap-2 text-sm">
               <span className="font-medium text-slate-700">
-                {home.incomeLabels[incomePeriod]}
+                {calculationMode === 'gross-to-net'
+                  ? home.incomeLabels[incomePeriod]
+                  : (incomePeriod === 'monthly'
+                    ? (common.nav.calculator === "Calculator" ? "Desired Net Monthly Salary" : "Gewünschtes Netto Monatsgehalt")
+                    : (common.nav.calculator === "Calculator" ? "Desired Net Annual Salary" : "Gewünschtes Netto Jahresgehalt"))
+                }
               </span>
               <div className="relative rounded-2xl bg-white/90 px-4 py-3 shadow-inner ring-1 ring-rose-100/70 focus-within:ring-rose-300">
                 <input
@@ -679,7 +733,10 @@ export default function Home() {
               disabled={isNavigating}
               className="flex-1 inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-gradient-to-r from-rose-500 to-rose-600 px-6 py-3 text-base font-semibold text-white shadow-lg shadow-rose-500/30 transition hover:from-rose-600 hover:to-rose-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-200 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {home.calculateButton}
+              {calculationMode === 'gross-to-net'
+                ? home.calculateButton
+                : (common.nav.calculator === "Calculator" ? "Calculate Required Gross" : "Benötigtes Brutto berechnen")
+              }
             </button>
             <button
               type="button"
