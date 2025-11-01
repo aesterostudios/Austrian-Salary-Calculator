@@ -188,35 +188,6 @@ export default function ResultPage() {
     common.employmentOptions.find((option) => option.id === payload.employmentType)
       ?.title ?? common.employmentOptions[0]?.title ?? "";
 
-  const summaryMetrics = [
-    {
-      label: result.summaryMetrics.netMonthlyAverage,
-      value: formatCurrency(calculation.netMonthly, currencyLocale),
-      accent: true,
-      info: result.summaryMetrics.info.netMonthlyAverage,
-      footnote: result.summaryMetrics.footnotes.netMonthlyAverage,
-    },
-    {
-      label: result.summaryMetrics.netAnnualTotal,
-      value: formatCurrency(calculation.netAnnual, currencyLocale),
-      accent: true,
-      info: result.summaryMetrics.info.netAnnualTotal,
-      footnote: result.summaryMetrics.footnotes.netAnnualTotal,
-    },
-    {
-      label: result.summaryMetrics.netMonthlyExcludingSpecial,
-      value: formatCurrency(calculation.netRegularMonthly, currencyLocale),
-      info: result.summaryMetrics.info.netMonthlyExcludingSpecial,
-      footnote: result.summaryMetrics.footnotes.netMonthlyExcludingSpecial,
-    },
-    {
-      label: result.summaryMetrics.netAnnualExcludingSpecial,
-      value: formatCurrency(calculation.netRegularAnnual, currencyLocale),
-      info: result.summaryMetrics.info.netAnnualExcludingSpecial,
-      footnote: result.summaryMetrics.footnotes.netAnnualExcludingSpecial,
-    },
-  ];
-
   const analysisMetrics = [
     {
       label: result.analysis.metrics.grossMonthly,
@@ -225,17 +196,6 @@ export default function ResultPage() {
     {
       label: result.analysis.metrics.grossAnnual,
       value: formatCurrency(calculation.grossAnnual, currencyLocale),
-    },
-  ];
-
-  const specialSalaryMetrics = [
-    {
-      label: result.analysis.metrics.net13th,
-      value: formatCurrency(calculation.netSpecial13th, currencyLocale),
-    },
-    {
-      label: result.analysis.metrics.net14th,
-      value: formatCurrency(calculation.netSpecial14th, currencyLocale),
     },
   ];
 
@@ -516,7 +476,10 @@ export default function ResultPage() {
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
                 {result.summaryMetrics.netMonthlyAverage}
               </p>
-              <InfoTooltip content={result.summaryMetrics.info.netMonthlyAverage} />
+              <InfoTooltip
+                label={result.summaryMetrics.netMonthlyAverage}
+                content={result.summaryMetrics.info.netMonthlyAverage}
+              />
             </div>
             <p className="mt-3 text-3xl font-bold text-slate-900">
               {formatCurrency(calculation.netMonthly, currencyLocale)}
@@ -532,7 +495,10 @@ export default function ResultPage() {
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
                 {result.summaryMetrics.netAnnualTotal}
               </p>
-              <InfoTooltip content={result.summaryMetrics.info.netAnnualTotal} />
+              <InfoTooltip
+                label={result.summaryMetrics.netAnnualTotal}
+                content={result.summaryMetrics.info.netAnnualTotal}
+              />
             </div>
             <p className="mt-3 text-3xl font-bold text-slate-900">
               {formatCurrency(calculation.netAnnual, currencyLocale)}
@@ -1071,8 +1037,8 @@ export default function ResultPage() {
           </button>
           {inputsExpanded && (
             <div className="space-y-6 px-6 py-6 sm:px-8">
-              {contextSections.map((section, index) => (
-                <div key={section.title ?? index} className="space-y-3">
+              {contextSections.map((section, sectionIndex) => (
+                <div key={section.title ?? sectionIndex} className="space-y-3">
                   {section.title ? (
                     <p className="text-xs font-semibold uppercase tracking-[0.35em] text-rose-500">
                       {section.title}
