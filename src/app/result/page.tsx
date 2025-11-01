@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeftIcon, PrinterIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, PrinterIcon, ChartPieIcon, ChartBarIcon } from "@heroicons/react/24/outline";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { headerLinkClasses, headerPrimaryLinkClasses } from "@/components/header-link";
@@ -135,6 +135,7 @@ export default function ResultPage() {
   );
 
   const [activeSegment, setActiveSegment] = useState<AnalysisChartSegmentId | null>(null);
+  const [chartType, setChartType] = useState<'donut' | 'bar'>('donut');
 
   const handlePrint = () => {
     window.print();
@@ -585,19 +586,51 @@ export default function ResultPage() {
                 </div>
               ))}
             </div>
-            <div className="flex flex-col gap-6 rounded-[2rem] border border-rose-100/60 bg-white/95 p-6 shadow transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl sm:p-7">
-              <div className="flex flex-col gap-2">
-                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.38em] text-rose-400">
-                  {result.analysis.chart.title}
-                </p>
-                <p className="text-sm text-slate-500">
-                  {result.analysis.chart.description}
-                </p>
+            <div className="flex flex-col gap-6 rounded-[2rem] border border-rose-100/60 bg-white/95 p-6 shadow transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl sm:p-8">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="flex flex-col gap-2">
+                  <p className="text-[0.65rem] font-semibold uppercase tracking-[0.38em] text-rose-400">
+                    {result.analysis.chart.title}
+                  </p>
+                  <p className="text-sm text-slate-500">
+                    {result.analysis.chart.description}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 rounded-full border-2 border-rose-100 bg-rose-50/50 p-1">
+                  <button
+                    type="button"
+                    onClick={() => setChartType('donut')}
+                    className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all ${
+                      chartType === 'donut'
+                        ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/30'
+                        : 'text-rose-600 hover:bg-rose-100/50'
+                    }`}
+                    aria-pressed={chartType === 'donut'}
+                  >
+                    <ChartPieIcon className="h-4 w-4" />
+                    <span className="hidden sm:inline">{common.nav.calculator === "Calculator" ? "Donut" : "Donut"}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setChartType('bar')}
+                    className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all ${
+                      chartType === 'bar'
+                        ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/30'
+                        : 'text-rose-600 hover:bg-rose-100/50'
+                    }`}
+                    aria-pressed={chartType === 'bar'}
+                  >
+                    <ChartBarIcon className="h-4 w-4" />
+                    <span className="hidden sm:inline">{common.nav.calculator === "Calculator" ? "Bars" : "Balken"}</span>
+                  </button>
+                </div>
               </div>
               {hasChartData ? (
-                <div className="flex flex-col items-center gap-10">
-                  <div className="relative h-80 w-80 sm:h-96 sm:w-96">
-                    <svg viewBox="0 0 200 200" className="h-full w-full">
+                <div className="flex flex-col gap-8">
+                  {chartType === 'donut' ? (
+                    <div className="flex flex-col items-center gap-8 lg:flex-row lg:items-start lg:justify-center">
+                      <div className="relative w-full max-w-[min(100%,20rem)] sm:max-w-sm">
+                        <svg viewBox="0 0 200 200" className="h-auto w-full" style={{ aspectRatio: '1 / 1' }}>
                       <circle
                         cx={donutCenter}
                         cy={donutCenter}
@@ -716,75 +749,168 @@ export default function ResultPage() {
                           />
                         </>
                       )}
-                    </svg>
-                    <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-1 px-6 text-center">
-                      <p className="text-[0.6rem] font-semibold uppercase tracking-[0.36em] text-rose-400">
-                        {centerTitle}
-                      </p>
-                      <p className="text-xl font-semibold text-slate-900 sm:text-2xl">
-                        {centerValue}
-                      </p>
-                      {centerPercent ? (
-                        <p className="text-xs font-semibold text-rose-500">{centerPercent}</p>
-                      ) : null}
-                    </div>
-                  </div>
-                  <ul className="flex w-full flex-wrap gap-3 sm:flex-col">
-                    {segmentsWithPercentages.map((segment) => {
-                      const isInteractive = segment.value > 0 && hasChartData;
-                      const isActive = activeSegment === segment.id;
-                      const isDimmed = activeSegment !== null && !isActive;
-                      const percentLabel = percentFormatter.format(segment.percentage / 100);
+                        </svg>
+                        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-1 px-4 text-center">
+                          <p className="text-[0.5rem] font-semibold uppercase tracking-[0.32em] text-rose-400 sm:text-[0.6rem]">
+                            {centerTitle}
+                          </p>
+                          <p className="text-lg font-bold text-slate-900 sm:text-xl lg:text-2xl">
+                            {centerValue}
+                          </p>
+                          {centerPercent ? (
+                            <p className="text-sm font-semibold text-rose-500 sm:text-base">{centerPercent}</p>
+                          ) : null}
+                        </div>
+                      </div>
+                      <div className="flex w-full flex-col gap-3 lg:max-w-xs">
+                        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-rose-500">
+                          {common.nav.calculator === "Calculator" ? "Breakdown" : "Aufschlüsselung"}
+                        </p>
+                        {segmentsWithPercentages.map((segment) => {
+                          const isInteractive = segment.value > 0 && hasChartData;
+                          const isActive = activeSegment === segment.id;
+                          const isDimmed = activeSegment !== null && !isActive;
+                          const percentLabel = percentFormatter.format(segment.percentage / 100);
 
-                      return (
-                        <li
-                          key={segment.id}
-                          className="flex min-w-[min(100%,12rem)] flex-1 sm:min-w-0"
-                        >
-                          <button
-                            type="button"
-                            disabled={!isInteractive}
-                            onMouseEnter={
-                              isInteractive ? () => setActiveSegment(segment.id) : undefined
-                            }
-                            onFocus={
-                              isInteractive ? () => setActiveSegment(segment.id) : undefined
-                            }
-                            onMouseLeave={
-                              isInteractive ? () => setActiveSegment(null) : undefined
-                            }
-                            onBlur={
-                              isInteractive ? () => setActiveSegment(null) : undefined
-                            }
-                            className={`flex h-full w-full flex-col items-start gap-3 rounded-2xl border border-rose-100/80 bg-rose-50/80 px-5 py-4 text-left shadow-sm transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300/80 ${
-                              !isInteractive
-                                ? "cursor-default opacity-50"
-                                : isActive
-                                  ? "bg-white shadow-md ring-2 ring-rose-200/80"
-                                  : "hover:-translate-y-0.5 hover:shadow-md"
-                            } ${isDimmed ? "opacity-60" : "opacity-100"}`}
-                          >
-                            <span className="flex w-full items-center justify-between gap-3">
-                              <span className="flex items-center gap-2 text-[0.6rem] font-semibold uppercase tracking-[0.32em] text-rose-500">
-                                <span
-                                  className="h-2.5 w-2.5 rounded-full"
-                                  style={{ backgroundColor: segment.color }}
-                                  aria-hidden
-                                />
-                                <span className="text-rose-600">{segment.label}</span>
-                              </span>
-                              <span className="inline-flex items-center justify-center rounded-full bg-rose-500 px-3 py-1 text-[0.62rem] font-semibold uppercase tracking-[0.24em] text-white">
-                                {percentLabel}
-                              </span>
-                            </span>
-                            <span className="text-base font-semibold text-slate-900">
-                              {formatCurrency(segment.value, currencyLocale)}
-                            </span>
-                          </button>
-                        </li>
-                      );
-                    })}
-                  </ul>
+                          return (
+                            <button
+                              key={segment.id}
+                              type="button"
+                              disabled={!isInteractive}
+                              onMouseEnter={
+                                isInteractive ? () => setActiveSegment(segment.id) : undefined
+                              }
+                              onFocus={
+                                isInteractive ? () => setActiveSegment(segment.id) : undefined
+                              }
+                              onMouseLeave={
+                                isInteractive ? () => setActiveSegment(null) : undefined
+                              }
+                              onBlur={
+                                isInteractive ? () => setActiveSegment(null) : undefined
+                              }
+                              className={`flex w-full flex-col gap-2 rounded-xl border-2 p-4 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300/80 ${
+                                !isInteractive
+                                  ? "cursor-default border-rose-100/50 bg-rose-50/30 opacity-50"
+                                  : isActive
+                                    ? "border-rose-400 bg-rose-50/90 shadow-lg"
+                                    : "border-rose-100 bg-white hover:border-rose-300 hover:shadow-md"
+                              } ${isDimmed ? "opacity-50" : "opacity-100"}`}
+                            >
+                              <div className="flex items-center justify-between gap-3">
+                                <div className="flex items-center gap-2">
+                                  <div
+                                    className="h-3 w-3 rounded-full ring-2 ring-white"
+                                    style={{ backgroundColor: segment.color }}
+                                    aria-hidden
+                                  />
+                                  <span className="text-sm font-semibold text-slate-800">
+                                    {segment.label}
+                                  </span>
+                                </div>
+                                <span className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-rose-500 to-rose-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm">
+                                  {percentLabel}
+                                </span>
+                              </div>
+                              <div className="flex items-baseline justify-between gap-2">
+                                <span className="text-lg font-bold text-rose-600">
+                                  {formatCurrency(segment.value, currencyLocale)}
+                                </span>
+                                <span className="text-xs text-slate-500">{common.currency.perYear}</span>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col gap-6">
+                      <div className="flex flex-col gap-4">
+                        {segmentsWithPercentages.map((segment, index) => {
+                          const isInteractive = segment.value > 0 && hasChartData;
+                          const isActive = activeSegment === segment.id;
+                          const isDimmed = activeSegment !== null && !isActive;
+                          const percentLabel = percentFormatter.format(segment.percentage / 100);
+                          const maxValue = Math.max(...segmentsWithPercentages.map(s => s.value));
+                          const widthPercent = maxValue > 0 ? (segment.value / maxValue) * 100 : 0;
+
+                          return (
+                            <button
+                              key={segment.id}
+                              type="button"
+                              disabled={!isInteractive}
+                              onMouseEnter={
+                                isInteractive ? () => setActiveSegment(segment.id) : undefined
+                              }
+                              onFocus={
+                                isInteractive ? () => setActiveSegment(segment.id) : undefined
+                              }
+                              onMouseLeave={
+                                isInteractive ? () => setActiveSegment(null) : undefined
+                              }
+                              onBlur={
+                                isInteractive ? () => setActiveSegment(null) : undefined
+                              }
+                              className={`group flex w-full flex-col gap-3 rounded-xl border-2 p-5 text-left transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300/80 ${
+                                !isInteractive
+                                  ? "cursor-default border-rose-100/50 bg-rose-50/30 opacity-50"
+                                  : isActive
+                                    ? "border-rose-400 bg-rose-50/90 shadow-xl"
+                                    : "border-rose-100 bg-white hover:border-rose-300 hover:shadow-lg"
+                              } ${isDimmed ? "opacity-50" : "opacity-100"}`}
+                            >
+                              <div className="flex items-center justify-between gap-4">
+                                <div className="flex items-center gap-3">
+                                  <div
+                                    className="h-3 w-3 rounded-full ring-2 ring-white shadow-sm"
+                                    style={{ backgroundColor: segment.color }}
+                                    aria-hidden
+                                  />
+                                  <span className="text-sm font-semibold text-slate-800">
+                                    {segment.label}
+                                  </span>
+                                </div>
+                                <span className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-rose-500 to-rose-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm">
+                                  {percentLabel}
+                                </span>
+                              </div>
+                              <div className="relative h-12 w-full overflow-hidden rounded-lg bg-rose-100/40">
+                                <div
+                                  className="absolute inset-y-0 left-0 flex items-center justify-end rounded-lg px-4 transition-all duration-500 ease-out"
+                                  style={{
+                                    width: `${widthPercent}%`,
+                                    background: `linear-gradient(90deg, ${segment.color} 0%, ${segment.color}dd 100%)`,
+                                    minWidth: widthPercent > 0 ? '60px' : '0px'
+                                  }}
+                                >
+                                  <span className="whitespace-nowrap text-sm font-bold text-white drop-shadow-sm">
+                                    {formatCurrency(segment.value, currencyLocale)}
+                                  </span>
+                                </div>
+                                {widthPercent < 40 && segment.value > 0 && (
+                                  <div className="absolute inset-y-0 left-0 flex items-center" style={{ left: `calc(${widthPercent}% + 12px)` }}>
+                                    <span className="whitespace-nowrap text-sm font-bold text-slate-700">
+                                      {formatCurrency(segment.value, currencyLocale)}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                      <div className="rounded-xl border border-rose-200/60 bg-rose-50/50 p-4">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="font-medium text-slate-600">
+                            {common.nav.calculator === "Calculator" ? "Total Gross Annual" : "Brutto Gesamt (Jahr)"}
+                          </span>
+                          <span className="font-bold text-rose-600">
+                            {formatCurrency(totalGrossAnnual, currencyLocale)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <p className="rounded-2xl border border-dashed border-rose-200/60 bg-white/70 p-6 text-sm font-medium text-slate-500">
