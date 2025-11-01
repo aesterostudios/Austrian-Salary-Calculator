@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, PrinterIcon } from "@heroicons/react/24/outline";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { headerLinkClasses, headerPrimaryLinkClasses } from "@/components/header-link";
@@ -135,6 +135,10 @@ export default function ResultPage() {
   );
 
   const [activeSegment, setActiveSegment] = useState<AnalysisChartSegmentId | null>(null);
+
+  const handlePrint = () => {
+    window.print();
+  };
 
   if (!payload || !calculation) {
     return null;
@@ -392,8 +396,29 @@ export default function ResultPage() {
   ];
 
   return (
-    <main className="relative mx-auto min-h-screen w-full max-w-6xl px-6 pb-16 pt-28">
-      <div className="absolute right-6 top-6 flex items-center gap-3">
+    <main className="relative mx-auto min-h-screen w-full max-w-6xl px-6 pb-16 pt-28 print:pt-0">
+      <header className="hidden print:flex print:mb-8 print:border-b-2 print:border-rose-500 print:pb-4">
+        <div className="flex w-full items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-rose-600">Austrian Salary Calculator</h1>
+            <p className="text-sm text-slate-600">{result.headerTitle}</p>
+          </div>
+          <div className="text-right text-xs text-slate-500">
+            <p>{new Date().toLocaleDateString(currencyLocale, { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+          </div>
+        </div>
+      </header>
+      <div className="absolute right-6 top-6 flex items-center gap-3 print:hidden">
+        <button
+          onClick={handlePrint}
+          className="inline-flex items-center gap-2 rounded-full border-2 border-rose-500 bg-gradient-to-r from-rose-500 to-rose-600 px-3 py-2 text-sm font-semibold text-white shadow-lg shadow-rose-500/30 transition hover:from-rose-600 hover:to-rose-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-200 sm:px-4"
+          aria-label={common.nav.calculator === "Calculator" ? "Print or save as PDF" : "Drucken oder als PDF speichern"}
+        >
+          <PrinterIcon className="h-4 w-4" />
+          <span className="hidden sm:inline">
+            {common.nav.calculator === "Calculator" ? "Print / PDF" : "Drucken / PDF"}
+          </span>
+        </button>
         <Link
           href="/"
           aria-label={common.nav.backToInput}

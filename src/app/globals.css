@@ -48,3 +48,246 @@ a {
 * {
   box-sizing: border-box;
 }
+
+/* Print Styles for Beautiful PDF Export */
+@media print {
+  @page {
+    size: A4;
+    margin: 1.5cm;
+  }
+
+  html {
+    background-color: white !important;
+  }
+
+  body {
+    background: white !important;
+    color: #1f2937 !important;
+    font-size: 11pt;
+    line-height: 1.4;
+  }
+
+  body::before {
+    display: none !important;
+  }
+
+  /* Hide interactive elements */
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Show print-only elements */
+  .print\:flex {
+    display: flex !important;
+  }
+
+  .print\:mb-8 {
+    margin-bottom: 2rem !important;
+  }
+
+  .print\:border-b-2 {
+    border-bottom-width: 2px !important;
+  }
+
+  .print\:border-rose-500 {
+    border-color: #f43f5e !important;
+  }
+
+  .print\:pb-4 {
+    padding-bottom: 1rem !important;
+  }
+
+  .print\:pt-0 {
+    padding-top: 0 !important;
+  }
+
+  /* Optimize layout for print */
+  main {
+    max-width: 100% !important;
+    padding: 0 !important;
+    min-height: auto !important;
+  }
+
+  /* Adjust grid layout for print */
+  .lg\:grid-cols-\[1\.1fr_0\.9fr\] {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+
+  /* Move sidebar content inline */
+  aside {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    margin-top: 1.5rem;
+    border: 2px solid #fecdd3 !important;
+    box-shadow: none !important;
+  }
+
+  /* Adjust colors for print - lighter backgrounds to save ink */
+  .bg-white\/95,
+  .bg-white\/80,
+  .bg-white\/85,
+  .bg-white\/90,
+  .bg-white {
+    background-color: white !important;
+  }
+
+  .bg-rose-50\/60,
+  .bg-rose-50\/70,
+  .bg-rose-50\/80,
+  .bg-rose-100\/60 {
+    background-color: #fff1f2 !important;
+  }
+
+  /* Simplify gradients for print */
+  .bg-gradient-to-br,
+  .bg-gradient-to-r {
+    background: #f43f5e !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Ensure important text is visible */
+  .text-white {
+    color: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .text-rose-600,
+  .text-rose-500 {
+    color: #f43f5e !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .text-rose-400 {
+    color: #fb7185 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Remove shadows for cleaner print */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Keep essential borders */
+  .border,
+  .border-2 {
+    border-color: #fecdd3 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .border-rose-500 {
+    border-color: #f43f5e !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Optimize card styling for print */
+  .rounded-2xl,
+  .rounded-\[2rem\],
+  .rounded-\[1\.7rem\] {
+    border-radius: 0.75rem !important;
+  }
+
+  /* Prevent page breaks inside important elements */
+  .group,
+  section,
+  .flex-col > div {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Adjust spacing for print */
+  .gap-12 {
+    gap: 1.5rem !important;
+  }
+
+  .gap-10 {
+    gap: 1.25rem !important;
+  }
+
+  .gap-8 {
+    gap: 1rem !important;
+  }
+
+  /* Optimize chart for print */
+  svg {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Adjust font sizes for print readability */
+  .text-4xl,
+  .text-5xl {
+    font-size: 1.75rem !important;
+  }
+
+  .text-3xl {
+    font-size: 1.5rem !important;
+  }
+
+  .text-2xl {
+    font-size: 1.25rem !important;
+  }
+
+  /* Hide decorative elements that waste ink */
+  .shadow-lg,
+  .shadow-xl,
+  .shadow-md,
+  .shadow-rose-500\/30,
+  .shadow-rose-500\/40 {
+    box-shadow: none !important;
+  }
+
+  /* Ensure the donut chart is visible */
+  .h-80,
+  .h-96 {
+    height: 16rem !important;
+  }
+
+  .w-80,
+  .w-96 {
+    width: 16rem !important;
+  }
+
+  /* Add page break before analysis section if needed */
+  .analysis-section {
+    page-break-before: auto;
+  }
+
+  /* Footer adjustments */
+  footer {
+    display: none !important;
+  }
+
+  /* Ensure links are visible */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* Fix backdrop filters that don't work in print */
+  .backdrop-blur-sm,
+  .backdrop-blur {
+    backdrop-filter: none !important;
+  }
+
+  /* Optimize button-like elements that show data */
+  button[disabled] {
+    opacity: 1 !important;
+  }
+
+  /* Make sure percentages and values are clearly visible */
+  .font-semibold {
+    font-weight: 600 !important;
+  }
+
+  .font-bold {
+    font-weight: 700 !important;
+  }
+}

@@ -8,7 +8,7 @@ export function SiteFooter() {
   const footer = dictionary.footer;
 
   return (
-    <footer className="mt-24 border-t border-rose-100/70 bg-white/60 py-10 backdrop-blur">
+    <footer className="mt-24 border-t border-rose-100/70 bg-white/60 py-10 backdrop-blur print:hidden">
       <div className="mx-auto flex w-full max-w-6xl justify-center px-6 text-center">
         <p className="flex flex-wrap items-center justify-center gap-2 text-sm font-medium text-slate-600">
           <span>
