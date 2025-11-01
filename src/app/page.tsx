@@ -77,6 +77,7 @@ export default function Home() {
   const [commuterAllowanceValue, setCommuterAllowanceValue] =
     useState<string>("0");
   const [isRestoredFromStorage, setIsRestoredFromStorage] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -238,12 +239,43 @@ export default function Home() {
         : 0,
     };
 
+    setIsNavigating(true);
     const encoded = encodeURIComponent(JSON.stringify(payload));
     router.push(`/result?payload=${encoded}`);
   };
 
+  const handleReset = () => {
+    setEmploymentType("employee");
+    setIncomePeriod("monthly");
+    setIncome("3000");
+    setHasChildren(false);
+    setChildrenUnder18("0");
+    setChildrenOver18("0");
+    setIsSingleEarner(false);
+    setFamilyBonus("none");
+    setUsesTaxableBenefits(false);
+    setTaxableBenefit("0");
+    setCompanyCarValue("0");
+    setAllowance("0");
+    setReceivesCommuterAllowance(false);
+    setCommuterAllowanceValue("0");
+  };
+
   return (
     <main className="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col justify-center gap-12 px-6 pb-12 pt-28">
+      {isNavigating && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-rose-50/80 backdrop-blur-sm">
+          <div className="flex flex-col items-center gap-6">
+            <div className="relative h-24 w-24">
+              <div className="absolute inset-0 animate-spin rounded-full border-4 border-rose-200"></div>
+              <div className="absolute inset-0 animate-spin rounded-full border-4 border-transparent border-t-rose-500" style={{ animationDuration: "1s" }}></div>
+            </div>
+            <p className="text-lg font-semibold text-rose-600">
+              {common.nav.calculator === "Calculator" ? "Calculating your net salary..." : "Berechne dein Nettogehalt..."}
+            </p>
+          </div>
+        </div>
+      )}
       <div className="absolute right-6 top-6 flex items-center gap-3">
         <Link href="/faq" className={headerLinkClasses}>
           {common.nav.faq}
@@ -641,12 +673,23 @@ export default function Home() {
             )}
           </div>
 
-          <button
-            type="submit"
-            className="mt-2 inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-gradient-to-r from-rose-500 to-rose-600 px-6 py-3 text-base font-semibold text-white shadow-lg shadow-rose-500/30 transition hover:from-rose-600 hover:to-rose-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-200"
-          >
-            {home.calculateButton}
-          </button>
+          <div className="mt-2 flex flex-col gap-3 sm:flex-row">
+            <button
+              type="submit"
+              disabled={isNavigating}
+              className="flex-1 inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-gradient-to-r from-rose-500 to-rose-600 px-6 py-3 text-base font-semibold text-white shadow-lg shadow-rose-500/30 transition hover:from-rose-600 hover:to-rose-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-200 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {home.calculateButton}
+            </button>
+            <button
+              type="button"
+              onClick={handleReset}
+              disabled={isNavigating}
+              className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-rose-200 bg-white px-6 py-3 text-base font-semibold text-rose-600 shadow transition hover:border-rose-300 hover:bg-rose-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-200 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {common.nav.calculator === "Calculator" ? "Reset" : "Zurücksetzen"}
+            </button>
+          </div>
         </form>
       </div>
     </main>
