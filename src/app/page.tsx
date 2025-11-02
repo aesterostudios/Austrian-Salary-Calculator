@@ -265,10 +265,19 @@ export default function Home() {
     router.push(`/result?payload=${encoded}`);
   };
 
+  const handleCalculationModeChange = (newMode: CalculationMode) => {
+    if (newMode !== calculationMode) {
+      setCalculationMode(newMode);
+      // Reset income when switching modes to avoid confusion
+      setIncome("3000");
+    }
+  };
+
   const handleReset = () => {
     setEmploymentType("employee");
     setIncomePeriod("monthly");
     setIncome("3000");
+    setCalculationMode("gross-to-net");
     setHasChildren(false);
     setChildrenUnder18("0");
     setChildrenOver18("0");
@@ -285,9 +294,14 @@ export default function Home() {
   return (
     <main className="relative mx-auto min-h-screen w-full px-4 pb-20 pt-6 sm:px-6">
       {isNavigating && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-rose-50/90 backdrop-blur-md">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-rose-50/90 backdrop-blur-md"
+          role="status"
+          aria-live="polite"
+          aria-busy="true"
+        >
           <div className="flex flex-col items-center gap-6">
-            <div className="relative h-20 w-20">
+            <div className="relative h-20 w-20" aria-hidden="true">
               <div className="absolute inset-0 animate-spin rounded-full border-4 border-rose-200"></div>
               <div className="absolute inset-0 animate-spin rounded-full border-4 border-transparent border-t-rose-500" style={{ animationDuration: "0.8s" }}></div>
             </div>
@@ -310,12 +324,13 @@ export default function Home() {
             <div className="flex items-center gap-1.5 rounded-full border border-rose-100 bg-rose-50/50 p-0.5 shadow-sm">
               <button
                 type="button"
-                onClick={() => setCalculationMode('gross-to-net')}
+                onClick={() => handleCalculationModeChange('gross-to-net')}
                 className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-all sm:px-4 sm:text-sm ${
                   calculationMode === 'gross-to-net'
                     ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-md'
                     : 'text-rose-600 hover:bg-rose-100/50'
                 }`}
+                aria-pressed={calculationMode === 'gross-to-net'}
               >
                 <span className="whitespace-nowrap">
                   {common.nav.calculator === "Calculator" ? "Gross → Net" : "Brutto → Netto"}
@@ -323,12 +338,13 @@ export default function Home() {
               </button>
               <button
                 type="button"
-                onClick={() => setCalculationMode('net-to-gross')}
+                onClick={() => handleCalculationModeChange('net-to-gross')}
                 className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-all sm:px-4 sm:text-sm ${
                   calculationMode === 'net-to-gross'
                     ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-md'
                     : 'text-rose-600 hover:bg-rose-100/50'
                 }`}
+                aria-pressed={calculationMode === 'net-to-gross'}
               >
                 <span className="whitespace-nowrap">
                   {common.nav.calculator === "Calculator" ? "Net → Gross" : "Netto → Brutto"}
@@ -466,6 +482,8 @@ export default function Home() {
             <button
               type="button"
               onClick={() => setFamilyExpanded(!familyExpanded)}
+              aria-expanded={familyExpanded}
+              aria-controls="family-section-content"
               className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
             >
               <div>
@@ -481,7 +499,7 @@ export default function Home() {
               </div>
             </button>
             {familyExpanded && (
-              <div className="space-y-6 px-6 py-6 sm:px-8">
+              <div id="family-section-content" className="space-y-6 px-6 py-6 sm:px-8">
                 <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
                   <span>{home.family.question}</span>
                 </div>
@@ -610,6 +628,8 @@ export default function Home() {
             <button
               type="button"
               onClick={() => setBenefitsExpanded(!benefitsExpanded)}
+              aria-expanded={benefitsExpanded}
+              aria-controls="benefits-section-content"
               className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
             >
               <div>
@@ -625,7 +645,7 @@ export default function Home() {
               </div>
             </button>
             {benefitsExpanded && (
-              <div className="space-y-6 px-6 py-6 sm:px-8">
+              <div id="benefits-section-content" className="space-y-6 px-6 py-6 sm:px-8">
                 <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
                   <span>{home.benefits.question}</span>
                 </div>
@@ -704,6 +724,8 @@ export default function Home() {
             <button
               type="button"
               onClick={() => setCommuterExpanded(!commuterExpanded)}
+              aria-expanded={commuterExpanded}
+              aria-controls="commuter-section-content"
               className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
             >
               <div>
@@ -719,7 +741,7 @@ export default function Home() {
               </div>
             </button>
             {commuterExpanded && (
-              <div className="space-y-6 px-6 py-6 sm:px-8">
+              <div id="commuter-section-content" className="space-y-6 px-6 py-6 sm:px-8">
                 <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
                   <span>{home.commuter.question}</span>
                 </div>

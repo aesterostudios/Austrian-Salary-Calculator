@@ -540,6 +540,8 @@ export default function ResultPage() {
           <button
             type="button"
             onClick={() => setBreakdownExpanded(!breakdownExpanded)}
+            aria-expanded={breakdownExpanded}
+            aria-controls="breakdown-section-content"
             className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
           >
             <div>
@@ -555,7 +557,7 @@ export default function ResultPage() {
             </div>
           </button>
           {breakdownExpanded && (
-            <div className="space-y-6 px-6 py-6 sm:px-8">
+            <div id="breakdown-section-content" className="space-y-6 px-6 py-6 sm:px-8">
               {/* Payment Comparison Table */}
               <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100/50 p-1 overflow-x-auto">
                 <table className="w-full">
@@ -690,6 +692,8 @@ export default function ResultPage() {
           <button
             type="button"
             onClick={() => setChartExpanded(!chartExpanded)}
+            aria-expanded={chartExpanded}
+            aria-controls="chart-section-content"
             className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
           >
             <div>
@@ -705,7 +709,7 @@ export default function ResultPage() {
             </div>
           </button>
           {chartExpanded && (
-            <div className="space-y-6 px-6 py-6 sm:px-8">
+            <div id="chart-section-content" className="space-y-6 px-6 py-6 sm:px-8">
               {/* Analysis Metrics */}
               <div className="grid gap-4 sm:grid-cols-2">
                 {analysisMetrics.map((metric) => (
@@ -766,7 +770,13 @@ export default function ResultPage() {
                   {chartType === 'donut' ? (
                     <div className="flex flex-col items-center gap-8 lg:flex-row lg:items-start lg:justify-center">
                       <div className="relative w-full max-w-[min(100%,20rem)] sm:max-w-sm">
-                        <svg viewBox="0 0 200 200" className="h-auto w-full" style={{ aspectRatio: '1 / 1' }}>
+                        <svg
+                          viewBox="0 0 200 200"
+                          className="h-auto w-full"
+                          style={{ aspectRatio: '1 / 1' }}
+                          role="img"
+                          aria-label={`${result.analysis.chart.title}: ${centerTitle} - ${centerValue}`}
+                        >
                       <circle
                         cx={donutCenter}
                         cy={donutCenter}
@@ -1075,6 +1085,8 @@ export default function ResultPage() {
           <button
             type="button"
             onClick={() => setInputsExpanded(!inputsExpanded)}
+            aria-expanded={inputsExpanded}
+            aria-controls="inputs-section-content"
             className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
           >
             <div>
@@ -1090,7 +1102,7 @@ export default function ResultPage() {
             </div>
           </button>
           {inputsExpanded && (
-            <div className="space-y-6 px-6 py-6 sm:px-8">
+            <div id="inputs-section-content" className="space-y-6 px-6 py-6 sm:px-8">
               {contextSections.map((section, sectionIndex) => (
                 <div key={section.title ?? sectionIndex} className="space-y-3">
                   {section.title ? (
