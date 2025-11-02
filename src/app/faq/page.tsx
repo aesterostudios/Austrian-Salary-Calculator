@@ -2,7 +2,7 @@
 
 import { useMemo, type ReactNode } from "react";
 import Link from "next/link";
-import { headerLinkClasses } from "@/components/header-link";
+import { headerLinkClasses, headerPrimaryLinkClasses } from "@/components/header-link";
 import { LanguageToggle } from "@/components/language-toggle";
 import { useLanguage } from "@/components/language-provider";
 import type { Language } from "@/lib/i18n";
@@ -474,45 +474,69 @@ export default function FAQPage() {
   const faqs = useMemo(() => getFaqs(language), [language]);
 
   return (
-    <main className="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col items-center justify-center gap-10 px-6 pb-16 pt-28">
-      <div className="absolute right-6 top-6 flex items-center gap-3">
-        <Link href="/" className={headerLinkClasses}>
-          {common.nav.calculator}
-        </Link>
-        <LanguageToggle />
+    <main className="relative mx-auto min-h-screen w-full px-4 pb-20 pt-6 sm:px-6">
+      {/* Sticky Header */}
+      <div className="sticky top-0 z-40 -mx-4 mb-8 border-b border-rose-100/50 bg-white/80 backdrop-blur-xl print:hidden sm:-mx-6">
+        <div className="mx-auto flex max-w-4xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
+          <div className="flex items-center gap-3">
+            <Link href="/" className={`inline-flex items-center gap-2 ${headerPrimaryLinkClasses} text-sm`}>
+              {common.nav.calculator}
+            </Link>
+          </div>
+          <div className="flex items-center gap-3">
+            <LanguageToggle />
+          </div>
+        </div>
       </div>
-      <div className="flex max-w-2xl flex-col items-center gap-3 text-center">
-        <p className="text-xs font-semibold uppercase tracking-[0.35em] text-rose-400">{faq.badge}</p>
-        <h1 className="text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
-          {faq.title}
-        </h1>
-        <p className="text-sm text-slate-500">{faq.description}</p>
-      </div>
-      <section className="mx-auto flex w-full max-w-3xl flex-col gap-4">
-        {faqs.map((faqItem) => (
-          <details
-            key={faqItem.question}
-            className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_18px_45px_-25px_rgba(15,23,42,0.3)] transition hover:border-rose-200 hover:shadow-[0_18px_45px_-22px_rgba(244,114,182,0.35)]"
-          >
-            <summary className="flex cursor-pointer items-center justify-between gap-4 text-left text-lg font-semibold text-slate-900 transition group-open:text-rose-500">
-              <span>{faqItem.question}</span>
-              <span className="flex h-9 w-9 flex-none items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-sm font-semibold text-slate-500 transition group-open:border-rose-200 group-open:bg-rose-50 group-open:text-rose-500">
-                <span className="group-open:hidden">+</span>
-                <span className="hidden group-open:inline">–</span>
-              </span>
-            </summary>
-            <div className="mt-4 border-t border-slate-100 pt-4 text-base leading-relaxed">{faqItem.answer}</div>
-          </details>
-        ))}
-      </section>
-      <section className="mx-auto w-full max-w-3xl rounded-2xl border border-rose-200/60 bg-rose-50/70 p-6 shadow-sm">
-        <p className="text-xs font-semibold uppercase tracking-[0.35em] text-rose-500">{faq.notesTitle}</p>
-        <div className="mt-3 space-y-2 text-sm leading-relaxed text-rose-600">
-          {faq.notes.map((note) => (
-            <p key={note}>{note}</p>
+
+      {/* Centered Content */}
+      <div className="mx-auto max-w-4xl space-y-8">
+        {/* Header */}
+        <div className="text-center">
+          <div className="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-rose-50/50 px-4 py-2 mb-4">
+            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-600">
+              {faq.badge}
+            </span>
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+            {faq.title}
+          </h1>
+          <p className="mt-4 text-base text-slate-600 sm:text-lg">{faq.description}</p>
+        </div>
+
+        {/* FAQ Items */}
+        <div className="space-y-4">
+          {faqs.map((faqItem) => (
+            <details
+              key={faqItem.question}
+              className="group overflow-hidden rounded-3xl border border-rose-100/60 bg-white shadow-lg"
+            >
+              <summary className="flex cursor-pointer items-center justify-between gap-4 bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8">
+                <span className="text-base font-semibold text-slate-900 sm:text-lg group-open:text-rose-600">
+                  {faqItem.question}
+                </span>
+                <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full border-2 border-rose-200 bg-white text-sm font-bold text-rose-500 transition group-open:bg-rose-500 group-open:text-white">
+                  <span className="group-open:hidden">+</span>
+                  <span className="hidden group-open:inline">−</span>
+                </span>
+              </summary>
+              <div className="border-t border-rose-100/60 px-6 py-6 text-base leading-relaxed sm:px-8">
+                {faqItem.answer}
+              </div>
+            </details>
           ))}
         </div>
-      </section>
+
+        {/* Notes Section */}
+        <div className="rounded-3xl border border-rose-200/60 bg-gradient-to-br from-rose-50/50 to-pink-50/50 p-6 shadow-sm sm:p-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-rose-600">{faq.notesTitle}</p>
+          <div className="mt-4 space-y-3 text-sm leading-relaxed text-slate-700">
+            {faq.notes.map((note) => (
+              <p key={note}>{note}</p>
+            ))}
+          </div>
+        </div>
+      </div>
     </main>
   );
 }
