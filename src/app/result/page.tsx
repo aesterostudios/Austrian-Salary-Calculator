@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeftIcon, PrinterIcon, ChartPieIcon, ChartBarIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, PrinterIcon, ChartPieIcon, ChartBarIcon, ChevronDownIcon, BanknotesIcon, DocumentTextIcon, LinkIcon, CheckIcon } from "@heroicons/react/24/outline";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { headerLinkClasses, headerPrimaryLinkClasses } from "@/components/header-link";
@@ -149,9 +149,20 @@ export default function ResultPage() {
   const [breakdownExpanded, setBreakdownExpanded] = useState(true);
   const [chartExpanded, setChartExpanded] = useState(true);
   const [inputsExpanded, setInputsExpanded] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy link:', err);
+    }
   };
 
   if (!payload || !calculation) {
@@ -399,11 +410,34 @@ export default function ResultPage() {
           </div>
           <div className="flex items-center gap-3">
             <button
+              onClick={handleCopyLink}
+              className="inline-flex items-center gap-2 rounded-full border-2 border-rose-200 bg-white px-3 py-2 text-sm font-semibold text-rose-600 shadow-sm transition-all hover:border-rose-300 hover:bg-rose-50 hover:shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-200"
+              aria-label={linkCopied
+                ? (common.nav.calculator === "Calculator" ? "Link copied!" : "Link kopiert!")
+                : (common.nav.calculator === "Calculator" ? "Copy share link" : "Link kopieren")
+              }
+            >
+              {linkCopied ? (
+                <CheckIcon className="h-4 w-4 text-green-600" />
+              ) : (
+                <LinkIcon className="h-4 w-4" />
+              )}
+              <span className="hidden sm:inline">
+                {linkCopied
+                  ? (common.nav.calculator === "Calculator" ? "Copied!" : "Kopiert!")
+                  : (common.nav.calculator === "Calculator" ? "Share" : "Teilen")
+                }
+              </span>
+            </button>
+            <button
               onClick={handlePrint}
               className="inline-flex items-center gap-2 rounded-full border-2 border-rose-200 bg-white px-3 py-2 text-sm font-semibold text-rose-600 shadow-sm transition-all hover:border-rose-300 hover:bg-rose-50 hover:shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-200"
               aria-label={common.nav.calculator === "Calculator" ? "Print or save as PDF" : "Drucken oder als PDF speichern"}
             >
               <PrinterIcon className="h-4 w-4" />
+              <span className="hidden sm:inline">
+                {common.nav.calculator === "Calculator" ? "Print" : "Drucken"}
+              </span>
             </button>
             <LanguageToggle />
           </div>
@@ -530,8 +564,9 @@ export default function ResultPage() {
             className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
           >
             <div>
-              <h2 className="text-lg font-semibold text-slate-900">
-                {common.nav.calculator === "Calculator" ? "💰 Detailed Breakdown" : "💰 Detaillierte Aufschlüsselung"}
+              <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+                <BanknotesIcon className="h-5 w-5 text-rose-500" />
+                {common.nav.calculator === "Calculator" ? "Detailed Breakdown" : "Detaillierte Aufschlüsselung"}
               </h2>
               <p className="mt-1 text-sm text-slate-600">
                 {common.nav.calculator === "Calculator" ? "Taxes, deductions, and payments" : "Steuern, Abzüge und Zahlungen"}
@@ -682,8 +717,9 @@ export default function ResultPage() {
             className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
           >
             <div>
-              <h2 className="text-lg font-semibold text-slate-900">
-                {common.nav.calculator === "Calculator" ? "📊 Visual Analysis" : "📊 Visuelle Analyse"}
+              <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+                <ChartPieIcon className="h-5 w-5 text-rose-500" />
+                {common.nav.calculator === "Calculator" ? "Visual Analysis" : "Visuelle Analyse"}
               </h2>
               <p className="mt-1 text-sm text-slate-600">
                 {common.nav.calculator === "Calculator" ? "Charts and detailed analysis" : "Diagramme und detaillierte Analyse"}
@@ -1075,8 +1111,9 @@ export default function ResultPage() {
             className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
           >
             <div>
-              <h2 className="text-lg font-semibold text-slate-900">
-                {common.nav.calculator === "Calculator" ? "📝 Your Inputs" : "📝 Deine Eingaben"}
+              <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+                <DocumentTextIcon className="h-5 w-5 text-rose-500" />
+                {common.nav.calculator === "Calculator" ? "Your Inputs" : "Deine Eingaben"}
               </h2>
               <p className="mt-1 text-sm text-slate-600">
                 {common.nav.calculator === "Calculator" ? "Input summary and calculation details" : "Eingabezusammenfassung und Berechnungsdetails"}

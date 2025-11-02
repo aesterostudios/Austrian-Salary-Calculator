@@ -13,6 +13,10 @@ import {
   AcademicCapIcon,
   UserIcon,
   ChevronDownIcon,
+  ClipboardDocumentListIcon,
+  UsersIcon,
+  TruckIcon,
+  MapIcon,
 } from "@heroicons/react/24/outline";
 import type {
   CalculatorInput,
@@ -366,8 +370,9 @@ export default function Home() {
           {/* Section 1: Basic Information */}
           <div className="overflow-hidden rounded-3xl border border-rose-100/60 bg-white shadow-lg">
             <div className="bg-gradient-to-r from-rose-50 to-pink-50 px-6 py-5 sm:px-8">
-              <h2 className="text-lg font-semibold text-slate-900">
-                {common.nav.calculator === "Calculator" ? "📊 Basic Information" : "📊 Grundinformationen"}
+              <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+                <ClipboardDocumentListIcon className="h-5 w-5 text-rose-500" />
+                {common.nav.calculator === "Calculator" ? "Basic Information" : "Grundinformationen"}
               </h2>
               <p className="mt-1 text-sm text-slate-600">
                 {common.nav.calculator === "Calculator" ? "Employment type and salary" : "Beschäftigungsart und Gehalt"}
@@ -483,8 +488,9 @@ export default function Home() {
               className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
             >
               <div>
-                <h2 className="text-lg font-semibold text-slate-900">
-                  {common.nav.calculator === "Calculator" ? "👨‍👩‍👧‍👦 Family & Tax Credits" : "👨‍👩‍👧‍👦 Familie & Steuerabsetzbeträge"}
+                <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+                  <UsersIcon className="h-5 w-5 text-rose-500" />
+                  {common.nav.calculator === "Calculator" ? "Family & Tax Credits" : "Familie & Steuerabsetzbeträge"}
                 </h2>
                 <p className="mt-1 text-sm text-slate-600">
                   {common.nav.calculator === "Calculator" ? "Optional - Add if applicable" : "Optional - Falls zutreffend"}
@@ -608,8 +614,9 @@ export default function Home() {
               className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
             >
               <div>
-                <h2 className="text-lg font-semibold text-slate-900">
-                  {common.nav.calculator === "Calculator" ? "🚗 Taxable Benefits" : "🚗 Sachbezüge"}
+                <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+                  <TruckIcon className="h-5 w-5 text-rose-500" />
+                  {common.nav.calculator === "Calculator" ? "Taxable Benefits" : "Sachbezüge"}
                 </h2>
                 <p className="mt-1 text-sm text-slate-600">
                   {common.nav.calculator === "Calculator" ? "Optional - Company car, allowances" : "Optional - Firmenauto, Zulagen"}
@@ -704,8 +711,9 @@ export default function Home() {
               className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
             >
               <div>
-                <h2 className="text-lg font-semibold text-slate-900">
-                  {common.nav.calculator === "Calculator" ? "🚌 Commuter Allowance" : "🚌 Pendlerpauschale"}
+                <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+                  <MapIcon className="h-5 w-5 text-rose-500" />
+                  {common.nav.calculator === "Calculator" ? "Commuter Allowance" : "Pendlerpauschale"}
                 </h2>
                 <p className="mt-1 text-sm text-slate-600">
                   {common.nav.calculator === "Calculator" ? "Optional - Travel deductions" : "Optional - Fahrtkosten"}
