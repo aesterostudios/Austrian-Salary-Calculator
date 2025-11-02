@@ -40,7 +40,7 @@ export default function ResultError({
             Calculation Error
           </h1>
           <p className="mt-2 text-slate-600">
-            We couldn't process your salary calculation. This might be due to invalid input data.
+            We couldn&apos;t process your salary calculation. This might be due to invalid input data.
           </p>
         </div>
 

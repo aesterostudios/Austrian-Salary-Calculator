@@ -283,21 +283,6 @@ export default function ResultPage() {
     ? percentFormatter.format(activeSegmentData.percentage / 100)
     : null;
 
-  const breakdown = [
-    {
-      title: result.breakdownItems.socialInsurance.title,
-      monthly: formatCurrency(calculation.socialInsuranceMonthly, currencyLocale),
-      annual: formatCurrency(calculation.socialInsuranceAnnual, currencyLocale),
-      description: result.breakdownItems.socialInsurance.description,
-    },
-    {
-      title: result.breakdownItems.incomeTax.title,
-      monthly: formatCurrency(calculation.incomeTaxMonthly, currencyLocale),
-      annual: formatCurrency(calculation.incomeTaxAnnual, currencyLocale),
-      description: result.breakdownItems.incomeTax.description,
-    },
-  ];
-
   const contextSections: {
     title: string | null;
     items: { label: string; value: string; note?: string }[];
@@ -972,7 +957,7 @@ export default function ResultPage() {
                   ) : (
                     <div className="flex flex-col gap-6">
                       <div className="flex flex-col gap-4">
-                        {segmentsWithPercentages.map((segment, index) => {
+                        {segmentsWithPercentages.map((segment) => {
                           const isInteractive = segment.value > 0 && hasChartData;
                           const isActive = activeSegment === segment.id;
                           const isDimmed = activeSegment !== null && !isActive;

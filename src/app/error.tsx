@@ -41,7 +41,7 @@ export default function Error({
             Oops! Something went wrong
           </h1>
           <p className="mt-2 text-slate-600">
-            We encountered an unexpected error. Don't worry, your data is safe.
+            We encountered an unexpected error. Don&apos;t worry, your data is safe.
           </p>
         </div>
 

@@ -13,7 +13,6 @@ import {
   AcademicCapIcon,
   UserIcon,
   ChevronDownIcon,
-  ChevronUpIcon,
 } from "@heroicons/react/24/outline";
 import type {
   CalculatorInput,
@@ -22,7 +21,6 @@ import type {
   IncomePeriod,
   CalculationMode,
 } from "@/lib/calculator";
-import { formatCurrency, calculateGrossFromNet, calculateNetSalary } from "@/lib/calculator";
 
 type EmploymentOption = {
   id: EmploymentType;
@@ -59,7 +57,6 @@ export default function Home() {
   const router = useRouter();
   const { dictionary } = useLanguage();
   const { common, home } = dictionary;
-  const currencyLocale = common.currency.locale;
 
   const [employmentType, setEmploymentType] = useState<EmploymentType>(
     "employee",
@@ -215,18 +212,6 @@ export default function Home() {
       })),
     [common.employmentOptions],
   );
-
-  const previewValue = useMemo(() => {
-    const parsedIncome = Number.parseFloat(income);
-    if (Number.isNaN(parsedIncome)) {
-      return formatCurrency(0, currencyLocale);
-    }
-
-    const monthly =
-      incomePeriod === "monthly" ? parsedIncome : parsedIncome / 12;
-
-    return formatCurrency(monthly, currencyLocale);
-  }, [income, incomePeriod, currencyLocale]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
