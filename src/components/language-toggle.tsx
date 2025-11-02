@@ -58,10 +58,10 @@ export function LanguageToggle() {
                 type="button"
                 onClick={() => handleLanguageChange(option.id)}
                 className={clsx(
-                  "rounded-full px-3 py-1 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200",
+                  "rounded-full px-3 py-1.5 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300",
                   isActive
                     ? "bg-rose-500 text-white shadow-[0_10px_25px_rgba(244,114,182,0.35)]"
-                    : "text-rose-600/80 hover:text-rose-700",
+                    : "text-rose-700 hover:text-rose-800",
                 )}
                 aria-pressed={isActive}
               >

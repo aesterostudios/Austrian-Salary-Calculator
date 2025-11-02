@@ -322,51 +322,13 @@ export default function Home() {
 
       {/* Sticky Header */}
       <div className="sticky top-0 z-40 -mx-4 mb-8 border-b border-rose-100/50 bg-white/80 backdrop-blur-xl sm:-mx-6">
-        <div className="mx-auto flex max-w-4xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
+        <div className="mx-auto flex max-w-4xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
           <div className="flex items-center gap-3">
             <Link href="/faq" className={`${headerLinkClasses} text-sm`}>
               {common.nav.faq}
             </Link>
           </div>
           <div className="flex items-center gap-3">
-            <div className="inline-flex items-center gap-1 rounded-full border border-white/60 bg-white/40 p-1 shadow-[0_12px_30px_rgba(244,114,182,0.15)] backdrop-blur">
-              <button
-                type="button"
-                onClick={() => handleCalculationModeChange('gross-to-net')}
-                className={`rounded-full px-2 py-1.5 text-xs font-semibold transition-all sm:px-4 sm:text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200 ${
-                  calculationMode === 'gross-to-net'
-                    ? 'bg-rose-500 text-white shadow-[0_10px_25px_rgba(244,114,182,0.35)]'
-                    : 'text-rose-600/80 hover:text-rose-700'
-                }`}
-                aria-pressed={calculationMode === 'gross-to-net'}
-                aria-label={common.nav.calculator === "Calculator" ? "Gross to Net" : "Brutto zu Netto"}
-              >
-                <span className="hidden sm:inline whitespace-nowrap">
-                  {common.nav.calculator === "Calculator" ? "Gross → Net" : "Brutto → Netto"}
-                </span>
-                <span className="sm:hidden whitespace-nowrap">
-                  {common.nav.calculator === "Calculator" ? "Gr→Ne" : "Br→Ne"}
-                </span>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleCalculationModeChange('net-to-gross')}
-                className={`rounded-full px-2 py-1.5 text-xs font-semibold transition-all sm:px-4 sm:text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200 ${
-                  calculationMode === 'net-to-gross'
-                    ? 'bg-rose-500 text-white shadow-[0_10px_25px_rgba(244,114,182,0.35)]'
-                    : 'text-rose-600/80 hover:text-rose-700'
-                }`}
-                aria-pressed={calculationMode === 'net-to-gross'}
-                aria-label={common.nav.calculator === "Calculator" ? "Net to Gross" : "Netto zu Brutto"}
-              >
-                <span className="hidden sm:inline whitespace-nowrap">
-                  {common.nav.calculator === "Calculator" ? "Net → Gross" : "Netto → Brutto"}
-                </span>
-                <span className="sm:hidden whitespace-nowrap">
-                  {common.nav.calculator === "Calculator" ? "Ne→Gr" : "Ne→Br"}
-                </span>
-              </button>
-            </div>
             <LanguageToggle />
           </div>
         </div>
@@ -377,17 +339,12 @@ export default function Home() {
         {/* Hero */}
         <header className="text-center">
           <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
-            {calculationMode === 'gross-to-net' ? home.headline : home.headlineNetToGross}
+            {home.headline}
           </h1>
           <p className="mt-4 text-base text-slate-600 sm:text-lg">
-            {calculationMode === 'gross-to-net'
-              ? (common.nav.calculator === "Calculator"
-                ? "Calculate your net take-home pay from your gross salary"
-                : "Berechne dein Nettogehalt aus deinem Bruttogehalt")
-              : (common.nav.calculator === "Calculator"
-                ? "Calculate your gross salary from your net take-home pay"
-                : "Berechne dein Bruttogehalt aus deinem Netto-Einkommen")
-            }
+            {common.nav.calculator === "Calculator"
+              ? "Calculate your net take-home pay with accurate 2025 Austrian tax rates"
+              : "Berechne dein Nettogehalt mit aktuellen österreichischen Steuersätzen 2025"}
           </p>
         </header>
 
@@ -442,6 +399,51 @@ export default function Home() {
                 })}
               </div>
 
+              {/* Calculation Mode Toggle */}
+              <div className="space-y-3">
+                <label className="block text-sm font-medium text-slate-700">
+                  {common.nav.calculator === "Calculator" ? "What would you like to calculate?" : "Was möchten Sie berechnen?"}
+                </label>
+                <div className="inline-flex w-full items-center gap-1 rounded-2xl border-2 border-rose-100 bg-gradient-to-br from-white to-rose-50/30 p-1.5 shadow-sm">
+                  <button
+                    type="button"
+                    onClick={() => handleCalculationModeChange('gross-to-net')}
+                    className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300 ${
+                      calculationMode === 'gross-to-net'
+                        ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/25'
+                        : 'text-slate-700 hover:bg-white hover:text-rose-600'
+                    }`}
+                    aria-pressed={calculationMode === 'gross-to-net'}
+                    aria-label={common.nav.calculator === "Calculator" ? "Calculate Net from Gross salary" : "Netto aus Brutto berechnen"}
+                  >
+                    <span className="block text-xs opacity-75 mb-0.5">
+                      {common.nav.calculator === "Calculator" ? "Gross" : "Brutto"} → {common.nav.calculator === "Calculator" ? "Net" : "Netto"}
+                    </span>
+                    <span className="block">
+                      {common.nav.calculator === "Calculator" ? "Net Salary" : "Nettogehalt"}
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleCalculationModeChange('net-to-gross')}
+                    className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300 ${
+                      calculationMode === 'net-to-gross'
+                        ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/25'
+                        : 'text-slate-700 hover:bg-white hover:text-rose-600'
+                    }`}
+                    aria-pressed={calculationMode === 'net-to-gross'}
+                    aria-label={common.nav.calculator === "Calculator" ? "Calculate Gross from Net salary" : "Brutto aus Netto berechnen"}
+                  >
+                    <span className="block text-xs opacity-75 mb-0.5">
+                      {common.nav.calculator === "Calculator" ? "Net" : "Netto"} → {common.nav.calculator === "Calculator" ? "Gross" : "Brutto"}
+                    </span>
+                    <span className="block">
+                      {common.nav.calculator === "Calculator" ? "Gross Salary" : "Bruttogehalt"}
+                    </span>
+                  </button>
+                </div>
+              </div>
+
               {/* Salary Input */}
               <div className="space-y-4">
                 <label className="block">
@@ -461,21 +463,39 @@ export default function Home() {
                     </div>
                     <input
                       type="number"
+                      inputMode="decimal"
                       min="0"
-                      max="10000000"
-                      step="1"
+                      max="500000"
+                      step="0.01"
                       value={income}
                       onChange={(event) => setIncome(event.target.value)}
-                      className="block w-full rounded-2xl border-2 border-rose-100 bg-white py-4 pl-10 pr-4 text-lg font-semibold text-slate-900 placeholder:text-slate-400 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10 invalid:border-red-300 invalid:ring-red-500/10"
-                      placeholder={common.nav.calculator === "Calculator" ? "Enter amount" : "Betrag eingeben"}
+                      className="block w-full rounded-2xl border-2 border-rose-100 bg-white py-4 pl-10 pr-4 text-lg font-semibold text-slate-900 placeholder:text-slate-400 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
+                      placeholder={common.nav.calculator === "Calculator" ? "e.g., 3000" : "z.B. 3000"}
                       required
                       aria-required="true"
-                      aria-invalid={Number.parseFloat(income) <= 0}
+                      aria-describedby={income && (Number.parseFloat(income) <= 0 || Number.parseFloat(income) > 500000) ? "income-error" : undefined}
                     />
                   </div>
-                  {Number.parseFloat(income) <= 0 && income !== "" && (
-                    <p className="mt-1 text-sm text-red-600">
-                      {common.nav.calculator === "Calculator" ? "Please enter a valid salary amount" : "Bitte geben Sie einen gültigen Gehaltsbetrag ein"}
+                  {income && Number.parseFloat(income) > 0 && Number.parseFloat(income) > 100000 && (
+                    <div className="mt-2 flex items-start gap-2 rounded-xl bg-amber-50 border border-amber-200 px-3 py-2">
+                      <span className="text-amber-600 text-sm">⚠️</span>
+                      <p className="text-sm text-amber-800">
+                        {common.nav.calculator === "Calculator"
+                          ? "This is an unusually high salary. Please verify the amount."
+                          : "Dies ist ein ungewöhnlich hohes Gehalt. Bitte überprüfen Sie den Betrag."}
+                      </p>
+                    </div>
+                  )}
+                  {income && Number.parseFloat(income) <= 0 && (
+                    <p id="income-error" className="mt-2 flex items-center gap-2 text-sm text-red-600">
+                      <span>❌</span>
+                      {common.nav.calculator === "Calculator" ? "Please enter a valid amount (minimum €0.01)" : "Bitte geben Sie einen gültigen Betrag ein (mindestens €0,01)"}
+                    </p>
+                  )}
+                  {income && Number.parseFloat(income) > 500000 && (
+                    <p id="income-error" className="mt-2 flex items-center gap-2 text-sm text-red-600">
+                      <span>❌</span>
+                      {common.nav.calculator === "Calculator" ? "Amount exceeds maximum (€500,000)" : "Betrag überschreitet Maximum (€500.000)"}
                     </p>
                   )}
                 </label>
@@ -488,7 +508,7 @@ export default function Home() {
                         key={periodId}
                         type="button"
                         onClick={() => setIncomePeriod(periodId)}
-                        className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
+                        className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all min-h-[44px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300 ${
                           isActive
                             ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20"
                             : "bg-rose-50 text-rose-600 hover:bg-rose-100"
@@ -552,11 +572,12 @@ export default function Home() {
                         </span>
                         <input
                           type="number"
+                          inputMode="numeric"
                           min="0"
                           max="20"
                           value={childrenUnder18}
                           onChange={(event) => setChildrenUnder18(event.target.value)}
-                          className="mt-2 block w-full rounded-xl border-2 border-rose-100 bg-white px-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10 invalid:border-red-300"
+                          className="mt-2 block w-full rounded-xl border-2 border-rose-100 bg-white px-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
                         />
                       </label>
                       <label className="block">
@@ -565,11 +586,12 @@ export default function Home() {
                         </span>
                         <input
                           type="number"
+                          inputMode="numeric"
                           min="0"
                           max="20"
                           value={childrenOver18}
                           onChange={(event) => setChildrenOver18(event.target.value)}
-                          className="mt-2 block w-full rounded-xl border-2 border-rose-100 bg-white px-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10 invalid:border-red-300"
+                          className="mt-2 block w-full rounded-xl border-2 border-rose-100 bg-white px-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
                         />
                         <span className="mt-1 block text-xs text-slate-500">
                           {home.family.childrenOver18Note}
@@ -586,21 +608,39 @@ export default function Home() {
                       <span className="block text-sm font-medium text-slate-700">
                         {home.family.familyBonusTitle}
                       </span>
-                      <div className="space-y-2">
+                      <div className="space-y-2.5">
                         {common.familyBonusOptions.map((option) => {
                           const active = familyBonus === option.id;
+                          const descriptions = {
+                            none: common.nav.calculator === "Calculator" ? "I don't receive this benefit" : "Ich erhalte diese Förderung nicht",
+                            shared: common.nav.calculator === "Calculator" ? "Split 50/50 with partner" : "50/50 mit Partner aufgeteilt",
+                            full: common.nav.calculator === "Calculator" ? "I claim 100% of the benefit" : "Ich beziehe 100% der Förderung"
+                          };
                           return (
                             <button
                               key={option.id}
                               type="button"
                               onClick={() => setFamilyBonus(option.id as FamilyBonusOption)}
-                              className={`block w-full rounded-xl px-4 py-3 text-left text-sm font-semibold transition-all ${
+                              className={`flex w-full items-center justify-between gap-3 rounded-xl px-4 py-3.5 text-left transition-all min-h-[44px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300 ${
                                 active
-                                  ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg"
-                                  : "border-2 border-rose-100 bg-white text-rose-600 hover:border-rose-300"
+                                  ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20"
+                                  : "border-2 border-rose-100 bg-white text-slate-700 hover:border-rose-300 hover:bg-rose-50"
                               }`}
+                              aria-pressed={active}
                             >
-                              {option.label}
+                              <div className="flex-1">
+                                <div className={`text-sm font-semibold ${active ? 'text-white' : 'text-slate-900'}`}>
+                                  {option.label}
+                                </div>
+                                <div className={`text-xs mt-0.5 ${active ? 'text-white/80' : 'text-slate-500'}`}>
+                                  {descriptions[option.id as keyof typeof descriptions]}
+                                </div>
+                              </div>
+                              {active && (
+                                <div className="flex-shrink-0 h-5 w-5 rounded-full bg-white/30 flex items-center justify-center">
+                                  <span className="text-white text-sm">✓</span>
+                                </div>
+                              )}
                             </button>
                           );
                         })}
@@ -654,36 +694,57 @@ export default function Home() {
                   <div className="space-y-4 rounded-2xl bg-gradient-to-br from-rose-50/50 to-pink-50/50 p-6">
                     <label className="block">
                       <span className="block text-sm font-medium text-slate-700">{home.benefits.taxableBenefit}</span>
-                      <input
-                        type="number"
-                        min="0"
-                        step="10"
-                        value={taxableBenefit}
-                        onChange={(event) => setTaxableBenefit(event.target.value)}
-                        className="mt-2 block w-full rounded-xl border-2 border-rose-100 bg-white px-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
-                      />
+                      <div className="relative mt-2">
+                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                          <span className="text-base font-semibold text-rose-500">€</span>
+                        </div>
+                        <input
+                          type="number"
+                          inputMode="decimal"
+                          min="0"
+                          step="0.01"
+                          value={taxableBenefit}
+                          onChange={(event) => setTaxableBenefit(event.target.value)}
+                          className="block w-full rounded-xl border-2 border-rose-100 bg-white pl-10 pr-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
+                          placeholder="0.00"
+                        />
+                      </div>
                     </label>
                     <label className="block">
                       <span className="block text-sm font-medium text-slate-700">{home.benefits.companyCar}</span>
-                      <input
-                        type="number"
-                        min="0"
-                        step="10"
-                        value={companyCarValue}
-                        onChange={(event) => setCompanyCarValue(event.target.value)}
-                        className="mt-2 block w-full rounded-xl border-2 border-rose-100 bg-white px-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
-                      />
+                      <div className="relative mt-2">
+                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                          <span className="text-base font-semibold text-rose-500">€</span>
+                        </div>
+                        <input
+                          type="number"
+                          inputMode="decimal"
+                          min="0"
+                          step="0.01"
+                          value={companyCarValue}
+                          onChange={(event) => setCompanyCarValue(event.target.value)}
+                          className="block w-full rounded-xl border-2 border-rose-100 bg-white pl-10 pr-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
+                          placeholder="0.00"
+                        />
+                      </div>
                     </label>
                     <label className="block">
                       <span className="block text-sm font-medium text-slate-700">{home.benefits.allowance}</span>
-                      <input
-                        type="number"
-                        min="0"
-                        step="10"
-                        value={allowance}
-                        onChange={(event) => setAllowance(event.target.value)}
-                        className="mt-2 block w-full rounded-xl border-2 border-rose-100 bg-white px-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
-                      />
+                      <div className="relative mt-2">
+                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                          <span className="text-base font-semibold text-rose-500">€</span>
+                        </div>
+                        <input
+                          type="number"
+                          inputMode="decimal"
+                          min="0"
+                          step="0.01"
+                          value={allowance}
+                          onChange={(event) => setAllowance(event.target.value)}
+                          className="block w-full rounded-xl border-2 border-rose-100 bg-white pl-10 pr-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
+                          placeholder="0.00"
+                        />
+                      </div>
                     </label>
                   </div>
                 )}
@@ -732,14 +793,21 @@ export default function Home() {
                     <p className="text-sm text-slate-600">{home.commuter.helper}</p>
                     <label className="block">
                       <span className="block text-sm font-medium text-slate-700">{home.commuter.inputLabel}</span>
-                      <input
-                        type="number"
-                        min="0"
-                        step="10"
-                        value={commuterAllowanceValue}
-                        onChange={(event) => setCommuterAllowanceValue(event.target.value)}
-                        className="mt-2 block w-full rounded-xl border-2 border-rose-100 bg-white px-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
-                      />
+                      <div className="relative mt-2">
+                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                          <span className="text-base font-semibold text-rose-500">€</span>
+                        </div>
+                        <input
+                          type="number"
+                          inputMode="decimal"
+                          min="0"
+                          step="0.01"
+                          value={commuterAllowanceValue}
+                          onChange={(event) => setCommuterAllowanceValue(event.target.value)}
+                          className="block w-full rounded-xl border-2 border-rose-100 bg-white pl-10 pr-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
+                          placeholder="0.00"
+                        />
+                      </div>
                     </label>
                   </div>
                 )}

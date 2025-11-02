@@ -474,8 +474,27 @@ export default function FAQPage() {
   const { common, faq } = dictionary;
   const faqs = useMemo(() => getFaqs(language), [language]);
 
+  // Generate FAQ structured data for SEO
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map((faqItem) => ({
+      "@type": "Question",
+      "name": faqItem.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": typeof faqItem.answer === 'string' ? faqItem.answer : faqItem.question
+      }
+    }))
+  };
+
   return (
-    <main className="relative mx-auto min-h-screen w-full px-4 pb-20 pt-6 sm:px-6">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <main className="relative mx-auto min-h-screen w-full px-4 pb-20 pt-6 sm:px-6">
       {/* Sticky Header */}
       <div className="sticky top-0 z-40 -mx-4 mb-8 border-b border-rose-100/50 bg-white/80 backdrop-blur-xl print:hidden sm:-mx-6">
         <div className="mx-auto flex max-w-4xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
@@ -541,5 +560,6 @@ export default function FAQPage() {
         </div>
       </div>
     </main>
+    </>
   );
 }
