@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { ComponentType, FormEvent, SVGProps } from "react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { headerLinkClasses } from "@/components/header-link";
 import { LanguageToggle } from "@/components/language-toggle";
@@ -88,6 +88,9 @@ export default function Home() {
   const [benefitsExpanded, setBenefitsExpanded] = useState(false);
   const [commuterExpanded, setCommuterExpanded] = useState(false);
 
+  // Debounce timer for sessionStorage saves
+  const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
+
   // Auto-expand sections if they have data
   useEffect(() => {
     if (hasChildren) setFamilyExpanded(true);
@@ -169,27 +172,42 @@ export default function Home() {
       return;
     }
 
-    const stateToPersist: StoredFormState = {
-      employmentType,
-      incomePeriod,
-      income,
-      hasChildren,
-      childrenUnder18,
-      childrenOver18,
-      isSingleEarner,
-      familyBonus,
-      usesTaxableBenefits,
-      taxableBenefit,
-      companyCarValue,
-      allowance,
-      receivesCommuterAllowance,
-      commuterAllowanceValue,
-    };
+    // Clear existing timer
+    if (saveTimerRef.current) {
+      clearTimeout(saveTimerRef.current);
+    }
 
-    window.sessionStorage.setItem(
-      FORM_STATE_STORAGE_KEY,
-      JSON.stringify(stateToPersist),
-    );
+    // Debounce the save operation
+    saveTimerRef.current = setTimeout(() => {
+      const stateToPersist: StoredFormState = {
+        employmentType,
+        incomePeriod,
+        income,
+        hasChildren,
+        childrenUnder18,
+        childrenOver18,
+        isSingleEarner,
+        familyBonus,
+        usesTaxableBenefits,
+        taxableBenefit,
+        companyCarValue,
+        allowance,
+        receivesCommuterAllowance,
+        commuterAllowanceValue,
+      };
+
+      window.sessionStorage.setItem(
+        FORM_STATE_STORAGE_KEY,
+        JSON.stringify(stateToPersist),
+      );
+    }, 500); // 500ms debounce
+
+    // Cleanup on unmount
+    return () => {
+      if (saveTimerRef.current) {
+        clearTimeout(saveTimerRef.current);
+      }
+    };
   }, [
     allowance,
     childrenOver18,
@@ -505,36 +523,18 @@ export default function Home() {
                 <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
                   <span>{home.family.question}</span>
                 </div>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setHasChildren(true)}
-                    className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
-                      hasChildren
-                        ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20"
-                        : "bg-rose-50 text-rose-600 hover:bg-rose-100"
-                    }`}
-                  >
-                    {common.responses.yes}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setHasChildren(false);
+                <YesNoToggle
+                  value={hasChildren}
+                  onChange={(value) => {
+                    setHasChildren(value);
+                    if (!value) {
                       setChildrenUnder18("0");
                       setChildrenOver18("0");
                       setIsSingleEarner(false);
                       setFamilyBonus("none");
-                    }}
-                    className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
-                      !hasChildren
-                        ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20"
-                        : "bg-rose-50 text-rose-600 hover:bg-rose-100"
-                    }`}
-                  >
-                    {common.responses.no}
-                  </button>
-                </div>
+                    }
+                  }}
+                />
                 {hasChildren && (
                   <div className="space-y-6 rounded-2xl bg-gradient-to-br from-rose-50/50 to-pink-50/50 p-6">
                     <div className="grid gap-4 sm:grid-cols-2">
@@ -631,35 +631,17 @@ export default function Home() {
                 <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
                   <span>{home.benefits.question}</span>
                 </div>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setUsesTaxableBenefits(true)}
-                    className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
-                      usesTaxableBenefits
-                        ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20"
-                        : "bg-rose-50 text-rose-600 hover:bg-rose-100"
-                    }`}
-                  >
-                    {common.responses.yes}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setUsesTaxableBenefits(false);
+                <YesNoToggle
+                  value={usesTaxableBenefits}
+                  onChange={(value) => {
+                    setUsesTaxableBenefits(value);
+                    if (!value) {
                       setTaxableBenefit("0");
                       setCompanyCarValue("0");
                       setAllowance("0");
-                    }}
-                    className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
-                      !usesTaxableBenefits
-                        ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20"
-                        : "bg-rose-50 text-rose-600 hover:bg-rose-100"
-                    }`}
-                  >
-                    {common.responses.no}
-                  </button>
-                </div>
+                    }
+                  }}
+                />
                 {usesTaxableBenefits && (
                   <div className="space-y-4 rounded-2xl bg-gradient-to-br from-rose-50/50 to-pink-50/50 p-6">
                     <label className="block">
@@ -728,33 +710,15 @@ export default function Home() {
                 <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
                   <span>{home.commuter.question}</span>
                 </div>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setReceivesCommuterAllowance(true)}
-                    className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
-                      receivesCommuterAllowance
-                        ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20"
-                        : "bg-rose-50 text-rose-600 hover:bg-rose-100"
-                    }`}
-                  >
-                    {common.responses.yes}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setReceivesCommuterAllowance(false);
+                <YesNoToggle
+                  value={receivesCommuterAllowance}
+                  onChange={(value) => {
+                    setReceivesCommuterAllowance(value);
+                    if (!value) {
                       setCommuterAllowanceValue("0");
-                    }}
-                    className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
-                      !receivesCommuterAllowance
-                        ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20"
-                        : "bg-rose-50 text-rose-600 hover:bg-rose-100"
-                    }`}
-                  >
-                    {common.responses.no}
-                  </button>
-                </div>
+                    }
+                  }}
+                />
                 {receivesCommuterAllowance && (
                   <div className="space-y-4 rounded-2xl bg-gradient-to-br from-rose-50/50 to-pink-50/50 p-6">
                     <p className="text-sm text-slate-600">{home.commuter.helper}</p>

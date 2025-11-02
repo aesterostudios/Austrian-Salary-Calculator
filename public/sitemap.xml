@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <!-- Home Page / Calculator -->
+  <url>
+    <loc>https://salary-calculator-austrian.vercel.app/</loc>
+    <lastmod>2025-01-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://salary-calculator-austrian.vercel.app/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://salary-calculator-austrian.vercel.app/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://salary-calculator-austrian.vercel.app/" />
+  </url>
+
+  <!-- FAQ Page -->
+  <url>
+    <loc>https://salary-calculator-austrian.vercel.app/faq</loc>
+    <lastmod>2025-01-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://salary-calculator-austrian.vercel.app/faq" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://salary-calculator-austrian.vercel.app/faq" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://salary-calculator-austrian.vercel.app/faq" />
+  </url>
+
+  <!-- Privacy Page -->
+  <url>
+    <loc>https://salary-calculator-austrian.vercel.app/privacy</loc>
+    <lastmod>2025-01-09</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://salary-calculator-austrian.vercel.app/privacy" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://salary-calculator-austrian.vercel.app/privacy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://salary-calculator-austrian.vercel.app/privacy" />
+  </url>
+</urlset>

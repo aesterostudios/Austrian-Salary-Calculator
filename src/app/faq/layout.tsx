@@ -4,6 +4,13 @@ export const metadata: Metadata = {
   title: "FAQ - Frequently Asked Questions | Austrian Salary Calculator",
   description:
     "Answers to common questions about Austrian salary calculations, tax credits, family bonuses, social insurance, commuter allowances, and employment types.",
+  alternates: {
+    languages: {
+      en: "/faq",
+      de: "/faq",
+      "x-default": "/faq",
+    },
+  },
   openGraph: {
     title: "FAQ - Frequently Asked Questions | Austrian Salary Calculator",
     description:

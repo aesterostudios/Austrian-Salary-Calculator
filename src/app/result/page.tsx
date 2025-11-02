@@ -488,7 +488,7 @@ export default function ResultPage() {
         </div>
 
         {/* Quick Summary Cards */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {/* Average Monthly Net Card */}
           <div className="group relative rounded-2xl border-2 border-rose-100 bg-white p-6 shadow-lg transition-all hover:border-rose-300 hover:shadow-xl">
             <div className="flex items-start justify-between gap-2">
