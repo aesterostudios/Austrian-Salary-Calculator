@@ -470,21 +470,37 @@ export default function ResultPage() {
         {/* Primary Result Card - The Big Answer */}
         <div className="overflow-hidden rounded-3xl border-2 border-rose-500 bg-gradient-to-br from-rose-500 via-rose-500/95 to-rose-600 shadow-2xl shadow-rose-500/30">
           <div className="px-8 py-10 text-center sm:px-12 sm:py-14">
-            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-white/80 sm:text-base">
-              {common.currency.perMonth}
-            </p>
-            {primaryResultNote && (
-              <div className="mx-auto mt-2 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 backdrop-blur-sm">
-                <span className="text-xs font-medium text-white/90">{primaryResultNote}</span>
-              </div>
-            )}
-            <p className="mt-4 text-5xl font-bold text-white sm:text-6xl lg:text-7xl">
-              {primaryResultValue}
-            </p>
-            <div className="mt-6 inline-flex items-center gap-2 rounded-full border-2 border-white/30 bg-white/10 px-6 py-3 backdrop-blur-sm">
-              <span className="text-sm font-medium text-white/90">{common.currency.perYear}:</span>
-              <span className="text-lg font-bold text-white">{primaryResultAnnual}</span>
+            {/* Monthly Amount */}
+            <div className="flex flex-col items-center gap-2">
+              <p className="text-5xl font-bold text-white sm:text-6xl lg:text-7xl">
+                {primaryResultValue}
+              </p>
+              <p className="text-base font-medium text-white/80 sm:text-lg">
+                {common.currency.perMonth}
+              </p>
             </div>
+
+            {/* Divider */}
+            <div className="mx-auto my-6 h-px w-24 bg-white/20"></div>
+
+            {/* Annual Amount */}
+            <div className="flex flex-col items-center gap-1">
+              <div className="flex items-baseline gap-2">
+                <p className="text-2xl font-bold text-white sm:text-3xl">
+                  {primaryResultAnnual}
+                </p>
+                <p className="text-sm font-medium text-white/70">
+                  {common.currency.perYear}
+                </p>
+              </div>
+            </div>
+
+            {/* Annotation */}
+            {primaryResultNote && (
+              <p className="mt-6 text-xs font-medium text-white/60 italic">
+                {primaryResultNote}
+              </p>
+            )}
           </div>
         </div>
 
@@ -529,27 +545,27 @@ export default function ResultPage() {
           </div>
 
           {/* 13th Salary Card */}
-          <div className="rounded-2xl border-2 border-emerald-100 bg-gradient-to-br from-emerald-50/50 to-teal-50/50 p-6 shadow-lg">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-600">
+          <div className="group relative rounded-2xl border-2 border-rose-100 bg-white p-6 shadow-lg transition-all hover:border-rose-300 hover:shadow-xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
               {result.analysis.metrics.net13th}
             </p>
             <p className="mt-3 text-3xl font-bold text-slate-900">
               {formatCurrency(calculation.netSpecial13th, currencyLocale)}
             </p>
-            <p className="mt-2 text-xs text-slate-500">
+            <p className="mt-2 text-xs text-rose-600/70">
               {common.nav.calculator === "Calculator" ? "Special payment" : "Sonderzahlung"}
             </p>
           </div>
 
           {/* 14th Salary Card */}
-          <div className="rounded-2xl border-2 border-emerald-100 bg-gradient-to-br from-emerald-50/50 to-teal-50/50 p-6 shadow-lg">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-600">
+          <div className="group relative rounded-2xl border-2 border-rose-100 bg-white p-6 shadow-lg transition-all hover:border-rose-300 hover:shadow-xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
               {result.analysis.metrics.net14th}
             </p>
             <p className="mt-3 text-3xl font-bold text-slate-900">
               {formatCurrency(calculation.netSpecial14th, currencyLocale)}
             </p>
-            <p className="mt-2 text-xs text-slate-500">
+            <p className="mt-2 text-xs text-rose-600/70">
               {common.nav.calculator === "Calculator" ? "Special payment" : "Sonderzahlung"}
             </p>
           </div>
@@ -615,27 +631,16 @@ export default function ResultPage() {
                     </tr>
                     <tr className="border-b border-slate-100 bg-blue-50/30">
                       <td className="px-4 py-3 text-sm font-medium text-slate-700">
-                        <div className="flex items-center gap-2">
-                          <span>{common.nav.calculator === "Calculator" ? "Social Insurance" : "Sozialversicherung"}</span>
-                          <span className="text-xs text-slate-500">
-                            ({payload.employmentType === "employee" ? "18.07%" : payload.employmentType === "apprentice" ? "15.50%" : "5.10%"})
-                          </span>
-                        </div>
+                        {common.nav.calculator === "Calculator" ? "Social Insurance" : "Sozialversicherung"}
                       </td>
                       <td className="px-4 py-3 text-right text-sm font-semibold text-blue-700">
                         -{formatCurrency(calculation.socialInsuranceMonthly, currencyLocale)}
                       </td>
                       <td className="px-4 py-3 text-right text-sm font-semibold text-blue-700 bg-blue-100/50">
                         -{formatCurrency(calculation.socialInsuranceSpecial, currencyLocale)}
-                        <div className="text-xs text-blue-600 mt-0.5">
-                          ({payload.employmentType === "employee" ? "17.07%" : payload.employmentType === "apprentice" ? "14.45%" : "5.10%"})
-                        </div>
                       </td>
                       <td className="px-4 py-3 text-right text-sm font-semibold text-blue-700 bg-blue-100/50">
                         -{formatCurrency(calculation.socialInsuranceSpecial, currencyLocale)}
-                        <div className="text-xs text-blue-600 mt-0.5">
-                          ({common.nav.calculator === "Calculator" ? "same!" : "gleich!"})
-                        </div>
                       </td>
                     </tr>
                     <tr className="border-b border-slate-100 bg-rose-50/30">
@@ -647,15 +652,9 @@ export default function ResultPage() {
                       </td>
                       <td className="px-4 py-3 text-right text-sm font-semibold text-rose-700 bg-rose-100/40">
                         -{formatCurrency(calculation.incomeTaxSpecial13th, currencyLocale)}
-                        <div className="text-xs text-rose-600 mt-0.5">
-                          ({common.nav.calculator === "Calculator" ? "lower brackets" : "niedrigere Stufen"})
-                        </div>
                       </td>
                       <td className="px-4 py-3 text-right text-sm font-semibold text-rose-700 bg-rose-100/70">
                         -{formatCurrency(calculation.incomeTaxSpecial14th, currencyLocale)}
-                        <div className="text-xs text-rose-600 mt-0.5">
-                          ({common.nav.calculator === "Calculator" ? "higher brackets" : "höhere Stufen"})
-                        </div>
                       </td>
                     </tr>
                     <tr className="bg-gradient-to-r from-emerald-50 to-teal-50 font-semibold">
