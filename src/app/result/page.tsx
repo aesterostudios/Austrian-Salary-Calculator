@@ -556,57 +556,101 @@ export default function ResultPage() {
           </button>
           {breakdownExpanded && (
             <div className="space-y-6 px-6 py-6 sm:px-8">
-              {/* Main Breakdown Cards */}
-              <div className="grid gap-4 sm:grid-cols-2">
-                {breakdown.map((item) => (
-                  <div
-                    key={item.title}
-                    className="flex flex-col gap-3 rounded-2xl border-2 border-rose-100 bg-gradient-to-br from-rose-50/30 to-pink-50/30 p-5"
-                  >
-                    <p className="text-sm font-semibold text-rose-600">{item.title}</p>
-                    <div className="flex items-baseline gap-2">
-                      <p className="text-2xl font-bold text-slate-900">{item.monthly}</p>
-                      <span className="text-xs text-slate-500">{common.currency.perMonth}</span>
-                    </div>
-                    <p className="text-sm text-slate-600">
-                      <span className="font-semibold">{item.annual}</span> {common.currency.perYear}
-                    </p>
-                    <p className="text-xs leading-relaxed text-slate-500">{item.description}</p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Detailed Social Insurance Breakdown */}
-              <div className="rounded-2xl border border-rose-100/60 bg-white p-5">
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500 mb-4">
-                  {common.nav.calculator === "Calculator" ? "Social Insurance Details" : "Sozialversicherung Details"}
-                </p>
-                <div className="space-y-3 text-sm">
-                  <div className="flex justify-between items-baseline">
-                    <span className="text-slate-600">
-                      {common.nav.calculator === "Calculator" ? "Regular months (rate):" : "Reguläre Monate (Satz):"}
-                    </span>
-                    <span className="font-semibold text-slate-900">
-                      {payload.employmentType === "employee" ? "18.07%" : payload.employmentType === "apprentice" ? "15.50%" : "5.10%"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-baseline">
-                    <span className="text-slate-600">
-                      {common.nav.calculator === "Calculator" ? "Special payments (rate):" : "Sonderzahlungen (Satz):"}
-                    </span>
-                    <span className="font-semibold text-slate-900">
-                      {payload.employmentType === "employee" ? "17.07%" : payload.employmentType === "apprentice" ? "14.45%" : "5.10%"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-baseline pt-2 border-t border-rose-100">
-                    <span className="text-slate-600">
-                      {common.nav.calculator === "Calculator" ? "Special payment deduction:" : "Sonderzahlung Abzug:"}
-                    </span>
-                    <span className="font-semibold text-slate-900">
-                      {formatCurrency(calculation.socialInsuranceSpecial, currencyLocale)}
-                    </span>
-                  </div>
-                </div>
+              {/* Payment Comparison Table */}
+              <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100/50 p-1 overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-slate-200">
+                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-600">
+                        {common.nav.calculator === "Calculator" ? "Payment Type" : "Zahlungsart"}
+                      </th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-600">
+                        {common.nav.calculator === "Calculator" ? "Regular" : "Regulär"}
+                      </th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-emerald-600">
+                        {common.nav.calculator === "Calculator" ? "13th Salary" : "13. Gehalt"}
+                      </th>
+                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-emerald-600">
+                        {common.nav.calculator === "Calculator" ? "14th Salary" : "14. Gehalt"}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white">
+                    <tr className="border-b border-slate-100">
+                      <td className="px-4 py-3 text-sm font-medium text-slate-700">
+                        {common.nav.calculator === "Calculator" ? "Gross" : "Brutto"}
+                      </td>
+                      <td className="px-4 py-3 text-right text-sm font-semibold text-slate-900">
+                        {formatCurrency(calculation.grossMonthly, currencyLocale)}
+                      </td>
+                      <td className="px-4 py-3 text-right text-sm font-semibold text-slate-900">
+                        {formatCurrency(calculation.grossMonthly, currencyLocale)}
+                      </td>
+                      <td className="px-4 py-3 text-right text-sm font-semibold text-slate-900">
+                        {formatCurrency(calculation.grossMonthly, currencyLocale)}
+                      </td>
+                    </tr>
+                    <tr className="border-b border-slate-100 bg-blue-50/30">
+                      <td className="px-4 py-3 text-sm font-medium text-slate-700">
+                        <div className="flex items-center gap-2">
+                          <span>{common.nav.calculator === "Calculator" ? "Social Insurance" : "Sozialversicherung"}</span>
+                          <span className="text-xs text-slate-500">
+                            ({payload.employmentType === "employee" ? "18.07%" : payload.employmentType === "apprentice" ? "15.50%" : "5.10%"})
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-right text-sm font-semibold text-blue-700">
+                        -{formatCurrency(calculation.socialInsuranceMonthly, currencyLocale)}
+                      </td>
+                      <td className="px-4 py-3 text-right text-sm font-semibold text-blue-700 bg-blue-100/50">
+                        -{formatCurrency(calculation.socialInsuranceSpecial, currencyLocale)}
+                        <div className="text-xs text-blue-600 mt-0.5">
+                          ({payload.employmentType === "employee" ? "17.07%" : payload.employmentType === "apprentice" ? "14.45%" : "5.10%"})
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-right text-sm font-semibold text-blue-700 bg-blue-100/50">
+                        -{formatCurrency(calculation.socialInsuranceSpecial, currencyLocale)}
+                        <div className="text-xs text-blue-600 mt-0.5">
+                          ({common.nav.calculator === "Calculator" ? "same!" : "gleich!"})
+                        </div>
+                      </td>
+                    </tr>
+                    <tr className="border-b border-slate-100 bg-rose-50/30">
+                      <td className="px-4 py-3 text-sm font-medium text-slate-700">
+                        {common.nav.calculator === "Calculator" ? "Income Tax" : "Lohnsteuer"}
+                      </td>
+                      <td className="px-4 py-3 text-right text-sm font-semibold text-rose-700">
+                        -{formatCurrency(calculation.incomeTaxMonthly, currencyLocale)}
+                      </td>
+                      <td className="px-4 py-3 text-right text-sm font-semibold text-rose-700 bg-rose-100/40">
+                        -{formatCurrency(calculation.incomeTaxSpecial13th, currencyLocale)}
+                        <div className="text-xs text-rose-600 mt-0.5">
+                          ({common.nav.calculator === "Calculator" ? "lower brackets" : "niedrigere Stufen"})
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-right text-sm font-semibold text-rose-700 bg-rose-100/70">
+                        -{formatCurrency(calculation.incomeTaxSpecial14th, currencyLocale)}
+                        <div className="text-xs text-rose-600 mt-0.5">
+                          ({common.nav.calculator === "Calculator" ? "higher brackets" : "höhere Stufen"})
+                        </div>
+                      </td>
+                    </tr>
+                    <tr className="bg-gradient-to-r from-emerald-50 to-teal-50 font-semibold">
+                      <td className="px-4 py-4 text-sm font-bold text-slate-800">
+                        {common.nav.calculator === "Calculator" ? "= Net" : "= Netto"}
+                      </td>
+                      <td className="px-4 py-4 text-right text-lg font-bold text-slate-900">
+                        {formatCurrency(calculation.netRegularMonthly, currencyLocale)}
+                      </td>
+                      <td className="px-4 py-4 text-right text-lg font-bold text-emerald-700">
+                        {formatCurrency(calculation.netSpecial13th, currencyLocale)}
+                      </td>
+                      <td className="px-4 py-4 text-right text-lg font-bold text-emerald-700">
+                        {formatCurrency(calculation.netSpecial14th, currencyLocale)}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
 
               {/* Why 13th and 14th are Different */}
@@ -614,17 +658,27 @@ export default function ResultPage() {
                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-700 mb-3">
                   {common.nav.calculator === "Calculator" ? "💡 Why 13th ≠ 14th salary?" : "💡 Warum 13. ≠ 14. Gehalt?"}
                 </p>
-                <div className="space-y-2 text-xs leading-relaxed text-slate-700">
-                  <p>
-                    {common.nav.calculator === "Calculator"
-                      ? "Even though both have the same gross amount, the 13th and 14th salaries are taxed differently due to progressive tax brackets with annual caps."
-                      : "Obwohl beide den gleichen Bruttobetrag haben, werden das 13. und 14. Gehalt unterschiedlich besteuert aufgrund progressiver Steuerstufen mit Jahresobergrenzen."}
-                  </p>
-                  <p className="font-medium text-amber-900">
-                    {common.nav.calculator === "Calculator"
-                      ? "The 13th payment uses lower tax brackets first, leaving higher brackets for the 14th payment."
-                      : "Die 13. Zahlung nutzt zuerst niedrigere Steuerstufen, wodurch höhere Stufen für die 14. Zahlung übrig bleiben."}
-                  </p>
+                <div className="space-y-3 text-xs leading-relaxed text-slate-700">
+                  <div className="flex items-start gap-2">
+                    <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-700 flex-shrink-0">1</span>
+                    <p>
+                      <span className="font-semibold text-blue-900">{common.nav.calculator === "Calculator" ? "Social insurance:" : "Sozialversicherung:"}</span>
+                      {" "}
+                      {common.nav.calculator === "Calculator"
+                        ? `Special payments have a lower rate (${payload.employmentType === "employee" ? "17.07%" : payload.employmentType === "apprentice" ? "14.45%" : "5.10%"} vs ${payload.employmentType === "employee" ? "18.07%" : payload.employmentType === "apprentice" ? "15.50%" : "5.10%"}), so both 13th and 14th have the same deduction.`
+                        : `Sonderzahlungen haben einen niedrigeren Satz (${payload.employmentType === "employee" ? "17,07%" : payload.employmentType === "apprentice" ? "14,45%" : "5,10%"} vs ${payload.employmentType === "employee" ? "18,07%" : payload.employmentType === "apprentice" ? "15,50%" : "5,10%"}), daher haben 13. und 14. denselben Abzug.`}
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-rose-100 text-xs font-bold text-rose-700 flex-shrink-0">2</span>
+                    <p>
+                      <span className="font-semibold text-rose-900">{common.nav.calculator === "Calculator" ? "Income tax:" : "Lohnsteuer:"}</span>
+                      {" "}
+                      {common.nav.calculator === "Calculator"
+                        ? "Progressive tax brackets with annual caps are applied sequentially. The 13th payment uses lower tax brackets first (6% after €620 tax-free), leaving higher brackets for the 14th payment."
+                        : "Progressive Steuerstufen mit Jahresobergrenzen werden nacheinander angewendet. Die 13. Zahlung nutzt zuerst niedrigere Steuerstufen (6% nach €620 steuerfrei), wodurch höhere Stufen für die 14. Zahlung übrig bleiben."}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
