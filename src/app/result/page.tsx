@@ -25,9 +25,9 @@ type AnalysisChartSegment = {
 };
 
 const ANALYSIS_CHART_COLORS: Record<AnalysisChartSegmentId, string> = {
-  socialInsurance: "#fecdd3",
-  incomeTax: "#fda4af",
-  netIncome: "#f43f5e",
+  netIncome: "#10b981",      // Emerald-500 - vibrant green for take-home
+  socialInsurance: "#3b82f6", // Blue-500 - distinct blue
+  incomeTax: "#f43f5e",       // Rose-500 - pink/red for tax
 };
 
 function polarToCartesian(
@@ -433,10 +433,11 @@ export default function ResultPage() {
               onClick={handlePrint}
               className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border-2 border-rose-200 bg-white px-2.5 sm:px-3 py-2 text-sm font-semibold text-rose-600 shadow-sm transition-all hover:border-rose-300 hover:bg-rose-50 hover:shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-200"
               aria-label={common.nav.calculator === "Calculator" ? "Print or save as PDF" : "Drucken oder als PDF speichern"}
+              title={common.nav.calculator === "Calculator" ? "Print or save as PDF" : "Drucken oder als PDF speichern"}
             >
               <PrinterIcon className="h-4 w-4" />
               <span className="hidden sm:inline">
-                {common.nav.calculator === "Calculator" ? "Print" : "Drucken"}
+                {common.nav.calculator === "Calculator" ? "Print / PDF" : "Drucken / PDF"}
               </span>
             </button>
             <LanguageToggle />
@@ -822,18 +823,15 @@ export default function ResultPage() {
                                 r={donutOuterRadius}
                                 fill={singleDonutSegment.color}
                                 stroke={isActive ? singleDonutSegment.color : "transparent"}
-                                strokeWidth={isActive ? 4 : 0}
+                                strokeWidth={isActive ? 6 : 0}
                                 strokeLinejoin="round"
                                 strokeLinecap="round"
-                                className="cursor-pointer transition-[opacity,filter,transform] duration-300"
+                                className="cursor-pointer transition-all duration-200"
                                 style={{
-                                  opacity: isDimmed ? 0.35 : 1,
+                                  opacity: isDimmed ? 0.4 : isActive ? 1 : 0.95,
                                   filter: isActive
-                                    ? `drop-shadow(0 10px 30px ${hexToRgba(singleDonutSegment.color, 0.35)})`
+                                    ? `drop-shadow(0 6px 20px ${hexToRgba(singleDonutSegment.color, 0.4)}) brightness(1.1)`
                                     : undefined,
-                                  transform: isActive ? "scale(1.05)" : undefined,
-                                  transformOrigin: `${donutCenter}px ${donutCenter}px`,
-                                  transformBox: "fill-box",
                                 }}
                                 tabIndex={0}
                                 aria-label={`${singleDonutSegment.label}: ${formatCurrency(
@@ -876,19 +874,16 @@ export default function ResultPage() {
                                 key={segment.id}
                                 d={segment.path}
                                 fill={segment.color}
-                                stroke={isActive ? segment.color : "transparent"}
-                                strokeWidth={isActive ? 4 : 0}
+                                stroke={isActive ? "#ffffff" : "transparent"}
+                                strokeWidth={isActive ? 3 : 0}
                                 strokeLinejoin="round"
                                 strokeLinecap="round"
-                                className="cursor-pointer transition-[opacity,filter,transform] duration-300 focus:outline-none"
+                                className="cursor-pointer transition-all duration-200 focus:outline-none"
                                 style={{
-                                  opacity: isDimmed ? 0.35 : 1,
+                                  opacity: isDimmed ? 0.4 : isActive ? 1 : 0.95,
                                   filter: isActive
-                                    ? `drop-shadow(0 10px 30px ${hexToRgba(segment.color, 0.35)})`
+                                    ? `drop-shadow(0 6px 20px ${hexToRgba(segment.color, 0.4)}) brightness(1.1)`
                                     : undefined,
-                                  transform: isActive ? "scale(1.05)" : undefined,
-                                  transformOrigin: `${donutCenter}px ${donutCenter}px`,
-                                  transformBox: "fill-box",
                                 }}
                                 tabIndex={isInteractive ? 0 : -1}
                                 aria-label={`${segment.label}: ${formatCurrency(
@@ -998,8 +993,8 @@ export default function ResultPage() {
                           const isActive = activeSegment === segment.id;
                           const isDimmed = activeSegment !== null && !isActive;
                           const percentLabel = percentFormatter.format(segment.percentage / 100);
-                          const maxValue = Math.max(...segmentsWithPercentages.map(s => s.value));
-                          const widthPercent = maxValue > 0 ? (segment.value / maxValue) * 100 : 0;
+                          // Use actual percentage of total, not relative to max value
+                          const widthPercent = segment.percentage;
 
                           return (
                             <button
@@ -1041,21 +1036,23 @@ export default function ResultPage() {
                                   {percentLabel}
                                 </span>
                               </div>
-                              <div className="relative h-12 w-full overflow-hidden rounded-lg bg-rose-100/40">
+                              <div className="relative h-12 w-full overflow-hidden rounded-lg bg-slate-100">
                                 <div
-                                  className="absolute inset-y-0 left-0 flex items-center justify-end rounded-lg px-4 transition-all duration-500 ease-out"
+                                  className="absolute inset-y-0 left-0 flex items-center rounded-lg px-4 transition-all duration-500 ease-out"
                                   style={{
                                     width: `${widthPercent}%`,
-                                    background: `linear-gradient(90deg, ${segment.color} 0%, ${segment.color}dd 100%)`,
-                                    minWidth: widthPercent > 0 ? '60px' : '0px'
+                                    backgroundColor: segment.color,
+                                    minWidth: widthPercent > 5 ? '80px' : '0px'
                                   }}
                                 >
-                                  <span className="whitespace-nowrap text-sm font-bold text-white drop-shadow-sm">
-                                    {formatCurrency(segment.value, currencyLocale)}
-                                  </span>
+                                  {widthPercent > 15 && (
+                                    <span className="whitespace-nowrap text-sm font-bold text-white drop-shadow-sm">
+                                      {formatCurrency(segment.value, currencyLocale)}
+                                    </span>
+                                  )}
                                 </div>
-                                {widthPercent < 40 && segment.value > 0 && (
-                                  <div className="absolute inset-y-0 left-0 flex items-center" style={{ left: `calc(${widthPercent}% + 12px)` }}>
+                                {widthPercent <= 15 && segment.value > 0 && (
+                                  <div className="absolute inset-y-0 right-4 flex items-center">
                                     <span className="whitespace-nowrap text-sm font-bold text-slate-700">
                                       {formatCurrency(segment.value, currencyLocale)}
                                     </span>

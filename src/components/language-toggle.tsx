@@ -38,39 +38,45 @@ export function LanguageToggle() {
 
   return (
     <div ref={containerRef} className="relative">
-      {!isOpen ? (
-        <button
-          type="button"
-          onClick={() => setIsOpen(true)}
-          className="inline-flex items-center gap-2 rounded-full border border-white/60 bg-white/40 p-2 text-rose-600 shadow-[0_12px_30px_rgba(244,114,182,0.15)] backdrop-blur transition-all hover:bg-white/60 hover:shadow-[0_12px_30px_rgba(244,114,182,0.25)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200"
-          aria-label="Change language"
-        >
-          <LanguageIcon className="h-5 w-5" />
-        </button>
-      ) : (
-        <div className="inline-flex items-center gap-1 rounded-full border border-white/60 bg-white/40 p-1 text-sm font-semibold text-rose-600 shadow-[0_12px_30px_rgba(244,114,182,0.15)] backdrop-blur">
-          {options.map((option) => {
-            const isActive = language === option.id;
+      <div className={clsx(
+        "inline-flex items-center rounded-full border border-white/60 bg-white/40 shadow-[0_12px_30px_rgba(244,114,182,0.15)] backdrop-blur transition-all duration-300 ease-in-out hover:shadow-[0_12px_30px_rgba(244,114,182,0.25)]",
+        isOpen ? "gap-1 p-1" : "gap-2 p-2 hover:bg-white/60"
+      )}>
+        {!isOpen ? (
+          <button
+            type="button"
+            onClick={() => setIsOpen(true)}
+            className="inline-flex items-center gap-2 text-rose-600 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200"
+            aria-label="Change language"
+          >
+            <LanguageIcon className="h-5 w-5 transition-transform duration-300" />
+          </button>
+        ) : (
+          <>
+            {options.map((option, index) => {
+              const isActive = language === option.id;
 
-            return (
-              <button
-                key={option.id}
-                type="button"
-                onClick={() => handleLanguageChange(option.id)}
-                className={clsx(
-                  "rounded-full px-3 py-1.5 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300",
-                  isActive
-                    ? "bg-rose-500 text-white shadow-[0_10px_25px_rgba(244,114,182,0.35)]"
-                    : "text-rose-700 hover:text-rose-800",
-                )}
-                aria-pressed={isActive}
-              >
-                {option.label}
-              </button>
-            );
-          })}
-        </div>
-      )}
+              return (
+                <button
+                  key={option.id}
+                  type="button"
+                  onClick={() => handleLanguageChange(option.id)}
+                  className={clsx(
+                    "rounded-full px-3 py-1.5 text-sm font-semibold transition-all duration-200 animate-in fade-in slide-in-from-top-2",
+                    isActive
+                      ? "bg-rose-500 text-white shadow-[0_10px_25px_rgba(244,114,182,0.35)]"
+                      : "text-rose-700 hover:text-rose-800",
+                  )}
+                  style={{ animationDelay: `${index * 50}ms` }}
+                  aria-pressed={isActive}
+                >
+                  {option.label}
+                </button>
+              );
+            })}
+          </>
+        )}
+      </div>
     </div>
   );
 }

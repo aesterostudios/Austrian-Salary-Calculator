@@ -340,13 +340,27 @@ export default function Home() {
       <div className="mx-auto max-w-4xl space-y-8">
         {/* Hero */}
         <header className="text-center">
+          {/* Social Proof Badge */}
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border-2 border-emerald-200 bg-gradient-to-r from-emerald-50 to-teal-50 px-4 py-2 shadow-sm">
+            <svg className="h-4 w-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+            </svg>
+            <span className="text-xs font-semibold text-emerald-700">
+              {common.nav.calculator === "Calculator"
+                ? "Trusted by 3,000+ users this month"
+                : "Vertraut von über 3.000 Nutzern diesen Monat"}
+            </span>
+          </div>
+
           <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
-            {home.headline}
+            {common.nav.calculator === "Calculator"
+              ? "Austrian Salary Calculator"
+              : "Österreichischer Gehaltsrechner"}
           </h1>
           <p className="mt-4 text-base text-slate-600 sm:text-lg">
             {common.nav.calculator === "Calculator"
-              ? "Calculate your net take-home pay with accurate 2025 Austrian tax rates"
-              : "Berechne dein Nettogehalt mit aktuellen österreichischen Steuersätzen 2025"}
+              ? "Calculate gross-to-net or net-to-gross with accurate 2025 Austrian tax rates"
+              : "Berechne Brutto-Netto oder Netto-Brutto mit aktuellen österreichischen Steuersätzen 2025"}
           </p>
         </header>
 
@@ -479,7 +493,7 @@ export default function Home() {
                       inputMode="decimal"
                       min="0"
                       max="500000"
-                      step="0.01"
+                      step="10"
                       value={income}
                       onChange={(event) => setIncome(event.target.value)}
                       className="block w-full rounded-2xl border-2 border-rose-100 bg-white py-4 pl-10 pr-4 text-lg font-semibold text-slate-900 placeholder:text-slate-400 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
