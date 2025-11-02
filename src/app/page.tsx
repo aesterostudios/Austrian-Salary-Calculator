@@ -66,7 +66,7 @@ export default function Home() {
     "employee",
   );
   const [incomePeriod, setIncomePeriod] = useState<IncomePeriod>("monthly");
-  const [income, setIncome] = useState<string>("3000");
+  const [income, setIncome] = useState<string>("");
   const [hasChildren, setHasChildren] = useState<boolean>(false);
   const [childrenUnder18, setChildrenUnder18] = useState<string>("0");
   const [childrenOver18, setChildrenOver18] = useState<string>("0");
@@ -277,14 +277,14 @@ export default function Home() {
     if (newMode !== calculationMode) {
       setCalculationMode(newMode);
       // Reset income when switching modes to avoid confusion
-      setIncome("3000");
+      setIncome("");
     }
   };
 
   const handleReset = () => {
     setEmploymentType("employee");
     setIncomePeriod("monthly");
-    setIncome("3000");
+    setIncome("");
     setCalculationMode("gross-to-net");
     setHasChildren(false);
     setChildrenUnder18("0");
@@ -333,29 +333,37 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => handleCalculationModeChange('gross-to-net')}
-                className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-all sm:px-4 sm:text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200 ${
+                className={`rounded-full px-2 py-1.5 text-xs font-semibold transition-all sm:px-4 sm:text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200 ${
                   calculationMode === 'gross-to-net'
                     ? 'bg-rose-500 text-white shadow-[0_10px_25px_rgba(244,114,182,0.35)]'
                     : 'text-rose-600/80 hover:text-rose-700'
                 }`}
                 aria-pressed={calculationMode === 'gross-to-net'}
+                aria-label={common.nav.calculator === "Calculator" ? "Gross to Net" : "Brutto zu Netto"}
               >
-                <span className="whitespace-nowrap">
+                <span className="hidden sm:inline whitespace-nowrap">
                   {common.nav.calculator === "Calculator" ? "Gross → Net" : "Brutto → Netto"}
+                </span>
+                <span className="sm:hidden whitespace-nowrap">
+                  {common.nav.calculator === "Calculator" ? "Gr→Ne" : "Br→Ne"}
                 </span>
               </button>
               <button
                 type="button"
                 onClick={() => handleCalculationModeChange('net-to-gross')}
-                className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-all sm:px-4 sm:text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200 ${
+                className={`rounded-full px-2 py-1.5 text-xs font-semibold transition-all sm:px-4 sm:text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200 ${
                   calculationMode === 'net-to-gross'
                     ? 'bg-rose-500 text-white shadow-[0_10px_25px_rgba(244,114,182,0.35)]'
                     : 'text-rose-600/80 hover:text-rose-700'
                 }`}
                 aria-pressed={calculationMode === 'net-to-gross'}
+                aria-label={common.nav.calculator === "Calculator" ? "Net to Gross" : "Netto zu Brutto"}
               >
-                <span className="whitespace-nowrap">
+                <span className="hidden sm:inline whitespace-nowrap">
                   {common.nav.calculator === "Calculator" ? "Net → Gross" : "Netto → Brutto"}
+                </span>
+                <span className="sm:hidden whitespace-nowrap">
+                  {common.nav.calculator === "Calculator" ? "Ne→Gr" : "Ne→Br"}
                 </span>
               </button>
             </div>
@@ -369,7 +377,7 @@ export default function Home() {
         {/* Hero */}
         <header className="text-center">
           <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
-            {home.headline}
+            {calculationMode === 'gross-to-net' ? home.headline : home.headlineNetToGross}
           </h1>
           <p className="mt-4 text-base text-slate-600 sm:text-lg">
             {calculationMode === 'gross-to-net'
@@ -377,8 +385,8 @@ export default function Home() {
                 ? "Calculate your net take-home pay from your gross salary"
                 : "Berechne dein Nettogehalt aus deinem Bruttogehalt")
               : (common.nav.calculator === "Calculator"
-                ? "Find out what gross salary you need for your desired net income"
-                : "Finde heraus, welches Bruttogehalt du für dein gewünschtes Nettogehalt benötigst")
+                ? "Calculate your gross salary from your net take-home pay"
+                : "Berechne dein Bruttogehalt aus deinem Netto-Einkommen")
             }
           </p>
         </header>
@@ -459,7 +467,7 @@ export default function Home() {
                       value={income}
                       onChange={(event) => setIncome(event.target.value)}
                       className="block w-full rounded-2xl border-2 border-rose-100 bg-white py-4 pl-10 pr-4 text-lg font-semibold text-slate-900 placeholder:text-slate-400 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10 invalid:border-red-300 invalid:ring-red-500/10"
-                      placeholder="3000"
+                      placeholder={common.nav.calculator === "Calculator" ? "Enter amount" : "Betrag eingeben"}
                       required
                       aria-required="true"
                       aria-invalid={Number.parseFloat(income) <= 0}

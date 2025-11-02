@@ -30,6 +30,7 @@ export interface Dictionary {
   home: {
     badge: string;
     headline: string;
+    headlineNetToGross: string;
     summaryLabel: string;
     summarySuffix: string;
     incomePlaceholder: string;
@@ -206,6 +207,7 @@ export const translations: Record<Language, Dictionary> = {
     home: {
       badge: "Gross-to-net calculator",
       headline: "Calculate your Austrian net salary.",
+      headlineNetToGross: "Calculate your Austrian gross salary.",
       summaryLabel: "Currently selected gross salary",
       summarySuffix: "/ month",
       incomePlaceholder: "e.g. 3,000",
@@ -450,6 +452,7 @@ export const translations: Record<Language, Dictionary> = {
     home: {
       badge: "Brutto-Netto-Rechner",
       headline: "Berechne dein österreichisches Nettogehalt.",
+      headlineNetToGross: "Berechne dein österreichisches Bruttogehalt.",
       summaryLabel: "Aktuell ausgewähltes Bruttogehalt",
       summarySuffix: "/ Monat",
       incomePlaceholder: "z. B. 3.000",
