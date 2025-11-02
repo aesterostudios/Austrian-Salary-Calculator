@@ -25,6 +25,13 @@ export const metadata: Metadata = {
   title: "Austrian Salary Calculator",
   description:
     "Calculate your Austrian net salary, taxes, and contributions with our gross-to-net calculator.",
+  alternates: {
+    languages: {
+      en: "/",
+      de: "/",
+      "x-default": "/",
+    },
+  },
 };
 
 export default async function RootLayout({

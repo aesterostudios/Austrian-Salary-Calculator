@@ -2,17 +2,21 @@
 
 import Link from "next/link";
 import type { ComponentType, FormEvent, SVGProps } from "react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { headerLinkClasses } from "@/components/header-link";
 import { LanguageToggle } from "@/components/language-toggle";
+import { YesNoToggle } from "@/components/yes-no-toggle";
 import { useLanguage } from "@/components/language-provider";
 import {
   BuildingOffice2Icon,
   AcademicCapIcon,
   UserIcon,
   ChevronDownIcon,
-  ChevronUpIcon,
+  ClipboardDocumentListIcon,
+  UsersIcon,
+  TruckIcon,
+  MapIcon,
 } from "@heroicons/react/24/outline";
 import type {
   CalculatorInput,
@@ -21,7 +25,6 @@ import type {
   IncomePeriod,
   CalculationMode,
 } from "@/lib/calculator";
-import { formatCurrency, calculateGrossFromNet, calculateNetSalary } from "@/lib/calculator";
 
 type EmploymentOption = {
   id: EmploymentType;
@@ -58,7 +61,6 @@ export default function Home() {
   const router = useRouter();
   const { dictionary } = useLanguage();
   const { common, home } = dictionary;
-  const currencyLocale = common.currency.locale;
 
   const [employmentType, setEmploymentType] = useState<EmploymentType>(
     "employee",
@@ -85,6 +87,9 @@ export default function Home() {
   const [familyExpanded, setFamilyExpanded] = useState(false);
   const [benefitsExpanded, setBenefitsExpanded] = useState(false);
   const [commuterExpanded, setCommuterExpanded] = useState(false);
+
+  // Debounce timer for sessionStorage saves
+  const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Auto-expand sections if they have data
   useEffect(() => {
@@ -167,27 +172,42 @@ export default function Home() {
       return;
     }
 
-    const stateToPersist: StoredFormState = {
-      employmentType,
-      incomePeriod,
-      income,
-      hasChildren,
-      childrenUnder18,
-      childrenOver18,
-      isSingleEarner,
-      familyBonus,
-      usesTaxableBenefits,
-      taxableBenefit,
-      companyCarValue,
-      allowance,
-      receivesCommuterAllowance,
-      commuterAllowanceValue,
-    };
+    // Clear existing timer
+    if (saveTimerRef.current) {
+      clearTimeout(saveTimerRef.current);
+    }
 
-    window.sessionStorage.setItem(
-      FORM_STATE_STORAGE_KEY,
-      JSON.stringify(stateToPersist),
-    );
+    // Debounce the save operation
+    saveTimerRef.current = setTimeout(() => {
+      const stateToPersist: StoredFormState = {
+        employmentType,
+        incomePeriod,
+        income,
+        hasChildren,
+        childrenUnder18,
+        childrenOver18,
+        isSingleEarner,
+        familyBonus,
+        usesTaxableBenefits,
+        taxableBenefit,
+        companyCarValue,
+        allowance,
+        receivesCommuterAllowance,
+        commuterAllowanceValue,
+      };
+
+      window.sessionStorage.setItem(
+        FORM_STATE_STORAGE_KEY,
+        JSON.stringify(stateToPersist),
+      );
+    }, 500); // 500ms debounce
+
+    // Cleanup on unmount
+    return () => {
+      if (saveTimerRef.current) {
+        clearTimeout(saveTimerRef.current);
+      }
+    };
   }, [
     allowance,
     childrenOver18,
@@ -214,18 +234,6 @@ export default function Home() {
       })),
     [common.employmentOptions],
   );
-
-  const previewValue = useMemo(() => {
-    const parsedIncome = Number.parseFloat(income);
-    if (Number.isNaN(parsedIncome)) {
-      return formatCurrency(0, currencyLocale);
-    }
-
-    const monthly =
-      incomePeriod === "monthly" ? parsedIncome : parsedIncome / 12;
-
-    return formatCurrency(monthly, currencyLocale);
-  }, [income, incomePeriod, currencyLocale]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -265,10 +273,19 @@ export default function Home() {
     router.push(`/result?payload=${encoded}`);
   };
 
+  const handleCalculationModeChange = (newMode: CalculationMode) => {
+    if (newMode !== calculationMode) {
+      setCalculationMode(newMode);
+      // Reset income when switching modes to avoid confusion
+      setIncome("3000");
+    }
+  };
+
   const handleReset = () => {
     setEmploymentType("employee");
     setIncomePeriod("monthly");
     setIncome("3000");
+    setCalculationMode("gross-to-net");
     setHasChildren(false);
     setChildrenUnder18("0");
     setChildrenOver18("0");
@@ -285,9 +302,14 @@ export default function Home() {
   return (
     <main className="relative mx-auto min-h-screen w-full px-4 pb-20 pt-6 sm:px-6">
       {isNavigating && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-rose-50/90 backdrop-blur-md">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-rose-50/90 backdrop-blur-md"
+          role="status"
+          aria-live="polite"
+          aria-busy="true"
+        >
           <div className="flex flex-col items-center gap-6">
-            <div className="relative h-20 w-20">
+            <div className="relative h-20 w-20" aria-hidden="true">
               <div className="absolute inset-0 animate-spin rounded-full border-4 border-rose-200"></div>
               <div className="absolute inset-0 animate-spin rounded-full border-4 border-transparent border-t-rose-500" style={{ animationDuration: "0.8s" }}></div>
             </div>
@@ -307,15 +329,16 @@ export default function Home() {
             </Link>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5 rounded-full border border-rose-100 bg-rose-50/50 p-0.5 shadow-sm">
+            <div className="inline-flex items-center gap-1 rounded-full border border-white/60 bg-white/40 p-1 shadow-[0_12px_30px_rgba(244,114,182,0.15)] backdrop-blur">
               <button
                 type="button"
-                onClick={() => setCalculationMode('gross-to-net')}
-                className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-all sm:px-4 sm:text-sm ${
+                onClick={() => handleCalculationModeChange('gross-to-net')}
+                className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-all sm:px-4 sm:text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200 ${
                   calculationMode === 'gross-to-net'
-                    ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-md'
-                    : 'text-rose-600 hover:bg-rose-100/50'
+                    ? 'bg-rose-500 text-white shadow-[0_10px_25px_rgba(244,114,182,0.35)]'
+                    : 'text-rose-600/80 hover:text-rose-700'
                 }`}
+                aria-pressed={calculationMode === 'gross-to-net'}
               >
                 <span className="whitespace-nowrap">
                   {common.nav.calculator === "Calculator" ? "Gross → Net" : "Brutto → Netto"}
@@ -323,12 +346,13 @@ export default function Home() {
               </button>
               <button
                 type="button"
-                onClick={() => setCalculationMode('net-to-gross')}
-                className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-all sm:px-4 sm:text-sm ${
+                onClick={() => handleCalculationModeChange('net-to-gross')}
+                className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-all sm:px-4 sm:text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200 ${
                   calculationMode === 'net-to-gross'
-                    ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-md'
-                    : 'text-rose-600 hover:bg-rose-100/50'
+                    ? 'bg-rose-500 text-white shadow-[0_10px_25px_rgba(244,114,182,0.35)]'
+                    : 'text-rose-600/80 hover:text-rose-700'
                 }`}
+                aria-pressed={calculationMode === 'net-to-gross'}
               >
                 <span className="whitespace-nowrap">
                   {common.nav.calculator === "Calculator" ? "Net → Gross" : "Netto → Brutto"}
@@ -364,8 +388,9 @@ export default function Home() {
           {/* Section 1: Basic Information */}
           <div className="overflow-hidden rounded-3xl border border-rose-100/60 bg-white shadow-lg">
             <div className="bg-gradient-to-r from-rose-50 to-pink-50 px-6 py-5 sm:px-8">
-              <h2 className="text-lg font-semibold text-slate-900">
-                {common.nav.calculator === "Calculator" ? "📊 Basic Information" : "📊 Grundinformationen"}
+              <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+                <ClipboardDocumentListIcon className="h-5 w-5 text-rose-500" />
+                {common.nav.calculator === "Calculator" ? "Basic Information" : "Grundinformationen"}
               </h2>
               <p className="mt-1 text-sm text-slate-600">
                 {common.nav.calculator === "Calculator" ? "Employment type and salary" : "Beschäftigungsart und Gehalt"}
@@ -419,6 +444,8 @@ export default function Home() {
                         ? (common.nav.calculator === "Calculator" ? "Desired Net Monthly Salary" : "Gewünschtes Netto Monatsgehalt")
                         : (common.nav.calculator === "Calculator" ? "Desired Net Annual Salary" : "Gewünschtes Netto Jahresgehalt"))
                     }
+                    {" "}
+                    <span className="text-rose-500" aria-label="required">*</span>
                   </span>
                   <div className="relative mt-2">
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
@@ -427,14 +454,22 @@ export default function Home() {
                     <input
                       type="number"
                       min="0"
-                      step="100"
+                      max="10000000"
+                      step="1"
                       value={income}
                       onChange={(event) => setIncome(event.target.value)}
-                      className="block w-full rounded-2xl border-2 border-rose-100 bg-white py-4 pl-10 pr-4 text-lg font-semibold text-slate-900 placeholder:text-slate-400 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
+                      className="block w-full rounded-2xl border-2 border-rose-100 bg-white py-4 pl-10 pr-4 text-lg font-semibold text-slate-900 placeholder:text-slate-400 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10 invalid:border-red-300 invalid:ring-red-500/10"
                       placeholder="3000"
                       required
+                      aria-required="true"
+                      aria-invalid={Number.parseFloat(income) <= 0}
                     />
                   </div>
+                  {Number.parseFloat(income) <= 0 && income !== "" && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {common.nav.calculator === "Calculator" ? "Please enter a valid salary amount" : "Bitte geben Sie einen gültigen Gehaltsbetrag ein"}
+                    </p>
+                  )}
                 </label>
                 <div className="flex gap-2">
                   {["monthly", "yearly"].map((period) => {
@@ -466,11 +501,14 @@ export default function Home() {
             <button
               type="button"
               onClick={() => setFamilyExpanded(!familyExpanded)}
+              aria-expanded={familyExpanded}
+              aria-controls="family-section-content"
               className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
             >
               <div>
-                <h2 className="text-lg font-semibold text-slate-900">
-                  {common.nav.calculator === "Calculator" ? "👨‍👩‍👧‍👦 Family & Tax Credits" : "👨‍👩‍👧‍👦 Familie & Steuerabsetzbeträge"}
+                <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+                  <UsersIcon className="h-5 w-5 text-rose-500" />
+                  {common.nav.calculator === "Calculator" ? "Family & Tax Credits" : "Familie & Steuerabsetzbeträge"}
                 </h2>
                 <p className="mt-1 text-sm text-slate-600">
                   {common.nav.calculator === "Calculator" ? "Optional - Add if applicable" : "Optional - Falls zutreffend"}
@@ -481,40 +519,22 @@ export default function Home() {
               </div>
             </button>
             {familyExpanded && (
-              <div className="space-y-6 px-6 py-6 sm:px-8">
+              <div id="family-section-content" className="space-y-6 px-6 py-6 sm:px-8">
                 <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
                   <span>{home.family.question}</span>
                 </div>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setHasChildren(true)}
-                    className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
-                      hasChildren
-                        ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20"
-                        : "bg-rose-50 text-rose-600 hover:bg-rose-100"
-                    }`}
-                  >
-                    {common.responses.yes}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setHasChildren(false);
+                <YesNoToggle
+                  value={hasChildren}
+                  onChange={(value) => {
+                    setHasChildren(value);
+                    if (!value) {
                       setChildrenUnder18("0");
                       setChildrenOver18("0");
                       setIsSingleEarner(false);
                       setFamilyBonus("none");
-                    }}
-                    className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
-                      !hasChildren
-                        ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20"
-                        : "bg-rose-50 text-rose-600 hover:bg-rose-100"
-                    }`}
-                  >
-                    {common.responses.no}
-                  </button>
-                </div>
+                    }
+                  }}
+                />
                 {hasChildren && (
                   <div className="space-y-6 rounded-2xl bg-gradient-to-br from-rose-50/50 to-pink-50/50 p-6">
                     <div className="grid gap-4 sm:grid-cols-2">
@@ -525,9 +545,10 @@ export default function Home() {
                         <input
                           type="number"
                           min="0"
+                          max="20"
                           value={childrenUnder18}
                           onChange={(event) => setChildrenUnder18(event.target.value)}
-                          className="mt-2 block w-full rounded-xl border-2 border-rose-100 bg-white px-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
+                          className="mt-2 block w-full rounded-xl border-2 border-rose-100 bg-white px-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10 invalid:border-red-300"
                         />
                       </label>
                       <label className="block">
@@ -537,9 +558,10 @@ export default function Home() {
                         <input
                           type="number"
                           min="0"
+                          max="20"
                           value={childrenOver18}
                           onChange={(event) => setChildrenOver18(event.target.value)}
-                          className="mt-2 block w-full rounded-xl border-2 border-rose-100 bg-white px-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
+                          className="mt-2 block w-full rounded-xl border-2 border-rose-100 bg-white px-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10 invalid:border-red-300"
                         />
                         <span className="mt-1 block text-xs text-slate-500">
                           {home.family.childrenOver18Note}
@@ -550,30 +572,7 @@ export default function Home() {
                       <span className="block text-sm font-medium text-slate-700">
                         {home.family.singleEarnerQuestion}
                       </span>
-                      <div className="flex gap-2">
-                        <button
-                          type="button"
-                          onClick={() => setIsSingleEarner(true)}
-                          className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
-                            isSingleEarner
-                              ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg"
-                              : "border-2 border-rose-100 bg-white text-rose-600 hover:border-rose-300"
-                          }`}
-                        >
-                          {common.responses.yes}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setIsSingleEarner(false)}
-                          className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
-                            !isSingleEarner
-                              ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg"
-                              : "border-2 border-rose-100 bg-white text-rose-600 hover:border-rose-300"
-                          }`}
-                        >
-                          {common.responses.no}
-                        </button>
-                      </div>
+                      <YesNoToggle value={isSingleEarner} onChange={setIsSingleEarner} />
                     </div>
                     <div className="space-y-3">
                       <span className="block text-sm font-medium text-slate-700">
@@ -610,11 +609,14 @@ export default function Home() {
             <button
               type="button"
               onClick={() => setBenefitsExpanded(!benefitsExpanded)}
+              aria-expanded={benefitsExpanded}
+              aria-controls="benefits-section-content"
               className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
             >
               <div>
-                <h2 className="text-lg font-semibold text-slate-900">
-                  {common.nav.calculator === "Calculator" ? "🚗 Taxable Benefits" : "🚗 Sachbezüge"}
+                <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+                  <TruckIcon className="h-5 w-5 text-rose-500" />
+                  {common.nav.calculator === "Calculator" ? "Taxable Benefits" : "Sachbezüge"}
                 </h2>
                 <p className="mt-1 text-sm text-slate-600">
                   {common.nav.calculator === "Calculator" ? "Optional - Company car, allowances" : "Optional - Firmenauto, Zulagen"}
@@ -625,39 +627,21 @@ export default function Home() {
               </div>
             </button>
             {benefitsExpanded && (
-              <div className="space-y-6 px-6 py-6 sm:px-8">
+              <div id="benefits-section-content" className="space-y-6 px-6 py-6 sm:px-8">
                 <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
                   <span>{home.benefits.question}</span>
                 </div>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setUsesTaxableBenefits(true)}
-                    className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
-                      usesTaxableBenefits
-                        ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20"
-                        : "bg-rose-50 text-rose-600 hover:bg-rose-100"
-                    }`}
-                  >
-                    {common.responses.yes}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setUsesTaxableBenefits(false);
+                <YesNoToggle
+                  value={usesTaxableBenefits}
+                  onChange={(value) => {
+                    setUsesTaxableBenefits(value);
+                    if (!value) {
                       setTaxableBenefit("0");
                       setCompanyCarValue("0");
                       setAllowance("0");
-                    }}
-                    className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
-                      !usesTaxableBenefits
-                        ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20"
-                        : "bg-rose-50 text-rose-600 hover:bg-rose-100"
-                    }`}
-                  >
-                    {common.responses.no}
-                  </button>
-                </div>
+                    }
+                  }}
+                />
                 {usesTaxableBenefits && (
                   <div className="space-y-4 rounded-2xl bg-gradient-to-br from-rose-50/50 to-pink-50/50 p-6">
                     <label className="block">
@@ -704,11 +688,14 @@ export default function Home() {
             <button
               type="button"
               onClick={() => setCommuterExpanded(!commuterExpanded)}
+              aria-expanded={commuterExpanded}
+              aria-controls="commuter-section-content"
               className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
             >
               <div>
-                <h2 className="text-lg font-semibold text-slate-900">
-                  {common.nav.calculator === "Calculator" ? "🚌 Commuter Allowance" : "🚌 Pendlerpauschale"}
+                <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+                  <MapIcon className="h-5 w-5 text-rose-500" />
+                  {common.nav.calculator === "Calculator" ? "Commuter Allowance" : "Pendlerpauschale"}
                 </h2>
                 <p className="mt-1 text-sm text-slate-600">
                   {common.nav.calculator === "Calculator" ? "Optional - Travel deductions" : "Optional - Fahrtkosten"}
@@ -719,37 +706,19 @@ export default function Home() {
               </div>
             </button>
             {commuterExpanded && (
-              <div className="space-y-6 px-6 py-6 sm:px-8">
+              <div id="commuter-section-content" className="space-y-6 px-6 py-6 sm:px-8">
                 <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
                   <span>{home.commuter.question}</span>
                 </div>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setReceivesCommuterAllowance(true)}
-                    className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
-                      receivesCommuterAllowance
-                        ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20"
-                        : "bg-rose-50 text-rose-600 hover:bg-rose-100"
-                    }`}
-                  >
-                    {common.responses.yes}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setReceivesCommuterAllowance(false);
+                <YesNoToggle
+                  value={receivesCommuterAllowance}
+                  onChange={(value) => {
+                    setReceivesCommuterAllowance(value);
+                    if (!value) {
                       setCommuterAllowanceValue("0");
-                    }}
-                    className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
-                      !receivesCommuterAllowance
-                        ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20"
-                        : "bg-rose-50 text-rose-600 hover:bg-rose-100"
-                    }`}
-                  >
-                    {common.responses.no}
-                  </button>
-                </div>
+                    }
+                  }}
+                />
                 {receivesCommuterAllowance && (
                   <div className="space-y-4 rounded-2xl bg-gradient-to-br from-rose-50/50 to-pink-50/50 p-6">
                     <p className="text-sm text-slate-600">{home.commuter.helper}</p>

@@ -2,7 +2,7 @@
 
 import { useMemo, type ReactNode } from "react";
 import Link from "next/link";
-import { headerLinkClasses, headerPrimaryLinkClasses } from "@/components/header-link";
+import { headerPrimaryLinkClasses } from "@/components/header-link";
 import { LanguageToggle } from "@/components/language-toggle";
 import { useLanguage } from "@/components/language-provider";
 import type { Language } from "@/lib/i18n";

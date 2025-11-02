@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeftIcon, PrinterIcon, ChartPieIcon, ChartBarIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, PrinterIcon, ChartPieIcon, ChartBarIcon, ChevronDownIcon, BanknotesIcon, DocumentTextIcon, LinkIcon, CheckIcon } from "@heroicons/react/24/outline";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { headerLinkClasses, headerPrimaryLinkClasses } from "@/components/header-link";
@@ -149,9 +149,20 @@ export default function ResultPage() {
   const [breakdownExpanded, setBreakdownExpanded] = useState(true);
   const [chartExpanded, setChartExpanded] = useState(true);
   const [inputsExpanded, setInputsExpanded] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy link:', err);
+    }
   };
 
   if (!payload || !calculation) {
@@ -283,21 +294,6 @@ export default function ResultPage() {
     ? percentFormatter.format(activeSegmentData.percentage / 100)
     : null;
 
-  const breakdown = [
-    {
-      title: result.breakdownItems.socialInsurance.title,
-      monthly: formatCurrency(calculation.socialInsuranceMonthly, currencyLocale),
-      annual: formatCurrency(calculation.socialInsuranceAnnual, currencyLocale),
-      description: result.breakdownItems.socialInsurance.description,
-    },
-    {
-      title: result.breakdownItems.incomeTax.title,
-      monthly: formatCurrency(calculation.incomeTaxMonthly, currencyLocale),
-      annual: formatCurrency(calculation.incomeTaxAnnual, currencyLocale),
-      description: result.breakdownItems.incomeTax.description,
-    },
-  ];
-
   const contextSections: {
     title: string | null;
     items: { label: string; value: string; note?: string }[];
@@ -414,11 +410,34 @@ export default function ResultPage() {
           </div>
           <div className="flex items-center gap-3">
             <button
+              onClick={handleCopyLink}
+              className="inline-flex items-center gap-2 rounded-full border-2 border-rose-200 bg-white px-3 py-2 text-sm font-semibold text-rose-600 shadow-sm transition-all hover:border-rose-300 hover:bg-rose-50 hover:shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-200"
+              aria-label={linkCopied
+                ? (common.nav.calculator === "Calculator" ? "Link copied!" : "Link kopiert!")
+                : (common.nav.calculator === "Calculator" ? "Copy share link" : "Link kopieren")
+              }
+            >
+              {linkCopied ? (
+                <CheckIcon className="h-4 w-4 text-green-600" />
+              ) : (
+                <LinkIcon className="h-4 w-4" />
+              )}
+              <span className="hidden sm:inline">
+                {linkCopied
+                  ? (common.nav.calculator === "Calculator" ? "Copied!" : "Kopiert!")
+                  : (common.nav.calculator === "Calculator" ? "Share" : "Teilen")
+                }
+              </span>
+            </button>
+            <button
               onClick={handlePrint}
               className="inline-flex items-center gap-2 rounded-full border-2 border-rose-200 bg-white px-3 py-2 text-sm font-semibold text-rose-600 shadow-sm transition-all hover:border-rose-300 hover:bg-rose-50 hover:shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-200"
               aria-label={common.nav.calculator === "Calculator" ? "Print or save as PDF" : "Drucken oder als PDF speichern"}
             >
               <PrinterIcon className="h-4 w-4" />
+              <span className="hidden sm:inline">
+                {common.nav.calculator === "Calculator" ? "Print" : "Drucken"}
+              </span>
             </button>
             <LanguageToggle />
           </div>
@@ -469,7 +488,7 @@ export default function ResultPage() {
         </div>
 
         {/* Quick Summary Cards */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {/* Average Monthly Net Card */}
           <div className="group relative rounded-2xl border-2 border-rose-100 bg-white p-6 shadow-lg transition-all hover:border-rose-300 hover:shadow-xl">
             <div className="flex items-start justify-between gap-2">
@@ -540,11 +559,14 @@ export default function ResultPage() {
           <button
             type="button"
             onClick={() => setBreakdownExpanded(!breakdownExpanded)}
+            aria-expanded={breakdownExpanded}
+            aria-controls="breakdown-section-content"
             className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
           >
             <div>
-              <h2 className="text-lg font-semibold text-slate-900">
-                {common.nav.calculator === "Calculator" ? "💰 Detailed Breakdown" : "💰 Detaillierte Aufschlüsselung"}
+              <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+                <BanknotesIcon className="h-5 w-5 text-rose-500" />
+                {common.nav.calculator === "Calculator" ? "Detailed Breakdown" : "Detaillierte Aufschlüsselung"}
               </h2>
               <p className="mt-1 text-sm text-slate-600">
                 {common.nav.calculator === "Calculator" ? "Taxes, deductions, and payments" : "Steuern, Abzüge und Zahlungen"}
@@ -555,7 +577,7 @@ export default function ResultPage() {
             </div>
           </button>
           {breakdownExpanded && (
-            <div className="space-y-6 px-6 py-6 sm:px-8">
+            <div id="breakdown-section-content" className="space-y-6 px-6 py-6 sm:px-8">
               {/* Payment Comparison Table */}
               <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100/50 p-1 overflow-x-auto">
                 <table className="w-full">
@@ -690,11 +712,14 @@ export default function ResultPage() {
           <button
             type="button"
             onClick={() => setChartExpanded(!chartExpanded)}
+            aria-expanded={chartExpanded}
+            aria-controls="chart-section-content"
             className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
           >
             <div>
-              <h2 className="text-lg font-semibold text-slate-900">
-                {common.nav.calculator === "Calculator" ? "📊 Visual Analysis" : "📊 Visuelle Analyse"}
+              <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+                <ChartPieIcon className="h-5 w-5 text-rose-500" />
+                {common.nav.calculator === "Calculator" ? "Visual Analysis" : "Visuelle Analyse"}
               </h2>
               <p className="mt-1 text-sm text-slate-600">
                 {common.nav.calculator === "Calculator" ? "Charts and detailed analysis" : "Diagramme und detaillierte Analyse"}
@@ -705,7 +730,7 @@ export default function ResultPage() {
             </div>
           </button>
           {chartExpanded && (
-            <div className="space-y-6 px-6 py-6 sm:px-8">
+            <div id="chart-section-content" className="space-y-6 px-6 py-6 sm:px-8">
               {/* Analysis Metrics */}
               <div className="grid gap-4 sm:grid-cols-2">
                 {analysisMetrics.map((metric) => (
@@ -732,14 +757,14 @@ export default function ResultPage() {
                     {result.analysis.chart.description}
                   </p>
                 </div>
-                <div className="flex items-center gap-2 rounded-full border-2 border-rose-100 bg-rose-50/50 p-1">
+                <div className="inline-flex items-center gap-1 rounded-full border border-white/60 bg-white/40 p-1 shadow-[0_12px_30px_rgba(244,114,182,0.15)] backdrop-blur">
                   <button
                     type="button"
                     onClick={() => setChartType('donut')}
-                    className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all ${
+                    className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200 ${
                       chartType === 'donut'
-                        ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/30'
-                        : 'text-rose-600 hover:bg-rose-100/50'
+                        ? 'bg-rose-500 text-white shadow-[0_10px_25px_rgba(244,114,182,0.35)]'
+                        : 'text-rose-600/80 hover:text-rose-700'
                     }`}
                     aria-pressed={chartType === 'donut'}
                   >
@@ -749,10 +774,10 @@ export default function ResultPage() {
                   <button
                     type="button"
                     onClick={() => setChartType('bar')}
-                    className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all ${
+                    className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200 ${
                       chartType === 'bar'
-                        ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/30'
-                        : 'text-rose-600 hover:bg-rose-100/50'
+                        ? 'bg-rose-500 text-white shadow-[0_10px_25px_rgba(244,114,182,0.35)]'
+                        : 'text-rose-600/80 hover:text-rose-700'
                     }`}
                     aria-pressed={chartType === 'bar'}
                   >
@@ -766,7 +791,13 @@ export default function ResultPage() {
                   {chartType === 'donut' ? (
                     <div className="flex flex-col items-center gap-8 lg:flex-row lg:items-start lg:justify-center">
                       <div className="relative w-full max-w-[min(100%,20rem)] sm:max-w-sm">
-                        <svg viewBox="0 0 200 200" className="h-auto w-full" style={{ aspectRatio: '1 / 1' }}>
+                        <svg
+                          viewBox="0 0 200 200"
+                          className="h-auto w-full"
+                          style={{ aspectRatio: '1 / 1' }}
+                          role="img"
+                          aria-label={`${result.analysis.chart.title}: ${centerTitle} - ${centerValue}`}
+                        >
                       <circle
                         cx={donutCenter}
                         cy={donutCenter}
@@ -962,7 +993,7 @@ export default function ResultPage() {
                   ) : (
                     <div className="flex flex-col gap-6">
                       <div className="flex flex-col gap-4">
-                        {segmentsWithPercentages.map((segment, index) => {
+                        {segmentsWithPercentages.map((segment) => {
                           const isInteractive = segment.value > 0 && hasChartData;
                           const isActive = activeSegment === segment.id;
                           const isDimmed = activeSegment !== null && !isActive;
@@ -1075,11 +1106,14 @@ export default function ResultPage() {
           <button
             type="button"
             onClick={() => setInputsExpanded(!inputsExpanded)}
+            aria-expanded={inputsExpanded}
+            aria-controls="inputs-section-content"
             className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
           >
             <div>
-              <h2 className="text-lg font-semibold text-slate-900">
-                {common.nav.calculator === "Calculator" ? "📝 Your Inputs" : "📝 Deine Eingaben"}
+              <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+                <DocumentTextIcon className="h-5 w-5 text-rose-500" />
+                {common.nav.calculator === "Calculator" ? "Your Inputs" : "Deine Eingaben"}
               </h2>
               <p className="mt-1 text-sm text-slate-600">
                 {common.nav.calculator === "Calculator" ? "Input summary and calculation details" : "Eingabezusammenfassung und Berechnungsdetails"}
@@ -1090,7 +1124,7 @@ export default function ResultPage() {
             </div>
           </button>
           {inputsExpanded && (
-            <div className="space-y-6 px-6 py-6 sm:px-8">
+            <div id="inputs-section-content" className="space-y-6 px-6 py-6 sm:px-8">
               {contextSections.map((section, sectionIndex) => (
                 <div key={section.title ?? sectionIndex} className="space-y-3">
                   {section.title ? (
