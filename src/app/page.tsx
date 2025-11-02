@@ -8,6 +8,8 @@ import { headerLinkClasses } from "@/components/header-link";
 import { LanguageToggle } from "@/components/language-toggle";
 import { YesNoToggle } from "@/components/yes-no-toggle";
 import { useLanguage } from "@/components/language-provider";
+import { Button } from "@/components/button";
+import { ToggleGroup } from "@/components/toggle-group";
 import {
   BuildingOffice2Icon,
   AcademicCapIcon,
@@ -349,17 +351,28 @@ export default function Home() {
         </header>
 
         {/* Main Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Section 1: Basic Information */}
-          <div className="overflow-hidden rounded-3xl border border-rose-100/60 bg-white shadow-lg">
-            <div className="bg-gradient-to-r from-rose-50 to-pink-50 px-6 py-5 sm:px-8">
-              <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
-                <ClipboardDocumentListIcon className="h-5 w-5 text-rose-500" />
-                {common.nav.calculator === "Calculator" ? "Basic Information" : "Grundinformationen"}
-              </h2>
-              <p className="mt-1 text-sm text-slate-600">
-                {common.nav.calculator === "Calculator" ? "Employment type and salary" : "Beschäftigungsart und Gehalt"}
-              </p>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Section 1: Basic Information - REQUIRED */}
+          <div className="overflow-hidden rounded-3xl border-2 border-rose-200 bg-white shadow-xl">
+            <div className="bg-gradient-to-r from-rose-500 to-rose-600 px-6 py-5 sm:px-8">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                    <ClipboardDocumentListIcon className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold text-white">
+                      {common.nav.calculator === "Calculator" ? "Basic Information" : "Grundinformationen"}
+                    </h2>
+                    <p className="mt-0.5 text-xs font-medium text-white/80">
+                      {common.nav.calculator === "Calculator" ? "Required • Employment type and salary" : "Erforderlich • Beschäftigungsart und Gehalt"}
+                    </p>
+                  </div>
+                </div>
+                <div className="hidden rounded-full bg-white/20 px-3 py-1 text-xs font-bold text-white backdrop-blur-sm sm:block">
+                  {common.nav.calculator === "Calculator" ? "REQUIRED" : "ERFORDERLICH"}
+                </div>
+              </div>
             </div>
             <div className="space-y-6 px-6 py-6 sm:px-8">
               {/* Employment Type */}
@@ -499,51 +512,45 @@ export default function Home() {
                     </p>
                   )}
                 </label>
-                <div className="flex gap-2">
-                  {["monthly", "yearly"].map((period) => {
-                    const periodId = period as IncomePeriod;
-                    const isActive = incomePeriod === periodId;
-                    return (
-                      <button
-                        key={periodId}
-                        type="button"
-                        onClick={() => setIncomePeriod(periodId)}
-                        className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all min-h-[44px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300 ${
-                          isActive
-                            ? "bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/20"
-                            : "bg-rose-50 text-rose-600 hover:bg-rose-100"
-                        }`}
-                        aria-pressed={isActive}
-                      >
-                        {home.incomePeriodLabels[periodId]}
-                      </button>
-                    );
-                  })}
-                </div>
+                <ToggleGroup
+                  options={[
+                    { id: "monthly" as IncomePeriod, label: home.incomePeriodLabels.monthly },
+                    { id: "yearly" as IncomePeriod, label: home.incomePeriodLabels.yearly },
+                  ]}
+                  value={incomePeriod}
+                  onChange={setIncomePeriod}
+                />
               </div>
             </div>
           </div>
 
-          {/* Section 2: Family (Collapsible) */}
-          <div className="overflow-hidden rounded-3xl border border-rose-100/60 bg-white shadow-lg">
+          {/* Section 2: Family (Collapsible) - OPTIONAL */}
+          <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-md hover:shadow-lg transition-shadow">
             <button
               type="button"
               onClick={() => setFamilyExpanded(!familyExpanded)}
               aria-expanded={familyExpanded}
               aria-controls="family-section-content"
-              className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
+              className="flex w-full items-center justify-between bg-gradient-to-r from-slate-50 to-slate-50 px-6 py-4 text-left transition-colors hover:from-rose-50/30 hover:to-pink-50/30 sm:px-8"
             >
-              <div>
-                <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
-                  <UsersIcon className="h-5 w-5 text-rose-500" />
-                  {common.nav.calculator === "Calculator" ? "Family & Tax Credits" : "Familie & Steuerabsetzbeträge"}
-                </h2>
-                <p className="mt-1 text-sm text-slate-600">
-                  {common.nav.calculator === "Calculator" ? "Optional - Add if applicable" : "Optional - Falls zutreffend"}
-                </p>
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100">
+                  <UsersIcon className="h-5 w-5 text-slate-600" />
+                </div>
+                <div>
+                  <h2 className="flex items-center gap-2 text-base font-semibold text-slate-900">
+                    {common.nav.calculator === "Calculator" ? "Family & Tax Credits" : "Familie & Steuerabsetzbeträge"}
+                    <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
+                      {common.nav.calculator === "Calculator" ? "Optional" : "Optional"}
+                    </span>
+                  </h2>
+                  <p className="mt-0.5 text-xs text-slate-500">
+                    {common.nav.calculator === "Calculator" ? "Add if you have children or family benefits" : "Hinzufügen bei Kindern oder Familienförderung"}
+                  </p>
+                </div>
               </div>
               <div className={`transform transition-transform duration-200 ${familyExpanded ? 'rotate-180' : ''}`}>
-                <ChevronDownIcon className="h-5 w-5 text-rose-500" />
+                <ChevronDownIcon className="h-5 w-5 text-slate-400" />
               </div>
             </button>
             {familyExpanded && (
@@ -652,26 +659,33 @@ export default function Home() {
             )}
           </div>
 
-          {/* Section 3: Benefits (Collapsible) */}
-          <div className="overflow-hidden rounded-3xl border border-rose-100/60 bg-white shadow-lg">
+          {/* Section 3: Benefits (Collapsible) - OPTIONAL */}
+          <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-md hover:shadow-lg transition-shadow">
             <button
               type="button"
               onClick={() => setBenefitsExpanded(!benefitsExpanded)}
               aria-expanded={benefitsExpanded}
               aria-controls="benefits-section-content"
-              className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
+              className="flex w-full items-center justify-between bg-gradient-to-r from-slate-50 to-slate-50 px-6 py-4 text-left transition-colors hover:from-rose-50/30 hover:to-pink-50/30 sm:px-8"
             >
-              <div>
-                <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
-                  <TruckIcon className="h-5 w-5 text-rose-500" />
-                  {common.nav.calculator === "Calculator" ? "Taxable Benefits" : "Sachbezüge"}
-                </h2>
-                <p className="mt-1 text-sm text-slate-600">
-                  {common.nav.calculator === "Calculator" ? "Optional - Company car, allowances" : "Optional - Firmenauto, Zulagen"}
-                </p>
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100">
+                  <TruckIcon className="h-5 w-5 text-slate-600" />
+                </div>
+                <div>
+                  <h2 className="flex items-center gap-2 text-base font-semibold text-slate-900">
+                    {common.nav.calculator === "Calculator" ? "Taxable Benefits" : "Sachbezüge"}
+                    <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
+                      {common.nav.calculator === "Calculator" ? "Optional" : "Optional"}
+                    </span>
+                  </h2>
+                  <p className="mt-0.5 text-xs text-slate-500">
+                    {common.nav.calculator === "Calculator" ? "Add company car or other benefits" : "Firmenauto oder andere Zulagen hinzufügen"}
+                  </p>
+                </div>
               </div>
               <div className={`transform transition-transform duration-200 ${benefitsExpanded ? 'rotate-180' : ''}`}>
-                <ChevronDownIcon className="h-5 w-5 text-rose-500" />
+                <ChevronDownIcon className="h-5 w-5 text-slate-400" />
               </div>
             </button>
             {benefitsExpanded && (
@@ -752,26 +766,33 @@ export default function Home() {
             )}
           </div>
 
-          {/* Section 4: Commuter (Collapsible) */}
-          <div className="overflow-hidden rounded-3xl border border-rose-100/60 bg-white shadow-lg">
+          {/* Section 4: Commuter (Collapsible) - OPTIONAL */}
+          <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-md hover:shadow-lg transition-shadow">
             <button
               type="button"
               onClick={() => setCommuterExpanded(!commuterExpanded)}
               aria-expanded={commuterExpanded}
               aria-controls="commuter-section-content"
-              className="flex w-full items-center justify-between bg-gradient-to-r from-rose-50/50 to-pink-50/50 px-6 py-5 text-left transition-colors hover:from-rose-50 hover:to-pink-50 sm:px-8"
+              className="flex w-full items-center justify-between bg-gradient-to-r from-slate-50 to-slate-50 px-6 py-4 text-left transition-colors hover:from-rose-50/30 hover:to-pink-50/30 sm:px-8"
             >
-              <div>
-                <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
-                  <MapIcon className="h-5 w-5 text-rose-500" />
-                  {common.nav.calculator === "Calculator" ? "Commuter Allowance" : "Pendlerpauschale"}
-                </h2>
-                <p className="mt-1 text-sm text-slate-600">
-                  {common.nav.calculator === "Calculator" ? "Optional - Travel deductions" : "Optional - Fahrtkosten"}
-                </p>
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100">
+                  <MapIcon className="h-5 w-5 text-slate-600" />
+                </div>
+                <div>
+                  <h2 className="flex items-center gap-2 text-base font-semibold text-slate-900">
+                    {common.nav.calculator === "Calculator" ? "Commuter Allowance" : "Pendlerpauschale"}
+                    <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
+                      {common.nav.calculator === "Calculator" ? "Optional" : "Optional"}
+                    </span>
+                  </h2>
+                  <p className="mt-0.5 text-xs text-slate-500">
+                    {common.nav.calculator === "Calculator" ? "Add travel deductions if you commute" : "Fahrtkostenabzug bei Pendeln hinzufügen"}
+                  </p>
+                </div>
               </div>
               <div className={`transform transition-transform duration-200 ${commuterExpanded ? 'rotate-180' : ''}`}>
-                <ChevronDownIcon className="h-5 w-5 text-rose-500" />
+                <ChevronDownIcon className="h-5 w-5 text-slate-400" />
               </div>
             </button>
             {commuterExpanded && (
@@ -817,24 +838,29 @@ export default function Home() {
 
           {/* Action Buttons */}
           <div className="flex flex-col gap-3 pt-4 sm:flex-row">
-            <button
+            <Button
               type="submit"
+              variant="primary"
+              size="lg"
+              fullWidth
               disabled={isNavigating}
-              className="flex-1 rounded-2xl bg-gradient-to-r from-rose-500 to-rose-600 px-8 py-4 text-lg font-bold text-white shadow-xl shadow-rose-500/30 transition-all hover:from-rose-600 hover:to-rose-700 hover:shadow-2xl hover:shadow-rose-500/40 focus:outline-none focus-visible:ring-4 focus-visible:ring-rose-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+              isLoading={isNavigating}
             >
               {calculationMode === 'gross-to-net'
                 ? home.calculateButton
                 : (common.nav.calculator === "Calculator" ? "Calculate Required Gross" : "Benötigtes Brutto berechnen")
               }
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
+              variant="secondary"
+              size="lg"
               onClick={handleReset}
               disabled={isNavigating}
-              className="rounded-2xl border-2 border-rose-200 bg-white px-8 py-4 text-lg font-bold text-rose-600 shadow-lg transition-all hover:border-rose-300 hover:bg-rose-50 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-rose-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+              className="sm:w-auto"
             >
               {common.nav.calculator === "Calculator" ? "Reset" : "Zurücksetzen"}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

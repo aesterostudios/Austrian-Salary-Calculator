@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import { Button } from "@/components/button";
 
 export default function Error({
   error,
@@ -59,17 +60,22 @@ export default function Error({
 
         {/* Action Buttons */}
         <div className="flex flex-col gap-3 sm:flex-row">
-          <button
+          <Button
             onClick={reset}
-            className="flex-1 rounded-2xl bg-gradient-to-r from-rose-500 to-rose-600 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:from-rose-600 hover:to-rose-700 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-rose-500/20"
+            variant="primary"
+            size="lg"
+            fullWidth
           >
             Try Again
-          </button>
-          <Link
-            href="/"
-            className="flex-1 rounded-2xl border-2 border-rose-200 bg-white px-6 py-3 text-center text-sm font-semibold text-rose-600 shadow-lg transition-all hover:border-rose-300 hover:bg-rose-50 hover:shadow-xl focus:outline-none focus-visible:ring-4 focus-visible:ring-rose-500/20"
-          >
-            Go Home
+          </Button>
+          <Link href="/" className="flex-1">
+            <Button
+              variant="secondary"
+              size="lg"
+              fullWidth
+            >
+              Go Home
+            </Button>
           </Link>
         </div>
       </div>
