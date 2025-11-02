@@ -435,9 +435,9 @@ export default function Home() {
                     </div>
                     <input
                       type="number"
-                      min="1"
+                      min="0"
                       max="10000000"
-                      step="100"
+                      step="1"
                       value={income}
                       onChange={(event) => setIncome(event.target.value)}
                       className="block w-full rounded-2xl border-2 border-rose-100 bg-white py-4 pl-10 pr-4 text-lg font-semibold text-slate-900 placeholder:text-slate-400 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10 invalid:border-red-300 invalid:ring-red-500/10"
