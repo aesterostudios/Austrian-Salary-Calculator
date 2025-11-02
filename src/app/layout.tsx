@@ -22,14 +22,68 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Austrian Salary Calculator",
+  metadataBase: new URL('https://austrian-salary-calculator.vercel.app'),
+  title: {
+    default: "Austrian Salary Calculator | Calculate Your Net Salary 2025",
+    template: "%s | Austrian Salary Calculator",
+  },
   description:
-    "Calculate your Austrian net salary, taxes, and contributions with our gross-to-net calculator.",
+    "Calculate your Austrian net salary, taxes, and social insurance contributions with accurate 2025 rates. Supports gross-to-net and net-to-gross calculations, family bonuses, and special payments.",
+  keywords: [
+    "Austrian salary calculator",
+    "net salary Austria",
+    "gross to net Austria",
+    "Austrian tax calculator",
+    "Brutto Netto Rechner",
+    "Gehaltsrechner Österreich",
+    "13th salary Austria",
+    "14th salary Austria",
+    "social insurance Austria",
+    "family bonus plus",
+  ],
+  authors: [{ name: "Austrian Salary Calculator" }],
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    alternateLocale: ["de_AT"],
+    url: "/",
+    siteName: "Austrian Salary Calculator",
+    title: "Austrian Salary Calculator | Calculate Your Net Salary 2025",
+    description:
+      "Calculate your Austrian net salary with accurate 2025 tax rates. Supports gross-to-net, net-to-gross, family bonuses, and special payments.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Austrian Salary Calculator",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Austrian Salary Calculator | Calculate Your Net Salary 2025",
+    description:
+      "Calculate your Austrian net salary with accurate 2025 tax rates. Supports gross-to-net, net-to-gross, and special payments.",
+    images: ["/og-image.png"],
+  },
   alternates: {
+    canonical: "/",
     languages: {
       en: "/",
       de: "/",
       "x-default": "/",
+    },
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
 };
