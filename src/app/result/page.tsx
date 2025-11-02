@@ -408,10 +408,10 @@ export default function ResultPage() {
               {common.nav.faq}
             </Link>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={handleCopyLink}
-              className="inline-flex items-center gap-2 rounded-full border-2 border-rose-200 bg-white px-3 py-2 text-sm font-semibold text-rose-600 shadow-sm transition-all hover:border-rose-300 hover:bg-rose-50 hover:shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-200"
+              className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border-2 border-rose-200 bg-white px-2.5 sm:px-3 py-2 text-sm font-semibold text-rose-600 shadow-sm transition-all hover:border-rose-300 hover:bg-rose-50 hover:shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-200"
               aria-label={linkCopied
                 ? (common.nav.calculator === "Calculator" ? "Link copied!" : "Link kopiert!")
                 : (common.nav.calculator === "Calculator" ? "Copy share link" : "Link kopieren")
@@ -431,7 +431,7 @@ export default function ResultPage() {
             </button>
             <button
               onClick={handlePrint}
-              className="inline-flex items-center gap-2 rounded-full border-2 border-rose-200 bg-white px-3 py-2 text-sm font-semibold text-rose-600 shadow-sm transition-all hover:border-rose-300 hover:bg-rose-50 hover:shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-200"
+              className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border-2 border-rose-200 bg-white px-2.5 sm:px-3 py-2 text-sm font-semibold text-rose-600 shadow-sm transition-all hover:border-rose-300 hover:bg-rose-50 hover:shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-200"
               aria-label={common.nav.calculator === "Calculator" ? "Print or save as PDF" : "Drucken oder als PDF speichern"}
             >
               <PrinterIcon className="h-4 w-4" />

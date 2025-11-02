@@ -2,6 +2,7 @@
 
 import { useMemo, type ReactNode } from "react";
 import Link from "next/link";
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { headerPrimaryLinkClasses } from "@/components/header-link";
 import { LanguageToggle } from "@/components/language-toggle";
 import { useLanguage } from "@/components/language-provider";
@@ -480,7 +481,9 @@ export default function FAQPage() {
         <div className="mx-auto flex max-w-4xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
           <div className="flex items-center gap-3">
             <Link href="/" className={`inline-flex items-center gap-2 ${headerPrimaryLinkClasses} text-sm`}>
-              {common.nav.calculator}
+              <ArrowLeftIcon className="h-4 w-4" />
+              <span className="hidden sm:inline">{common.nav.calculator === "Calculator" ? "Back to the calculator" : "Zurück zum Rechner"}</span>
+              <span className="sm:hidden">{common.nav.calculator === "Calculator" ? "Back" : "Zurück"}</span>
             </Link>
           </div>
           <div className="flex items-center gap-3">
