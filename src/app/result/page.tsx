@@ -736,14 +736,14 @@ export default function ResultPage() {
                     {result.analysis.chart.description}
                   </p>
                 </div>
-                <div className="flex items-center gap-2 rounded-full border-2 border-rose-100 bg-rose-50/50 p-1">
+                <div className="inline-flex items-center gap-1 rounded-full border border-white/60 bg-white/40 p-1 shadow-[0_12px_30px_rgba(244,114,182,0.15)] backdrop-blur">
                   <button
                     type="button"
                     onClick={() => setChartType('donut')}
-                    className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all ${
+                    className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200 ${
                       chartType === 'donut'
-                        ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/30'
-                        : 'text-rose-600 hover:bg-rose-100/50'
+                        ? 'bg-rose-500 text-white shadow-[0_10px_25px_rgba(244,114,182,0.35)]'
+                        : 'text-rose-600/80 hover:text-rose-700'
                     }`}
                     aria-pressed={chartType === 'donut'}
                   >
@@ -753,10 +753,10 @@ export default function ResultPage() {
                   <button
                     type="button"
                     onClick={() => setChartType('bar')}
-                    className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all ${
+                    className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-200 ${
                       chartType === 'bar'
-                        ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/30'
-                        : 'text-rose-600 hover:bg-rose-100/50'
+                        ? 'bg-rose-500 text-white shadow-[0_10px_25px_rgba(244,114,182,0.35)]'
+                        : 'text-rose-600/80 hover:text-rose-700'
                     }`}
                     aria-pressed={chartType === 'bar'}
                   >
