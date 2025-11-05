@@ -553,7 +553,7 @@ export default function Home() {
                 </div>
                 <div>
                   <h2 className="flex items-center gap-2 text-base font-semibold text-slate-900">
-                    {common.nav.calculator === "Calculator" ? "Family" : "Familie"}
+                    {common.nav.calculator === "Calculator" ? "Family Circumstances" : "Familiensituation"}
                     <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
                       {common.nav.calculator === "Calculator" ? "Optional" : "Optional"}
                     </span>
@@ -688,13 +688,13 @@ export default function Home() {
                 </div>
                 <div>
                   <h2 className="flex items-center gap-2 text-base font-semibold text-slate-900">
-                    {common.nav.calculator === "Calculator" ? "Taxable Benefits" : "Sachbezüge"}
+                    {common.nav.calculator === "Calculator" ? "Benefits and Tax Allowances" : "Sachbezüge und steuerliche Freibeträge"}
                     <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
                       {common.nav.calculator === "Calculator" ? "Optional" : "Optional"}
                     </span>
                   </h2>
                   <p className="mt-0.5 text-xs text-slate-500">
-                    {common.nav.calculator === "Calculator" ? "Add company car or other benefits" : "Firmenauto oder andere Zulagen hinzufügen"}
+                    {common.nav.calculator === "Calculator" ? "Add company car and other benefits" : "Firmenauto und andere Bezüge hinzufügen"}
                   </p>
                 </div>
               </div>
