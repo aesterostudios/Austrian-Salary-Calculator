@@ -482,8 +482,8 @@ export default function Home() {
                     {calculationMode === 'gross-to-net'
                       ? home.incomeLabels[incomePeriod]
                       : (incomePeriod === 'monthly'
-                        ? (common.nav.calculator === "Calculator" ? "Net salary per month" : "Nettoeinkommen pro Monat")
-                        : (common.nav.calculator === "Calculator" ? "Net salary per year" : "Nettoeinkommen pro Jahr"))
+                        ? (common.nav.calculator === "Calculator" ? "Net salary per month" : "Nettogehalt pro Monat")
+                        : (common.nav.calculator === "Calculator" ? "Net salary per year" : "Nettogehalt pro Jahr"))
                     }
                     {" "}
                     <span className="text-rose-500" aria-label="required">*</span>
