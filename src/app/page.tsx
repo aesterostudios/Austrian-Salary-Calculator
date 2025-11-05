@@ -253,8 +253,6 @@ export default function Home() {
     const sanitizedTaxableBenefit = Number.parseFloat(taxableBenefit) || 0;
     const sanitizedCompanyCarValue = Number.parseFloat(companyCarValue) || 0;
     const sanitizedAllowance = Number.parseFloat(allowance) || 0;
-    const derivedUsesTaxableBenefits =
-      sanitizedTaxableBenefit > 0 || sanitizedCompanyCarValue > 0 || sanitizedAllowance > 0;
 
     const sanitizedCommuterAllowance = Number.parseFloat(commuterAllowanceValue) || 0;
     const derivedReceivesCommuterAllowance = sanitizedCommuterAllowance > 0;
@@ -613,7 +611,32 @@ export default function Home() {
                       <span className="block text-sm font-medium text-slate-700">
                         {home.family.singleEarnerQuestion}
                       </span>
-                      <YesNoToggle value={isSingleEarner} onChange={setIsSingleEarner} />
+                      <div className="inline-flex w-full items-center gap-1 rounded-2xl border-2 border-rose-100 bg-gradient-to-br from-white to-rose-50/30 p-1.5 shadow-sm">
+                        <button
+                          type="button"
+                          onClick={() => setIsSingleEarner(true)}
+                          className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300 ${
+                            isSingleEarner
+                              ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/25'
+                              : 'text-slate-700 hover:bg-white hover:text-rose-600'
+                          }`}
+                          aria-pressed={isSingleEarner}
+                        >
+                          {common.responses.yes}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setIsSingleEarner(false)}
+                          className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-300 ${
+                            !isSingleEarner
+                              ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white shadow-lg shadow-rose-500/25'
+                              : 'text-slate-700 hover:bg-white hover:text-rose-600'
+                          }`}
+                          aria-pressed={!isSingleEarner}
+                        >
+                          {common.responses.no}
+                        </button>
+                      </div>
                     </div>
                     <div className="space-y-3">
                       <span className="block text-sm font-medium text-slate-700">
