@@ -199,9 +199,9 @@ export const translations: Record<Language, Dictionary> = {
         },
       ],
       familyBonusOptions: [
-        { id: "none", label: "no family bonus" },
-        { id: "shared", label: "shared family bonus" },
-        { id: "full", label: "full family bonus" },
+        { id: "none", label: "No family bonus" },
+        { id: "shared", label: "Shared family bonus" },
+        { id: "full", label: "Full family bonus" },
       ],
     },
     home: {
@@ -444,9 +444,9 @@ export const translations: Record<Language, Dictionary> = {
         },
       ],
       familyBonusOptions: [
-        { id: "none", label: "kein Familienbonus" },
-        { id: "shared", label: "geteilter Familienbonus" },
-        { id: "full", label: "voller Familienbonus" },
+        { id: "none", label: "Kein Familienbonus" },
+        { id: "shared", label: "Geteilter Familienbonus" },
+        { id: "full", label: "Voller Familienbonus" },
       ],
     },
     home: {
