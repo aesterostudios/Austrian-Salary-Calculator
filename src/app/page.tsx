@@ -347,8 +347,8 @@ export default function Home() {
             </svg>
             <span className="text-xs font-semibold text-emerald-700">
               {common.nav.calculator === "Calculator"
-                ? "Trusted by 3,000+ users this month"
-                : "Vertraut von über 3.000 Nutzern diesen Monat"}
+                ? "Trusted by 3,000+ users"
+                : "3.000+ Nutzer:innen vertrauen uns"}
             </span>
           </div>
 
@@ -359,8 +359,8 @@ export default function Home() {
           </h1>
           <p className="mt-4 text-base text-slate-600 sm:text-lg">
             {common.nav.calculator === "Calculator"
-              ? "Calculate gross-to-net or net-to-gross with accurate 2025 Austrian tax rates"
-              : "Berechne Brutto-Netto oder Netto-Brutto mit aktuellen österreichischen Steuersätzen 2025"}
+              ? "Gross-to-net or net-to-gross calculator with accurate 2025 Austrian tax rates"
+              : "Brutto-Netto oder Netto-Brutto Rechner mit aktuellen österreichischen Steuersätzen für 2025"}
           </p>
         </header>
 
@@ -379,7 +379,7 @@ export default function Home() {
                       {common.nav.calculator === "Calculator" ? "Basic Information" : "Grundinformationen"}
                     </h2>
                     <p className="mt-0.5 text-xs font-medium text-white/80">
-                      {common.nav.calculator === "Calculator" ? "Required • Employment type and salary" : "Erforderlich • Beschäftigungsart und Gehalt"}
+                      {common.nav.calculator === "Calculator" ? "Employment type and salary" : "Beschäftigungsart und Einkommen"}
                     </p>
                   </div>
                 </div>
@@ -478,8 +478,8 @@ export default function Home() {
                     {calculationMode === 'gross-to-net'
                       ? home.incomeLabels[incomePeriod]
                       : (incomePeriod === 'monthly'
-                        ? (common.nav.calculator === "Calculator" ? "Desired Net Monthly Salary" : "Gewünschtes Netto Monatsgehalt")
-                        : (common.nav.calculator === "Calculator" ? "Desired Net Annual Salary" : "Gewünschtes Netto Jahresgehalt"))
+                        ? (common.nav.calculator === "Calculator" ? "Net salary per month" : "Nettoeinkommen pro Monat")
+                        : (common.nav.calculator === "Calculator" ? "Net salary per year" : "Nettoeinkommen pro Jahr"))
                     }
                     {" "}
                     <span className="text-rose-500" aria-label="required">*</span>
@@ -497,7 +497,7 @@ export default function Home() {
                       value={income}
                       onChange={(event) => setIncome(event.target.value)}
                       className="block w-full rounded-2xl border-2 border-rose-100 bg-white py-4 pl-10 pr-4 text-lg font-semibold text-slate-900 placeholder:text-slate-400 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
-                      placeholder={common.nav.calculator === "Calculator" ? "e.g., 3000" : "z.B. 3000"}
+                      placeholder={common.nav.calculator === "Calculator" ? "e.g. 3000" : "z.B. 3000"}
                       required
                       aria-required="true"
                       aria-describedby={income && (Number.parseFloat(income) <= 0 || Number.parseFloat(income) > 500000) ? "income-error" : undefined}
@@ -553,13 +553,13 @@ export default function Home() {
                 </div>
                 <div>
                   <h2 className="flex items-center gap-2 text-base font-semibold text-slate-900">
-                    {common.nav.calculator === "Calculator" ? "Family & Tax Credits" : "Familie & Steuerabsetzbeträge"}
+                    {common.nav.calculator === "Calculator" ? "Family" : "Familie"}
                     <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
                       {common.nav.calculator === "Calculator" ? "Optional" : "Optional"}
                     </span>
                   </h2>
                   <p className="mt-0.5 text-xs text-slate-500">
-                    {common.nav.calculator === "Calculator" ? "Add if you have children or family benefits" : "Hinzufügen bei Kindern oder Familienförderung"}
+                    {common.nav.calculator === "Calculator" ? "Add if you have children" : "Hinzufügen wenn Sie Kinder haben"}
                   </p>
                 </div>
               </div>
