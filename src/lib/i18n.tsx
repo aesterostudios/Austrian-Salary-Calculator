@@ -464,8 +464,8 @@ export const translations: Record<Language, Dictionary> = {
         "5. Pendlerpauschale",
       ],
       incomeLabels: {
-        monthly: "Brutto pro Monat",
-        yearly: "Brutto pro Jahr",
+        monthly: "Bruttogehalt pro Monat",
+        yearly: "Bruttogehalt pro Jahr",
       },
       incomePeriodLabels: {
         monthly: "monatlich",
@@ -482,15 +482,15 @@ export const translations: Record<Language, Dictionary> = {
       benefits: {
         question:
           "Nimmst du Sachbezüge oder steuerliche Freibeträge in Anspruch?",
-        taxableBenefit: "Sachbezug (monatlich)",
-        companyCar: "Sachbezug durch Firmen-PKW (monatlich)",
-        allowance: "Steuerlicher Freibetrag (monatlich)",
+        taxableBenefit: "Sachbezug pro Monat",
+        companyCar: "Sachbezug durch Firmen-PKW pro Monat",
+        allowance: "Steuerlicher Freibetrag pro Monat",
       },
       commuter: {
         question: "Nimmst du eine Pendlerpauschale in Anspruch?",
         helper: (
           <>
-            Zur genauen Berechnung der Pendlerpauschale nutze bitte den&nbsp;
+            Zur genauen Berechnung der Pendlerpauschale nutzen Sie bitte den&nbsp;
             <a
               href="https://pendlerrechner.bmf.gv.at"
               target="_blank"
@@ -499,11 +499,11 @@ export const translations: Record<Language, Dictionary> = {
             >
               Pendlerrechner des BMF
             </a>
-            . Trage anschließend hier den monatlichen Betrag ein.
+            . Tragen Sie anschließend hier den monatlichen Betrag ein.
           </>
         ),
         linkLabel: "Pendlerrechner des BMF",
-        inputLabel: "Pendlerpauschale (monatlich)",
+        inputLabel: "Pendlerpauschale pro Monat",
       },
       calculateButton: "Jetzt berechnen",
     },
