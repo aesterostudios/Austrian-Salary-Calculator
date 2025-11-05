@@ -6,7 +6,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { headerLinkClasses } from "@/components/header-link";
 import { LanguageToggle } from "@/components/language-toggle";
-import { YesNoToggle } from "@/components/yes-no-toggle";
 import { useLanguage } from "@/components/language-provider";
 import { Button } from "@/components/button";
 import { ToggleGroup } from "@/components/toggle-group";
@@ -95,16 +94,22 @@ export default function Home() {
 
   // Auto-expand sections if they have data
   useEffect(() => {
-    if (hasChildren) setFamilyExpanded(true);
-  }, [hasChildren]);
+    const hasChildrenData = Number.parseInt(childrenUnder18, 10) > 0 || Number.parseInt(childrenOver18, 10) > 0;
+    if (hasChildrenData) setFamilyExpanded(true);
+  }, [childrenUnder18, childrenOver18]);
 
   useEffect(() => {
-    if (usesTaxableBenefits) setBenefitsExpanded(true);
-  }, [usesTaxableBenefits]);
+    const hasBenefitsData =
+      Number.parseFloat(taxableBenefit) > 0 ||
+      Number.parseFloat(companyCarValue) > 0 ||
+      Number.parseFloat(allowance) > 0;
+    if (hasBenefitsData) setBenefitsExpanded(true);
+  }, [taxableBenefit, companyCarValue, allowance]);
 
   useEffect(() => {
-    if (receivesCommuterAllowance) setCommuterExpanded(true);
-  }, [receivesCommuterAllowance]);
+    const hasCommuterData = Number.parseFloat(commuterAllowanceValue) > 0;
+    if (hasCommuterData) setCommuterExpanded(true);
+  }, [commuterAllowanceValue]);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -240,34 +245,35 @@ export default function Home() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const sanitizedChildrenUnder18 = hasChildren
-      ? Number.parseInt(childrenUnder18, 10) || 0
-      : 0;
-    const sanitizedChildrenOver18 = hasChildren
-      ? Number.parseInt(childrenOver18, 10) || 0
-      : 0;
+    // Derive boolean flags from actual values
+    const sanitizedChildrenUnder18 = Number.parseInt(childrenUnder18, 10) || 0;
+    const sanitizedChildrenOver18 = Number.parseInt(childrenOver18, 10) || 0;
+    const derivedHasChildren = sanitizedChildrenUnder18 > 0 || sanitizedChildrenOver18 > 0;
+
+    const sanitizedTaxableBenefit = Number.parseFloat(taxableBenefit) || 0;
+    const sanitizedCompanyCarValue = Number.parseFloat(companyCarValue) || 0;
+    const sanitizedAllowance = Number.parseFloat(allowance) || 0;
+    const derivedUsesTaxableBenefits =
+      sanitizedTaxableBenefit > 0 || sanitizedCompanyCarValue > 0 || sanitizedAllowance > 0;
+
+    const sanitizedCommuterAllowance = Number.parseFloat(commuterAllowanceValue) || 0;
+    const derivedReceivesCommuterAllowance = sanitizedCommuterAllowance > 0;
 
     const payload: CalculatorInput = {
       employmentType,
       incomePeriod,
       income: Number.parseFloat(income) || 0,
       calculationMode,
-      hasChildren,
+      hasChildren: derivedHasChildren,
       childrenUnder18: sanitizedChildrenUnder18,
       childrenOver18: sanitizedChildrenOver18,
-      isSingleEarner: hasChildren ? isSingleEarner : false,
-      familyBonus: hasChildren ? familyBonus : "none",
-      taxableBenefitsMonthly: usesTaxableBenefits
-        ? Number.parseFloat(taxableBenefit) || 0
-        : 0,
-      companyCarBenefitMonthly: usesTaxableBenefits
-        ? Number.parseFloat(companyCarValue) || 0
-        : 0,
-      allowance: usesTaxableBenefits ? Number.parseFloat(allowance) || 0 : 0,
-      receivesCommuterAllowance,
-      commuterAllowanceMonthly: receivesCommuterAllowance
-        ? Number.parseFloat(commuterAllowanceValue) || 0
-        : 0,
+      isSingleEarner: derivedHasChildren ? isSingleEarner : false,
+      familyBonus: derivedHasChildren ? familyBonus : "none",
+      taxableBenefitsMonthly: sanitizedTaxableBenefit,
+      companyCarBenefitMonthly: sanitizedCompanyCarValue,
+      allowance: sanitizedAllowance,
+      receivesCommuterAllowance: derivedReceivesCommuterAllowance,
+      commuterAllowanceMonthly: sanitizedCommuterAllowance,
     };
 
     setIsNavigating(true);
@@ -569,23 +575,7 @@ export default function Home() {
             </button>
             {familyExpanded && (
               <div id="family-section-content" className="space-y-6 px-6 py-6 sm:px-8">
-                <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
-                  <span>{home.family.question}</span>
-                </div>
-                <YesNoToggle
-                  value={hasChildren}
-                  onChange={(value) => {
-                    setHasChildren(value);
-                    if (!value) {
-                      setChildrenUnder18("0");
-                      setChildrenOver18("0");
-                      setIsSingleEarner(false);
-                      setFamilyBonus("none");
-                    }
-                  }}
-                />
-                {hasChildren && (
-                  <div className="space-y-6 rounded-2xl bg-gradient-to-br from-rose-50/50 to-pink-50/50 p-6">
+                <div className="space-y-6 rounded-2xl bg-gradient-to-br from-rose-50/50 to-pink-50/50 p-6">
                     <div className="grid gap-4 sm:grid-cols-2">
                       <label className="block">
                         <span className="block text-sm font-medium text-slate-700">
@@ -668,7 +658,6 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
-                )}
               </div>
             )}
           </div>
@@ -704,22 +693,7 @@ export default function Home() {
             </button>
             {benefitsExpanded && (
               <div id="benefits-section-content" className="space-y-6 px-6 py-6 sm:px-8">
-                <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
-                  <span>{home.benefits.question}</span>
-                </div>
-                <YesNoToggle
-                  value={usesTaxableBenefits}
-                  onChange={(value) => {
-                    setUsesTaxableBenefits(value);
-                    if (!value) {
-                      setTaxableBenefit("0");
-                      setCompanyCarValue("0");
-                      setAllowance("0");
-                    }
-                  }}
-                />
-                {usesTaxableBenefits && (
-                  <div className="space-y-4 rounded-2xl bg-gradient-to-br from-rose-50/50 to-pink-50/50 p-6">
+                <div className="space-y-4 rounded-2xl bg-gradient-to-br from-rose-50/50 to-pink-50/50 p-6">
                     <label className="block">
                       <span className="block text-sm font-medium text-slate-700">{home.benefits.taxableBenefit}</span>
                       <div className="relative mt-2">
@@ -775,7 +749,6 @@ export default function Home() {
                       </div>
                     </label>
                   </div>
-                )}
               </div>
             )}
           </div>
@@ -811,20 +784,7 @@ export default function Home() {
             </button>
             {commuterExpanded && (
               <div id="commuter-section-content" className="space-y-6 px-6 py-6 sm:px-8">
-                <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
-                  <span>{home.commuter.question}</span>
-                </div>
-                <YesNoToggle
-                  value={receivesCommuterAllowance}
-                  onChange={(value) => {
-                    setReceivesCommuterAllowance(value);
-                    if (!value) {
-                      setCommuterAllowanceValue("0");
-                    }
-                  }}
-                />
-                {receivesCommuterAllowance && (
-                  <div className="space-y-4 rounded-2xl bg-gradient-to-br from-rose-50/50 to-pink-50/50 p-6">
+                <div className="space-y-4 rounded-2xl bg-gradient-to-br from-rose-50/50 to-pink-50/50 p-6">
                     <p className="text-sm text-slate-600">{home.commuter.helper}</p>
                     <label className="block">
                       <span className="block text-sm font-medium text-slate-700">{home.commuter.inputLabel}</span>
@@ -845,7 +805,6 @@ export default function Home() {
                       </div>
                     </label>
                   </div>
-                )}
               </div>
             )}
           </div>
