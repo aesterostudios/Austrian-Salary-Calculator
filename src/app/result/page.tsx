@@ -14,6 +14,7 @@ import {
   formatCurrency,
   type CalculatorInput,
 } from "@/lib/calculator";
+import { decodePayload, createShareUrl } from "@/lib/url-utils";
 
 type AnalysisChartSegmentId = "socialInsurance" | "incomeTax" | "netIncome";
 
@@ -86,20 +87,9 @@ function hexToRgba(hex: string, alpha: number) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
+// Legacy function - now uses the new url-utils
 function parsePayload(value: string | null): CalculatorInput | null {
-  if (!value) {
-    return null;
-  }
-
-  try {
-    return JSON.parse(decodeURIComponent(value)) as CalculatorInput;
-  } catch {
-    try {
-      return JSON.parse(value) as CalculatorInput;
-    } catch {
-      return null;
-    }
-  }
+  return decodePayload(value);
 }
 
 export default function ResultPage() {
@@ -157,7 +147,9 @@ export default function ResultPage() {
 
   const handleCopyLink = async () => {
     try {
-      await navigator.clipboard.writeText(window.location.href);
+      // Generate a compressed shareable URL
+      const shareableUrl = payload ? createShareUrl(payload) : window.location.href;
+      await navigator.clipboard.writeText(shareableUrl);
       setLinkCopied(true);
       setTimeout(() => setLinkCopied(false), 2000);
     } catch (err) {
@@ -510,7 +502,7 @@ export default function ResultPage() {
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {/* Average Monthly Net Card */}
           <div className="group relative rounded-2xl border-2 border-rose-100 bg-white p-6 shadow-lg transition-all hover:border-rose-300 hover:shadow-xl">
-            <div className="flex items-start justify-between gap-2 min-h-[2.5rem]">
+            <div className="flex items-start justify-between gap-2 min-h-[4.5rem]">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
                 {result.summaryMetrics.netMonthlyAverage}
               </p>
@@ -529,7 +521,7 @@ export default function ResultPage() {
 
           {/* Annual Total Card */}
           <div className="group relative rounded-2xl border-2 border-rose-100 bg-white p-6 shadow-lg transition-all hover:border-rose-300 hover:shadow-xl">
-            <div className="flex items-start justify-between gap-2 min-h-[2.5rem]">
+            <div className="flex items-start justify-between gap-2 min-h-[4.5rem]">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
                 {result.summaryMetrics.netAnnualTotal}
               </p>
@@ -548,7 +540,7 @@ export default function ResultPage() {
 
           {/* 13th Salary Card */}
           <div className="group relative rounded-2xl border-2 border-rose-100 bg-white p-6 shadow-lg transition-all hover:border-rose-300 hover:shadow-xl">
-            <div className="min-h-[2.5rem]">
+            <div className="min-h-[4.5rem] flex items-start">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
                 {result.analysis.metrics.net13th}
               </p>
@@ -563,7 +555,7 @@ export default function ResultPage() {
 
           {/* 14th Salary Card */}
           <div className="group relative rounded-2xl border-2 border-rose-100 bg-white p-6 shadow-lg transition-all hover:border-rose-300 hover:shadow-xl">
-            <div className="min-h-[2.5rem]">
+            <div className="min-h-[4.5rem] flex items-start">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
                 {result.analysis.metrics.net14th}
               </p>
