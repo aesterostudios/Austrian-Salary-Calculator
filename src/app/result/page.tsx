@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeftIcon, PrinterIcon, ChartPieIcon, ChartBarIcon, ChevronDownIcon, BanknotesIcon, DocumentTextIcon, LinkIcon, CheckIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, PrinterIcon, ChartPieIcon, ChartBarIcon, ChevronDownIcon, BanknotesIcon, DocumentTextIcon, ShareIcon } from "@heroicons/react/24/outline";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { headerLinkClasses, headerPrimaryLinkClasses } from "@/components/header-link";
 import { InfoTooltip } from "@/components/info-tooltip";
 import { LanguageToggle } from "@/components/language-toggle";
 import { useLanguage } from "@/components/language-provider";
+import { Toast } from "@/components/toast";
 import {
   calculateNetSalary,
   calculateGrossFromNet,
@@ -139,21 +140,38 @@ export default function ResultPage() {
   const [breakdownExpanded, setBreakdownExpanded] = useState(true);
   const [chartExpanded, setChartExpanded] = useState(true);
   const [inputsExpanded, setInputsExpanded] = useState(false);
-  const [linkCopied, setLinkCopied] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const handlePrint = () => {
     window.print();
   };
 
-  const handleCopyLink = async () => {
+  const handleShare = async () => {
     try {
       // Generate a compressed shareable URL
       const shareableUrl = payload ? createShareUrl(payload) : window.location.href;
+
+      // Try using Web Share API first (mobile devices)
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: result.headerTitle,
+            url: shareableUrl,
+          });
+          return; // Successfully shared via native dialog
+        } catch (shareErr) {
+          // User cancelled or share failed, fall back to clipboard
+          if ((shareErr as Error).name === 'AbortError') {
+            return; // User cancelled, don't show toast
+          }
+        }
+      }
+
+      // Fallback to clipboard copy (desktop)
       await navigator.clipboard.writeText(shareableUrl);
-      setLinkCopied(true);
-      setTimeout(() => setLinkCopied(false), 2000);
+      setShowToast(true);
     } catch (err) {
-      console.error('Failed to copy link:', err);
+      console.error('Failed to share link:', err);
     }
   };
 
@@ -374,6 +392,13 @@ export default function ResultPage() {
 
   return (
     <main className="relative mx-auto min-h-screen w-full px-4 pb-20 pt-6 sm:px-6">
+      {/* Toast Notification */}
+      <Toast
+        message={common.nav.calculator === "Calculator" ? "Link copied!" : "Link kopiert!"}
+        show={showToast}
+        onHide={() => setShowToast(false)}
+      />
+
       {/* Print Header */}
       <header className="hidden print:flex print:mb-8 print:border-b-2 print:border-rose-500 print:pb-4">
         <div className="flex w-full items-center justify-between">
@@ -402,23 +427,13 @@ export default function ResultPage() {
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
             <button
-              onClick={handleCopyLink}
+              onClick={handleShare}
               className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border-2 border-rose-200 bg-white px-2.5 sm:px-3 py-2 text-sm font-semibold text-rose-600 shadow-sm transition-all cursor-pointer hover:border-rose-300 hover:bg-rose-50 hover:shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-200"
-              aria-label={linkCopied
-                ? (common.nav.calculator === "Calculator" ? "Link copied!" : "Link kopiert!")
-                : (common.nav.calculator === "Calculator" ? "Copy share link" : "Link kopieren")
-              }
+              aria-label={common.nav.calculator === "Calculator" ? "Share results" : "Ergebnisse teilen"}
             >
-              {linkCopied ? (
-                <CheckIcon className="h-4 w-4 text-green-600" />
-              ) : (
-                <LinkIcon className="h-4 w-4" />
-              )}
+              <ShareIcon className="h-4 w-4" />
               <span className="hidden sm:inline">
-                {linkCopied
-                  ? (common.nav.calculator === "Calculator" ? "Copied!" : "Kopiert!")
-                  : (common.nav.calculator === "Calculator" ? "Share" : "Teilen")
-                }
+                {common.nav.calculator === "Calculator" ? "Share" : "Teilen"}
               </span>
             </button>
             <button
