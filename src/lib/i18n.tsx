@@ -361,7 +361,7 @@ export const translations: Record<Language, Dictionary> = {
         "Answers to frequent questions on Austrian net income, taxes and social security contributions.",
       notesTitle: "Notes",
       notes: [
-        "Rules change regularly. The relevant law and official information (tax office, social insurance) prevail.",
+        "Laws change regularly. The relevant law and official information (tax office, social insurance) prevail.",
         "This FAQ is simplified and does not replace legal advice.",
       ],
     },
@@ -601,7 +601,7 @@ export const translations: Record<Language, Dictionary> = {
       badge: "FAQ",
       title: "Häufig gestellte Fragen",
       description:
-        "Antworten zu häufigen Fragen rund um dein österreichisches Nettoeinkommen sowie Steuern und Abgaben.",
+        "Antworten zu häufigen Fragen rund um Ihr österreichisches Nettoeinkommen sowie Steuern und Abgaben.",
       notesTitle: "Hinweise",
       notes: [
         "Die Regeln ändern sich immer wieder. Maßgeblich sind die jeweils geltenden Gesetze und offiziellen Informationen (Finanzamt, Sozialversicherung).",
