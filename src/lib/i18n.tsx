@@ -276,7 +276,7 @@ export const translations: Record<Language, Dictionary> = {
         netAnnualExcludingSpecial: "Net / year",
         info: {
           netMonthlyAverage:
-            "Average of all 14 net payments (incl. 13th and 14th salary) spread across 12 calendar months.",
+            "Sum all 14 net payments (incl. 13th and 14th salary) spread across 12 calendar months.",
           netAnnualTotal:
             "Sum of the net amount of all 14 salary payments (incl. 13th and 14th salary).",
           netMonthlyExcludingSpecial:
@@ -316,21 +316,21 @@ export const translations: Record<Language, Dictionary> = {
         chart: {
           title: "Where your annual gross salary goes",
           description:
-            "How social insurance contributions and income tax compare to your yearly gross income.",
+            "How social insurance contributions and income tax impact your yearly gross income.",
           totalGross: "Gross / year",
           emptyState: "Enter a salary to see how it's distributed.",
           legend: {
             socialInsurance: "Social insurance",
             incomeTax: "Income tax",
-            netIncome: "Net income",
+            netIncome: "Net salary",
           },
         },
       },
       noteSection: {
         title: "Notes on the results",
         paragraphs: [
-          "This gross-to-net calculator is for orientation only – no guarantee, no legal advice.",
-          "The displayed values assume 14 equal gross monthly salary payments per year. Deviations are possible, e.g. through overtime, tax-free allowances or additional special payments. Certain reductions for older employees regarding unemployment or pension insurance are not considered. Your actual net salary may therefore differ from the calculated amount.",
+          "This calculator is for orientation only – no guarantee, no legal advice.",
+          "The displayed values assume 14 equal gross monthly salary payments per year. Deviations are possible, e.g. through overtime, tax-free allowances or additional special payments. Certain reductions for older employees regarding unemployment or pension insurance are not considered. Your actual salary may therefore differ from the calculated amount.",
         ],
       },
       detailsTitle: "Your inputs",
@@ -520,9 +520,9 @@ export const translations: Record<Language, Dictionary> = {
         netAnnualExcludingSpecial: "Netto / Jahr",
         info: {
           netMonthlyAverage:
-            "Durchschnitt aller 14 Nettoeinkommen (inkl. 13. und 14. Gehalt) auf 12 Kalendermonate verteilt.",
+            "Summe aller 14 Nettogehälter (inkl. 13. und 14. Gehalt) auf 12 Kalendermonate verteilt.",
           netAnnualTotal:
-            "Summe der Nettoeinkommen aller 14 Gehaltszahlungen (inkl. 13. und 14. Gehalt).",
+            "Summe der Nettogehälter aller 14 Gehaltszahlungen (inkl. 13. und 14. Gehalt).",
           netMonthlyExcludingSpecial:
             "Reguläres monatliches Nettoeinkommen (exkl. 13. und 14. Gehalt).",
           netAnnualExcludingSpecial:
@@ -560,13 +560,13 @@ export const translations: Record<Language, Dictionary> = {
         chart: {
           title: "So verteilt sich dein Jahresbrutto",
           description:
-            "Vergleich der Abzüge für Sozialversicherung und Lohnsteuer mit deinem gesamten Jahresbrutto.",
+            "Wie sich Abzüge für Sozialversicherung und Lohnsteuer auf dein Jahresbrutto auswirken.",
           totalGross: "Brutto / Jahr",
           emptyState: "Bitte gib ein Gehalt ein, um die Verteilung zu sehen.",
           legend: {
             socialInsurance: "Sozialversicherung",
             incomeTax: "Lohnsteuer",
-            netIncome: "Nettoeinkommen",
+            netIncome: "Nettogehalt",
           },
         },
       },
