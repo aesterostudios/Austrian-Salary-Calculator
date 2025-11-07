@@ -693,8 +693,8 @@ export default function ResultPage() {
                       <span className="font-semibold text-blue-900">{common.nav.calculator === "Calculator" ? "Social insurance:" : "Sozialversicherung:"}</span>
                       {" "}
                       {common.nav.calculator === "Calculator"
-                        ? `Special payments have a lower rate (${payload.employmentType === "employee" ? "17.07%" : payload.employmentType === "apprentice" ? "14.45%" : "5.10%"} vs ${payload.employmentType === "employee" ? "18.07%" : payload.employmentType === "apprentice" ? "15.50%" : "5.10%"}), so both 13th and 14th have the same deduction.`
-                        : `Sonderzahlungen haben einen niedrigeren Satz (${payload.employmentType === "employee" ? "17,07%" : payload.employmentType === "apprentice" ? "14,45%" : "5,10%"} vs ${payload.employmentType === "employee" ? "18,07%" : payload.employmentType === "apprentice" ? "15,50%" : "5,10%"}), daher haben 13. und 14. denselben Abzug.`}
+                        ? `Special payments have a lower rate (${payload.employmentType === "employee" ? "17.07%" : payload.employmentType === "apprentice" ? "14.45%" : "5.10%"} vs ${payload.employmentType === "employee" ? "18.07%" : payload.employmentType === "apprentice" ? "15.50%" : "5.10%"}) for regular payments, so both the 13th and 14th salary have the same deduction.`
+                        : `Sonderzahlungen haben einen niedrigeren Satz (${payload.employmentType === "employee" ? "17,07%" : payload.employmentType === "apprentice" ? "14,45%" : "5,10%"} vs ${payload.employmentType === "employee" ? "18,07%" : payload.employmentType === "apprentice" ? "15,50%" : "5,10%"}) für reguläre Zahlungen, daher haben das 13. und 14. Gehalt denselben Abzug.`}
                     </p>
                   </div>
                   <div className="flex items-start gap-2">
