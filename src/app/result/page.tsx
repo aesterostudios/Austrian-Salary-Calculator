@@ -1107,7 +1107,7 @@ export default function ResultPage() {
                 {common.nav.calculator === "Calculator" ? "Your Inputs" : "Deine Eingaben"}
               </h2>
               <p className="mt-1 text-sm text-slate-600">
-                {common.nav.calculator === "Calculator" ? "Input summary and calculation details" : "Eingabezusammenfassung und Berechnungsdetails"}
+                {common.nav.calculator === "Calculator" ? "Input summary" : "Zusammenfassung deiner Eingaben"}
               </p>
             </div>
             <div className={`transform transition-transform duration-200 ${inputsExpanded ? 'rotate-180' : ''}`}>
