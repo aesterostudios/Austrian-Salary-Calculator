@@ -66,6 +66,7 @@ export interface Dictionary {
       netMonthlyAverage: string;
       netAnnualTotal: string;
       netMonthlyExcludingSpecial: string;
+      grossSalaryLabel: string;
       netAnnualExcludingSpecial: string;
       info: {
         netMonthlyAverage: string;
@@ -270,7 +271,8 @@ export const translations: Record<Language, Dictionary> = {
       summaryMetrics: {
         netMonthlyAverage: "Avg. net / month",
         netAnnualTotal: "Total net / year",
-        netMonthlyExcludingSpecial: "Net / month",
+        netMonthlyExcludingSpecial: "Your net salary",
+        grossSalaryLabel: "Your gross salary",
         netAnnualExcludingSpecial: "Net / year",
         info: {
           netMonthlyAverage:
@@ -513,7 +515,8 @@ export const translations: Record<Language, Dictionary> = {
       summaryMetrics: {
         netMonthlyAverage: "Dschn. Netto / Monat",
         netAnnualTotal: "Gesamt Netto / Jahr",
-        netMonthlyExcludingSpecial: "Netto / Monat",
+        netMonthlyExcludingSpecial: "Dein Nettogehalt",
+        grossSalaryLabel: "Dein Bruttogehalt",
         netAnnualExcludingSpecial: "Netto / Jahr",
         info: {
           netMonthlyAverage:
