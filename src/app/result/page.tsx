@@ -397,7 +397,7 @@ export default function ResultPage() {
         @media print {
           @page {
             size: A4;
-            margin: 20mm 18mm;
+            margin: 22mm 20mm;
           }
 
           * {
@@ -450,7 +450,7 @@ export default function ResultPage() {
 
         {/* Print-only Header */}
         <div className="hidden print:block">
-          <div className="flex items-start justify-between border-b-2 border-slate-900 pb-2 mb-3">
+          <div className="flex items-start justify-between border-b-2 border-slate-900 pb-2 mb-4">
             <div>
               <h1 className="text-lg font-bold text-slate-900" style={{ color: '#e11d48' }}>Austrian Salary Calculator</h1>
               <p className="text-xs text-slate-600 mt-0.5">austriansalary.xyz</p>
@@ -464,7 +464,7 @@ export default function ResultPage() {
           </div>
 
           {/* Print: Primary Result */}
-          <div className="mb-3 text-center border border-slate-300 rounded-lg p-3 no-break">
+          <div className="mb-4 text-center border border-slate-300 rounded-lg p-3 no-break">
             <p className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1">
               {result.headerBadge}
               {isNetToGross && <span> • {common.nav.calculator === "Calculator" ? "Net → Gross" : "Netto → Brutto"}</span>}
@@ -486,7 +486,7 @@ export default function ResultPage() {
           </div>
 
           {/* Print: Summary Metrics Table */}
-          <div className="mb-3 no-break">
+          <div className="mb-5 no-break">
             <table className="w-full text-xs" style={{ borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ borderBottom: '2px solid #e2e8f0' }}>
@@ -496,32 +496,47 @@ export default function ResultPage() {
                   <th className="text-right py-1 font-semibold text-slate-700 uppercase tracking-wider" style={{ fontSize: '10px' }}>
                     {common.nav.calculator === "Calculator" ? "Amount" : "Betrag"}
                   </th>
+                  <th className="text-right py-1 font-semibold text-slate-700 uppercase tracking-wider" style={{ fontSize: '10px' }}>
+                    {common.nav.calculator === "Calculator" ? "Remarks" : "Anmerkungen"}
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
                   <td className="py-1 text-slate-700 font-medium">{result.summaryMetrics.netMonthlyAverage}</td>
                   <td className="py-1 text-right font-bold text-slate-900">{formatCurrency(calculation.netMonthly, currencyLocale)}</td>
+                  <td className="py-1 text-right text-slate-600 italic" style={{ fontSize: '9px' }}>
+                    {common.nav.calculator === "Calculator" ? "Incl. 13th and 14th salary" : "Inkl. 13. und 14. Gehalt"}
+                  </td>
                 </tr>
                 <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
                   <td className="py-1 text-slate-700 font-medium">{result.summaryMetrics.netAnnualTotal}</td>
                   <td className="py-1 text-right font-bold text-slate-900">{formatCurrency(calculation.netAnnual, currencyLocale)}</td>
+                  <td className="py-1 text-right text-slate-600 italic" style={{ fontSize: '9px' }}>
+                    {common.nav.calculator === "Calculator" ? "Incl. 13th and 14th salary" : "Inkl. 13. und 14. Gehalt"}
+                  </td>
                 </tr>
                 <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
                   <td className="py-1 text-slate-700 font-medium">{result.analysis.metrics.net13th}</td>
                   <td className="py-1 text-right font-bold text-slate-900">{formatCurrency(calculation.netSpecial13th, currencyLocale)}</td>
+                  <td className="py-1 text-right text-slate-600 italic" style={{ fontSize: '9px' }}>
+                    {common.nav.calculator === "Calculator" ? "Special payment" : "Sonderzahlung"}
+                  </td>
                 </tr>
                 <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
                   <td className="py-1 text-slate-700 font-medium">{result.analysis.metrics.net14th}</td>
                   <td className="py-1 text-right font-bold text-slate-900">{formatCurrency(calculation.netSpecial14th, currencyLocale)}</td>
+                  <td className="py-1 text-right text-slate-600 italic" style={{ fontSize: '9px' }}>
+                    {common.nav.calculator === "Calculator" ? "Special payment" : "Sonderzahlung"}
+                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
 
           {/* Print: Detailed Breakdown */}
-          <div className="no-break mb-3">
-            <h3 className="text-xs font-bold text-slate-900 mb-1.5 uppercase tracking-wider">
+          <div className="no-break mb-5">
+            <h3 className="text-xs font-bold text-slate-900 mb-2 uppercase tracking-wider">
               {common.nav.calculator === "Calculator" ? "Detailed Breakdown" : "Detaillierte Aufschlüsselung"}
             </h3>
             <table className="w-full text-xs" style={{ borderCollapse: 'collapse', border: '1px solid #e2e8f0' }}>
@@ -568,56 +583,6 @@ export default function ResultPage() {
                 </tr>
               </tbody>
             </table>
-          </div>
-
-          {/* Print: Donut Chart */}
-          <div className="mb-3 flex justify-center no-break">
-            <div className="flex items-start gap-3" style={{ maxWidth: '400px' }}>
-              <svg viewBox="0 0 200 200" style={{ width: '120px', height: '120px' }}>
-                {/* Donut paths with grayscale */}
-                {donutArcSegments.map((segment) => (
-                  <path
-                    key={segment.id}
-                    d={segment.path}
-                    fill="none"
-                    stroke={
-                      segment.id === 'netIncome' ? '#1e293b' :
-                      segment.id === 'incomeTax' ? '#64748b' :
-                      '#94a3b8'
-                    }
-                    strokeWidth="18"
-                  />
-                ))}
-                {/* Center circle */}
-                <circle
-                  cx={donutCenter}
-                  cy={donutCenter}
-                  r={donutInnerRadius}
-                  fill="white"
-                  stroke="#e2e8f0"
-                  strokeWidth="1"
-                />
-              </svg>
-              {/* Legend */}
-              <div className="flex-1 space-y-1" style={{ fontSize: '10px', paddingTop: '8px' }}>
-                {segmentsWithPercentages.filter(s => s.value > 0).map((segment) => (
-                  <div key={segment.id} className="flex items-center gap-1.5">
-                    <div
-                      className="w-2.5 h-2.5 rounded-sm flex-shrink-0"
-                      style={{
-                        backgroundColor: segment.id === 'netIncome' ? '#1e293b' :
-                                       segment.id === 'incomeTax' ? '#64748b' :
-                                       '#94a3b8'
-                      }}
-                    />
-                    <div className="flex-1 flex items-center justify-between gap-2">
-                      <span className="text-slate-700">{segment.label}</span>
-                      <span className="font-bold text-slate-900">{percentFormatter.format(segment.percentage / 100)}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
 
           {/* Print: Footer */}
