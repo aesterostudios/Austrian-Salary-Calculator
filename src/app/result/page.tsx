@@ -397,7 +397,7 @@ export default function ResultPage() {
         @media print {
           @page {
             size: A4;
-            margin: 15mm;
+            margin: 20mm 18mm;
           }
 
           * {
@@ -449,10 +449,10 @@ export default function ResultPage() {
         />
 
         {/* Print-only Header */}
-        <div className="hidden print:block print:mb-4">
-          <div className="flex items-start justify-between border-b-2 border-slate-900 pb-3 mb-4">
+        <div className="hidden print:block">
+          <div className="flex items-start justify-between border-b-2 border-slate-900 pb-2 mb-3">
             <div>
-              <h1 className="text-xl font-bold text-slate-900" style={{ color: '#e11d48' }}>Austrian Salary Calculator</h1>
+              <h1 className="text-lg font-bold text-slate-900" style={{ color: '#e11d48' }}>Austrian Salary Calculator</h1>
               <p className="text-xs text-slate-600 mt-0.5">austriansalary.xyz</p>
             </div>
             <div className="text-right text-xs text-slate-600">
@@ -464,75 +464,128 @@ export default function ResultPage() {
           </div>
 
           {/* Print: Primary Result */}
-          <div className="mb-3 text-center border-2 border-slate-200 rounded-lg p-3 no-break" style={{ borderColor: '#fecdd3' }}>
-            <p className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">
+          <div className="mb-3 text-center border border-slate-300 rounded-lg p-3 no-break">
+            <p className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1">
               {result.headerBadge}
               {isNetToGross && <span> • {common.nav.calculator === "Calculator" ? "Net → Gross" : "Netto → Brutto"}</span>}
             </p>
-            <h2 className="text-base font-bold text-slate-900 mb-2">{primaryResultLabel}</h2>
+            <h2 className="text-sm font-bold text-slate-900 mb-2">{primaryResultLabel}</h2>
             <div className="space-y-1">
               <div>
-                <span className="text-3xl font-bold text-slate-900">{primaryResultValue}</span>
-                <span className="text-sm text-slate-600 ml-2">{common.currency.perMonth}</span>
+                <span className="text-2xl font-bold text-slate-900">{primaryResultValue}</span>
+                <span className="text-xs text-slate-600 ml-2">{common.currency.perMonth}</span>
               </div>
               <div className="text-slate-600">
-                <span className="text-lg font-semibold">{primaryResultAnnual}</span>
+                <span className="text-base font-semibold">{primaryResultAnnual}</span>
                 <span className="text-xs ml-1">{common.currency.perYear}</span>
               </div>
             </div>
             {primaryResultNote && (
-              <p className="text-xs text-slate-500 italic mt-2">{primaryResultNote}</p>
+              <p className="text-xs text-slate-500 italic mt-1">{primaryResultNote}</p>
             )}
           </div>
 
-          {/* Print: Two-column layout */}
-          <div className="flex gap-3 mb-3">
-            {/* Left column: Summary Table */}
-            <div className="flex-1">
-              <table className="w-full text-xs no-break" style={{ borderCollapse: 'collapse' }}>
-                <thead>
-                  <tr style={{ borderBottom: '2px solid #e2e8f0' }}>
-                    <th className="text-left py-1.5 font-semibold text-slate-700 uppercase tracking-wider" style={{ fontSize: '10px' }}>
-                      {common.nav.calculator === "Calculator" ? "Metric" : "Kennzahl"}
-                    </th>
-                    <th className="text-right py-1.5 font-semibold text-slate-700 uppercase tracking-wider" style={{ fontSize: '10px' }}>
-                      {common.nav.calculator === "Calculator" ? "Amount" : "Betrag"}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                    <td className="py-1.5 text-slate-700 font-medium">{result.summaryMetrics.netMonthlyAverage}</td>
-                    <td className="py-1.5 text-right font-bold text-slate-900">{formatCurrency(calculation.netMonthly, currencyLocale)}</td>
-                  </tr>
-                  <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                    <td className="py-1.5 text-slate-700 font-medium">{result.summaryMetrics.netAnnualTotal}</td>
-                    <td className="py-1.5 text-right font-bold text-slate-900">{formatCurrency(calculation.netAnnual, currencyLocale)}</td>
-                  </tr>
-                  <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                    <td className="py-1.5 text-slate-700 font-medium">{result.analysis.metrics.net13th}</td>
-                    <td className="py-1.5 text-right font-bold text-slate-900">{formatCurrency(calculation.netSpecial13th, currencyLocale)}</td>
-                  </tr>
-                  <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                    <td className="py-1.5 text-slate-700 font-medium">{result.analysis.metrics.net14th}</td>
-                    <td className="py-1.5 text-right font-bold text-slate-900">{formatCurrency(calculation.netSpecial14th, currencyLocale)}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+          {/* Print: Summary Metrics Table */}
+          <div className="mb-3 no-break">
+            <table className="w-full text-xs" style={{ borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ borderBottom: '2px solid #e2e8f0' }}>
+                  <th className="text-left py-1 font-semibold text-slate-700 uppercase tracking-wider" style={{ fontSize: '10px' }}>
+                    {common.nav.calculator === "Calculator" ? "Metric" : "Kennzahl"}
+                  </th>
+                  <th className="text-right py-1 font-semibold text-slate-700 uppercase tracking-wider" style={{ fontSize: '10px' }}>
+                    {common.nav.calculator === "Calculator" ? "Amount" : "Betrag"}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td className="py-1 text-slate-700 font-medium">{result.summaryMetrics.netMonthlyAverage}</td>
+                  <td className="py-1 text-right font-bold text-slate-900">{formatCurrency(calculation.netMonthly, currencyLocale)}</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td className="py-1 text-slate-700 font-medium">{result.summaryMetrics.netAnnualTotal}</td>
+                  <td className="py-1 text-right font-bold text-slate-900">{formatCurrency(calculation.netAnnual, currencyLocale)}</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td className="py-1 text-slate-700 font-medium">{result.analysis.metrics.net13th}</td>
+                  <td className="py-1 text-right font-bold text-slate-900">{formatCurrency(calculation.netSpecial13th, currencyLocale)}</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td className="py-1 text-slate-700 font-medium">{result.analysis.metrics.net14th}</td>
+                  <td className="py-1 text-right font-bold text-slate-900">{formatCurrency(calculation.netSpecial14th, currencyLocale)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-            {/* Right column: Donut Chart */}
-            <div className="w-40 flex flex-col items-center justify-center">
-              <svg viewBox="0 0 200 200" className="w-full h-auto">
-                {/* Donut paths */}
+          {/* Print: Detailed Breakdown */}
+          <div className="no-break mb-3">
+            <h3 className="text-xs font-bold text-slate-900 mb-1.5 uppercase tracking-wider">
+              {common.nav.calculator === "Calculator" ? "Detailed Breakdown" : "Detaillierte Aufschlüsselung"}
+            </h3>
+            <table className="w-full text-xs" style={{ borderCollapse: 'collapse', border: '1px solid #e2e8f0' }}>
+              <thead>
+                <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                  <th className="text-left py-1 px-2 font-semibold text-slate-700" style={{ fontSize: '10px', borderRight: '1px solid #e2e8f0' }}>
+                    {common.nav.calculator === "Calculator" ? "Type" : "Art"}
+                  </th>
+                  <th className="text-right py-1 px-2 font-semibold text-slate-700" style={{ fontSize: '10px', borderRight: '1px solid #e2e8f0' }}>
+                    {common.nav.calculator === "Calculator" ? "Regular" : "Regulär"}
+                  </th>
+                  <th className="text-right py-1 px-2 font-semibold text-slate-700" style={{ fontSize: '10px', borderRight: '1px solid #e2e8f0' }}>
+                    {common.nav.calculator === "Calculator" ? "13th" : "13."}
+                  </th>
+                  <th className="text-right py-1 px-2 font-semibold text-slate-700" style={{ fontSize: '10px' }}>
+                    {common.nav.calculator === "Calculator" ? "14th" : "14."}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td className="py-1 px-2 text-slate-700 font-medium" style={{ borderRight: '1px solid #f1f5f9' }}>{common.nav.calculator === "Calculator" ? "Gross" : "Brutto"}</td>
+                  <td className="py-1 px-2 text-right text-slate-900" style={{ borderRight: '1px solid #f1f5f9' }}>{formatCurrency(calculation.grossMonthly, currencyLocale)}</td>
+                  <td className="py-1 px-2 text-right text-slate-900" style={{ borderRight: '1px solid #f1f5f9' }}>{formatCurrency(calculation.grossMonthly, currencyLocale)}</td>
+                  <td className="py-1 px-2 text-right text-slate-900">{formatCurrency(calculation.grossMonthly, currencyLocale)}</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td className="py-1 px-2 text-slate-700" style={{ borderRight: '1px solid #f1f5f9' }}>{common.nav.calculator === "Calculator" ? "Social Insurance" : "SV"}</td>
+                  <td className="py-1 px-2 text-right text-slate-700" style={{ borderRight: '1px solid #f1f5f9' }}>-{formatCurrency(calculation.socialInsuranceMonthly, currencyLocale)}</td>
+                  <td className="py-1 px-2 text-right text-slate-700" style={{ borderRight: '1px solid #f1f5f9' }}>-{formatCurrency(calculation.socialInsuranceSpecial, currencyLocale)}</td>
+                  <td className="py-1 px-2 text-right text-slate-700">-{formatCurrency(calculation.socialInsuranceSpecial, currencyLocale)}</td>
+                </tr>
+                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td className="py-1 px-2 text-slate-700" style={{ borderRight: '1px solid #f1f5f9' }}>{common.nav.calculator === "Calculator" ? "Income Tax" : "Lohnsteuer"}</td>
+                  <td className="py-1 px-2 text-right text-slate-700" style={{ borderRight: '1px solid #f1f5f9' }}>-{formatCurrency(calculation.incomeTaxMonthly, currencyLocale)}</td>
+                  <td className="py-1 px-2 text-right text-slate-700" style={{ borderRight: '1px solid #f1f5f9' }}>-{formatCurrency(calculation.incomeTaxSpecial13th, currencyLocale)}</td>
+                  <td className="py-1 px-2 text-right text-slate-700">-{formatCurrency(calculation.incomeTaxSpecial14th, currencyLocale)}</td>
+                </tr>
+                <tr style={{ borderTop: '2px solid #e2e8f0', backgroundColor: '#f8fafc' }}>
+                  <td className="py-1 px-2 font-bold text-slate-900" style={{ borderRight: '1px solid #e2e8f0' }}>{common.nav.calculator === "Calculator" ? "= Net" : "= Netto"}</td>
+                  <td className="py-1 px-2 text-right font-bold text-slate-900" style={{ borderRight: '1px solid #e2e8f0' }}>{formatCurrency(calculation.netRegularMonthly, currencyLocale)}</td>
+                  <td className="py-1 px-2 text-right font-bold text-slate-900" style={{ borderRight: '1px solid #e2e8f0' }}>{formatCurrency(calculation.netSpecial13th, currencyLocale)}</td>
+                  <td className="py-1 px-2 text-right font-bold text-slate-900">{formatCurrency(calculation.netSpecial14th, currencyLocale)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          {/* Print: Donut Chart */}
+          <div className="mb-3 flex justify-center no-break">
+            <div className="flex items-start gap-3" style={{ maxWidth: '400px' }}>
+              <svg viewBox="0 0 200 200" style={{ width: '120px', height: '120px' }}>
+                {/* Donut paths with grayscale */}
                 {donutArcSegments.map((segment) => (
                   <path
                     key={segment.id}
                     d={segment.path}
                     fill="none"
-                    stroke={segment.id === 'netIncome' ? '#64748b' : segment.id === 'incomeTax' ? '#e11d48' : '#94a3b8'}
-                    strokeWidth="20"
-                    opacity="0.9"
+                    stroke={
+                      segment.id === 'netIncome' ? '#1e293b' :
+                      segment.id === 'incomeTax' ? '#64748b' :
+                      '#94a3b8'
+                    }
+                    strokeWidth="18"
                   />
                 ))}
                 {/* Center circle */}
@@ -546,81 +599,34 @@ export default function ResultPage() {
                 />
               </svg>
               {/* Legend */}
-              <div className="mt-2 space-y-0.5" style={{ fontSize: '9px' }}>
+              <div className="flex-1 space-y-1" style={{ fontSize: '10px', paddingTop: '8px' }}>
                 {segmentsWithPercentages.filter(s => s.value > 0).map((segment) => (
-                  <div key={segment.id} className="flex items-center gap-1">
+                  <div key={segment.id} className="flex items-center gap-1.5">
                     <div
-                      className="w-2 h-2 rounded-sm flex-shrink-0"
+                      className="w-2.5 h-2.5 rounded-sm flex-shrink-0"
                       style={{
-                        backgroundColor: segment.id === 'netIncome' ? '#64748b' : segment.id === 'incomeTax' ? '#e11d48' : '#94a3b8'
+                        backgroundColor: segment.id === 'netIncome' ? '#1e293b' :
+                                       segment.id === 'incomeTax' ? '#64748b' :
+                                       '#94a3b8'
                       }}
                     />
-                    <span className="text-slate-700 flex-1">{segment.label}:</span>
-                    <span className="font-semibold text-slate-900">{percentFormatter.format(segment.percentage / 100)}</span>
+                    <div className="flex-1 flex items-center justify-between gap-2">
+                      <span className="text-slate-700">{segment.label}</span>
+                      <span className="font-bold text-slate-900">{percentFormatter.format(segment.percentage / 100)}</span>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Print: Detailed Breakdown */}
-          <div className="no-break mb-3">
-            <h3 className="text-sm font-bold text-slate-900 mb-2">
-              {common.nav.calculator === "Calculator" ? "Detailed Breakdown" : "Detaillierte Aufschlüsselung"}
-            </h3>
-            <table className="w-full text-xs" style={{ borderCollapse: 'collapse' }}>
-              <thead>
-                <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0', borderTop: '1px solid #e2e8f0' }}>
-                  <th className="text-left py-1.5 px-2 font-semibold text-slate-700" style={{ fontSize: '10px', borderRight: '1px solid #e2e8f0' }}>
-                    {common.nav.calculator === "Calculator" ? "Type" : "Art"}
-                  </th>
-                  <th className="text-right py-1.5 px-2 font-semibold text-slate-700" style={{ fontSize: '10px', borderRight: '1px solid #e2e8f0' }}>
-                    {common.nav.calculator === "Calculator" ? "Regular" : "Regulär"}
-                  </th>
-                  <th className="text-right py-1.5 px-2 font-semibold text-slate-700" style={{ fontSize: '10px', borderRight: '1px solid #e2e8f0' }}>
-                    {common.nav.calculator === "Calculator" ? "13th" : "13."}
-                  </th>
-                  <th className="text-right py-1.5 px-2 font-semibold text-slate-700" style={{ fontSize: '10px' }}>
-                    {common.nav.calculator === "Calculator" ? "14th" : "14."}
-                  </th>
-                </tr>
-              </thead>
-              <tbody style={{ border: '1px solid #e2e8f0' }}>
-                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td className="py-1.5 px-2 text-slate-700 font-medium" style={{ borderRight: '1px solid #f1f5f9' }}>{common.nav.calculator === "Calculator" ? "Gross" : "Brutto"}</td>
-                  <td className="py-1.5 px-2 text-right text-slate-900" style={{ borderRight: '1px solid #f1f5f9' }}>{formatCurrency(calculation.grossMonthly, currencyLocale)}</td>
-                  <td className="py-1.5 px-2 text-right text-slate-900" style={{ borderRight: '1px solid #f1f5f9' }}>{formatCurrency(calculation.grossMonthly, currencyLocale)}</td>
-                  <td className="py-1.5 px-2 text-right text-slate-900">{formatCurrency(calculation.grossMonthly, currencyLocale)}</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td className="py-1.5 px-2 text-slate-700" style={{ borderRight: '1px solid #f1f5f9' }}>{common.nav.calculator === "Calculator" ? "Social Insurance" : "SV"}</td>
-                  <td className="py-1.5 px-2 text-right text-slate-700" style={{ borderRight: '1px solid #f1f5f9' }}>-{formatCurrency(calculation.socialInsuranceMonthly, currencyLocale)}</td>
-                  <td className="py-1.5 px-2 text-right text-slate-700" style={{ borderRight: '1px solid #f1f5f9' }}>-{formatCurrency(calculation.socialInsuranceSpecial, currencyLocale)}</td>
-                  <td className="py-1.5 px-2 text-right text-slate-700">-{formatCurrency(calculation.socialInsuranceSpecial, currencyLocale)}</td>
-                </tr>
-                <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td className="py-1.5 px-2 text-slate-700" style={{ borderRight: '1px solid #f1f5f9' }}>{common.nav.calculator === "Calculator" ? "Income Tax" : "Lohnsteuer"}</td>
-                  <td className="py-1.5 px-2 text-right text-slate-700" style={{ borderRight: '1px solid #f1f5f9' }}>-{formatCurrency(calculation.incomeTaxMonthly, currencyLocale)}</td>
-                  <td className="py-1.5 px-2 text-right text-slate-700" style={{ borderRight: '1px solid #f1f5f9' }}>-{formatCurrency(calculation.incomeTaxSpecial13th, currencyLocale)}</td>
-                  <td className="py-1.5 px-2 text-right text-slate-700">-{formatCurrency(calculation.incomeTaxSpecial14th, currencyLocale)}</td>
-                </tr>
-                <tr style={{ borderTop: '2px solid #e2e8f0', backgroundColor: '#f8fafc' }}>
-                  <td className="py-1.5 px-2 font-bold text-slate-900" style={{ borderRight: '1px solid #e2e8f0' }}>{common.nav.calculator === "Calculator" ? "= Net" : "= Netto"}</td>
-                  <td className="py-1.5 px-2 text-right font-bold text-slate-900" style={{ borderRight: '1px solid #e2e8f0' }}>{formatCurrency(calculation.netRegularMonthly, currencyLocale)}</td>
-                  <td className="py-1.5 px-2 text-right font-bold text-slate-900" style={{ borderRight: '1px solid #e2e8f0' }}>{formatCurrency(calculation.netSpecial13th, currencyLocale)}</td>
-                  <td className="py-1.5 px-2 text-right font-bold text-slate-900">{formatCurrency(calculation.netSpecial14th, currencyLocale)}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
           {/* Print: Footer */}
-          <div className="pt-2 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600">
+          <div className="pt-2 border-t border-slate-300 flex items-center justify-between" style={{ fontSize: '10px' }}>
             <div>
-              <p className="font-medium">Created by Aestero Studios in Austria.</p>
+              <p className="text-slate-600">Created by Aestero Studios in Austria.</p>
             </div>
             <div className="text-right">
-              <p className="font-mono">austriansalary.xyz</p>
+              <p className="font-mono text-slate-600">austriansalary.xyz</p>
             </div>
           </div>
         </div>
