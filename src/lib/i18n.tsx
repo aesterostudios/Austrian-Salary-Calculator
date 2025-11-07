@@ -604,7 +604,7 @@ export const translations: Record<Language, Dictionary> = {
         "Antworten zu häufigen Fragen rund um Ihr österreichisches Nettoeinkommen sowie Steuern und Abgaben.",
       notesTitle: "Hinweise",
       notes: [
-        "Die Regeln ändern sich immer wieder. Maßgeblich sind die jeweils geltenden Gesetze und offiziellen Informationen (Finanzamt, Sozialversicherung).",
+        "Die Gesetze ändern sich immer wieder. Maßgeblich sind die jeweils geltenden Gesetze und offiziellen Informationen (Finanzamt, Sozialversicherung).",
         "Dieses FAQ ist vereinfachend und ersetzt keine Rechtsberatung.",
       ],
     },
