@@ -368,7 +368,7 @@ export default function ResultPage() {
   // Determine the primary result to show prominently
   const isNetToGross = payload.calculationMode === 'net-to-gross';
   const primaryResultLabel = isNetToGross
-    ? (common.nav.calculator === "Calculator" ? "Required Gross Salary" : "Benötigtes Bruttogehalt")
+    ? result.summaryMetrics.grossSalaryLabel
     : result.summaryMetrics.netMonthlyExcludingSpecial;
   const primaryResultValue = isNetToGross
     ? formatCurrency(calculation.grossMonthly, currencyLocale)
@@ -469,15 +469,17 @@ export default function ResultPage() {
 
         {/* Primary Result Card - The Big Answer */}
         <div className="overflow-hidden rounded-3xl border-2 border-rose-500 bg-gradient-to-br from-rose-500 via-rose-500/95 to-rose-600 shadow-2xl shadow-rose-500/30">
-          <div className="px-8 py-10 text-center sm:px-12 sm:py-14">
+          <div className="px-6 py-10 text-center sm:px-12 sm:py-14">
             {/* Monthly Amount */}
             <div className="flex flex-col items-center gap-2">
-              <p className="text-5xl font-bold text-white sm:text-6xl lg:text-7xl">
-                {primaryResultValue}
-              </p>
-              <p className="text-base font-medium text-white/80 sm:text-lg">
-                {common.currency.perMonth}
-              </p>
+              <div className="flex flex-wrap items-baseline justify-center gap-2 sm:gap-3">
+                <p className="text-5xl font-bold text-white sm:text-6xl lg:text-7xl">
+                  {primaryResultValue}
+                </p>
+                <p className="text-base font-medium text-white/80 sm:text-lg">
+                  {common.currency.perMonth}
+                </p>
+              </div>
             </div>
 
             {/* Divider */}
@@ -485,7 +487,7 @@ export default function ResultPage() {
 
             {/* Annual Amount */}
             <div className="flex flex-col items-center gap-1">
-              <div className="flex items-baseline gap-2">
+              <div className="flex flex-wrap items-baseline justify-center gap-2">
                 <p className="text-2xl font-bold text-white sm:text-3xl">
                   {primaryResultAnnual}
                 </p>
@@ -508,7 +510,7 @@ export default function ResultPage() {
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {/* Average Monthly Net Card */}
           <div className="group relative rounded-2xl border-2 border-rose-100 bg-white p-6 shadow-lg transition-all hover:border-rose-300 hover:shadow-xl">
-            <div className="flex items-start justify-between gap-2">
+            <div className="flex items-start justify-between gap-2 min-h-[2.5rem]">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
                 {result.summaryMetrics.netMonthlyAverage}
               </p>
@@ -517,17 +519,17 @@ export default function ResultPage() {
                 content={result.summaryMetrics.info.netMonthlyAverage}
               />
             </div>
-            <p className="mt-3 text-3xl font-bold text-slate-900">
+            <p className="mt-3 text-2xl font-bold text-slate-900 break-all">
               {formatCurrency(calculation.netMonthly, currencyLocale)}
             </p>
-            <p className="mt-2 text-xs text-slate-500">
+            <p className="mt-2 text-xs text-slate-500 min-h-[2.5rem]">
               {result.summaryMetrics.footnotes.netMonthlyAverage}
             </p>
           </div>
 
           {/* Annual Total Card */}
           <div className="group relative rounded-2xl border-2 border-rose-100 bg-white p-6 shadow-lg transition-all hover:border-rose-300 hover:shadow-xl">
-            <div className="flex items-start justify-between gap-2">
+            <div className="flex items-start justify-between gap-2 min-h-[2.5rem]">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
                 {result.summaryMetrics.netAnnualTotal}
               </p>
@@ -536,36 +538,40 @@ export default function ResultPage() {
                 content={result.summaryMetrics.info.netAnnualTotal}
               />
             </div>
-            <p className="mt-3 text-3xl font-bold text-slate-900">
+            <p className="mt-3 text-2xl font-bold text-slate-900 break-all">
               {formatCurrency(calculation.netAnnual, currencyLocale)}
             </p>
-            <p className="mt-2 text-xs text-slate-500">
+            <p className="mt-2 text-xs text-slate-500 min-h-[2.5rem]">
               {result.summaryMetrics.footnotes.netAnnualTotal}
             </p>
           </div>
 
           {/* 13th Salary Card */}
           <div className="group relative rounded-2xl border-2 border-rose-100 bg-white p-6 shadow-lg transition-all hover:border-rose-300 hover:shadow-xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
-              {result.analysis.metrics.net13th}
-            </p>
-            <p className="mt-3 text-3xl font-bold text-slate-900">
+            <div className="min-h-[2.5rem]">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
+                {result.analysis.metrics.net13th}
+              </p>
+            </div>
+            <p className="mt-3 text-2xl font-bold text-slate-900 break-all">
               {formatCurrency(calculation.netSpecial13th, currencyLocale)}
             </p>
-            <p className="mt-2 text-xs text-rose-600/70">
+            <p className="mt-2 text-xs text-slate-500 min-h-[2.5rem]">
               {common.nav.calculator === "Calculator" ? "Special payment" : "Sonderzahlung"}
             </p>
           </div>
 
           {/* 14th Salary Card */}
           <div className="group relative rounded-2xl border-2 border-rose-100 bg-white p-6 shadow-lg transition-all hover:border-rose-300 hover:shadow-xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
-              {result.analysis.metrics.net14th}
-            </p>
-            <p className="mt-3 text-3xl font-bold text-slate-900">
+            <div className="min-h-[2.5rem]">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-500">
+                {result.analysis.metrics.net14th}
+              </p>
+            </div>
+            <p className="mt-3 text-2xl font-bold text-slate-900 break-all">
               {formatCurrency(calculation.netSpecial14th, currencyLocale)}
             </p>
-            <p className="mt-2 text-xs text-rose-600/70">
+            <p className="mt-2 text-xs text-slate-500 min-h-[2.5rem]">
               {common.nav.calculator === "Calculator" ? "Special payment" : "Sonderzahlung"}
             </p>
           </div>
@@ -606,10 +612,10 @@ export default function ResultPage() {
                       <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-600">
                         {common.nav.calculator === "Calculator" ? "Regular" : "Regulär"}
                       </th>
-                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-emerald-600">
+                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-600">
                         {common.nav.calculator === "Calculator" ? "13th Salary" : "13. Gehalt"}
                       </th>
-                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-emerald-600">
+                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-600">
                         {common.nav.calculator === "Calculator" ? "14th Salary" : "14. Gehalt"}
                       </th>
                     </tr>
@@ -664,10 +670,10 @@ export default function ResultPage() {
                       <td className="px-4 py-4 text-right text-lg font-bold text-slate-900">
                         {formatCurrency(calculation.netRegularMonthly, currencyLocale)}
                       </td>
-                      <td className="px-4 py-4 text-right text-lg font-bold text-emerald-700">
+                      <td className="px-4 py-4 text-right text-lg font-bold text-slate-900">
                         {formatCurrency(calculation.netSpecial13th, currencyLocale)}
                       </td>
-                      <td className="px-4 py-4 text-right text-lg font-bold text-emerald-700">
+                      <td className="px-4 py-4 text-right text-lg font-bold text-slate-900">
                         {formatCurrency(calculation.netSpecial14th, currencyLocale)}
                       </td>
                     </tr>
@@ -1081,19 +1087,6 @@ export default function ResultPage() {
                 </p>
               )}
             </div>
-
-              {/* Note Section */}
-              <div className="grid gap-3 rounded-2xl border border-rose-200/60 bg-rose-50/70 p-5 shadow-sm">
-                <h2 className="text-xs font-semibold uppercase tracking-[0.35em] text-rose-500">
-                  {result.noteSection.title}
-                </h2>
-                {result.noteSection.paragraphs.map((paragraph) => (
-                  <p key={paragraph} className="text-xs leading-relaxed text-rose-600">
-                    {paragraph}
-                  </p>
-                ))}
-              </div>
-            </div>
           )}
         </div>
 
@@ -1148,6 +1141,18 @@ export default function ResultPage() {
               ))}
             </div>
           )}
+        </div>
+
+        {/* Notes on the Results */}
+        <div className="rounded-3xl border border-rose-200/60 bg-gradient-to-br from-rose-50/50 to-pink-50/50 p-6 shadow-sm sm:p-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-rose-600">
+            {result.noteSection.title}
+          </p>
+          <div className="mt-4 space-y-3 text-sm leading-relaxed text-slate-700">
+            {result.noteSection.paragraphs.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </div>
         </div>
       </div>
     </main>
