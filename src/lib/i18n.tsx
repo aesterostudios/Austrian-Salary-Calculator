@@ -276,7 +276,7 @@ export const translations: Record<Language, Dictionary> = {
         netAnnualExcludingSpecial: "Net / year",
         info: {
           netMonthlyAverage:
-            "Sum all 14 net payments (incl. 13th and 14th salary) spread across 12 calendar months.",
+            "Sum of all 14 net payments (incl. 13th and 14th salary) spread across 12 calendar months.",
           netAnnualTotal:
             "Sum of the net amount of all 14 salary payments (incl. 13th and 14th salary).",
           netMonthlyExcludingSpecial:
