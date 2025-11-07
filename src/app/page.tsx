@@ -26,6 +26,7 @@ import type {
   IncomePeriod,
   CalculationMode,
 } from "@/lib/calculator";
+import { encodePayload } from "@/lib/url-utils";
 
 type EmploymentOption = {
   id: EmploymentType;
@@ -275,7 +276,7 @@ export default function Home() {
     };
 
     setIsNavigating(true);
-    const encoded = encodeURIComponent(JSON.stringify(payload));
+    const encoded = encodePayload(payload);
     router.push(`/result?payload=${encoded}`);
   };
 
