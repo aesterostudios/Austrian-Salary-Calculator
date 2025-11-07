@@ -994,7 +994,10 @@ export default function ResultPage() {
                         </div>
                       ) : (
                         <div className="flex flex-col gap-6">
-                          <div className="flex flex-col gap-4">
+                          <div
+                            className="flex flex-col gap-4"
+                            onMouseLeave={() => setActiveSegment(null)}
+                          >
                             {segmentsWithPercentages.map((segment) => {
                               const isInteractive = segment.value > 0 && hasChartData;
                               const isActive = activeSegment === segment.id;
@@ -1012,9 +1015,6 @@ export default function ResultPage() {
                                   }
                                   onFocus={
                                     isInteractive ? () => setActiveSegment(segment.id) : undefined
-                                  }
-                                  onMouseLeave={
-                                    isInteractive ? () => setActiveSegment(null) : undefined
                                   }
                                   onBlur={
                                     isInteractive ? () => setActiveSegment(null) : undefined
