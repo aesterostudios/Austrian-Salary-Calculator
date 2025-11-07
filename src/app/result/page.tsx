@@ -1038,46 +1038,28 @@ export default function ResultPage() {
                                         {segment.label}
                                       </span>
                                     </div>
-                                    <span className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-rose-500 to-rose-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm">
-                                      {percentLabel}
-                                    </span>
+                                    <div className="flex items-center gap-2 flex-wrap justify-end">
+                                      <span className="text-sm font-bold text-slate-700 whitespace-nowrap">
+                                        {formatCurrency(segment.value, currencyLocale)}
+                                      </span>
+                                      <span className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-rose-500 to-rose-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm">
+                                        {percentLabel}
+                                      </span>
+                                    </div>
                                   </div>
                                   <div className="relative h-12 w-full overflow-hidden rounded-lg bg-slate-100">
                                     <div
-                                      className="absolute inset-y-0 left-0 flex items-center rounded-lg px-4 transition-all duration-500 ease-out"
+                                      className="absolute inset-y-0 left-0 rounded-lg transition-all duration-500 ease-out"
                                       style={{
                                         width: `${widthPercent}%`,
                                         backgroundColor: segment.color,
                                         minWidth: widthPercent > 5 ? '80px' : '0px'
                                       }}
-                                    >
-                                      {widthPercent > 15 && (
-                                        <span className="whitespace-nowrap text-sm font-bold text-white drop-shadow-sm">
-                                          {formatCurrency(segment.value, currencyLocale)}
-                                        </span>
-                                      )}
-                                    </div>
-                                    {widthPercent <= 15 && segment.value > 0 && (
-                                      <div className="absolute inset-y-0 right-4 flex items-center">
-                                        <span className="whitespace-nowrap text-sm font-bold text-slate-700">
-                                          {formatCurrency(segment.value, currencyLocale)}
-                                        </span>
-                                      </div>
-                                    )}
+                                    />
                                   </div>
                                 </button>
                               );
                             })}
-                          </div>
-                          <div className="rounded-xl border border-rose-200/60 bg-rose-50/50 p-4">
-                            <div className="flex items-center justify-between text-sm">
-                              <span className="font-medium text-slate-600">
-                                {common.nav.calculator === "Calculator" ? "Total Gross Annual" : "Brutto Gesamt (Jahr)"}
-                              </span>
-                              <span className="font-bold text-rose-600">
-                                {formatCurrency(totalGrossAnnual, currencyLocale)}
-                              </span>
-                            </div>
                           </div>
                         </div>
                       )}
