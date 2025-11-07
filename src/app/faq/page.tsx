@@ -78,7 +78,7 @@ function getFaqs(language: Language): FaqItem[] {
               <li>
                 <strong className="text-slate-900">Alleinverdiener:in:</strong> Mehr als sechs Monate im Jahr verheiratet, in
                 eingetragener Partnerschaft oder in Lebensgemeinschaft mit mindestens einem Kind (für das Familienbeihilfe bezogen
-                wird) und der:die Partner:in verdient höchstens 7.284 Euro im Jahr.
+                wird) und der/die Partner:in verdient höchstens 7.284 Euro im Jahr.
               </li>
               <li>
                 <strong className="text-slate-900">Alleinerzieher:in:</strong> Mehr als sechs Monate im Jahr mit mindestens einem
@@ -97,7 +97,7 @@ function getFaqs(language: Language): FaqItem[] {
             </p>
             <div className="space-y-3">
               <p>
-                <strong className="text-slate-900">Einkommensteuer:</strong> Ja, sie bekommen eigene Steuerabsetzbeträge
+                <strong className="text-slate-900">Einkommensteuer:</strong> Ja, diese bekommen eigene Steuerabsetzbeträge
                 (Alleinverdiener:innen-/Alleinerzieher:innen-Absetzbetrag). Richtwerte 2025:
               </p>
               <ul className="list-disc space-y-1 pl-5">
@@ -130,7 +130,7 @@ function getFaqs(language: Language): FaqItem[] {
               <li>2.000 Euro/Jahr bis zum 18. Geburtstag,</li>
               <li>700 Euro/Jahr danach, solange Familienbeihilfe bezogen wird.</li>
             </ul>
-            <p>Er reduziert direkt deine Steuer (nicht die Sozialversicherung).</p>
+            <p>Er reduziert direkt Ihre Steuer (nicht die Sozialversicherung).</p>
           </div>
         ),
       },
@@ -170,7 +170,7 @@ function getFaqs(language: Language): FaqItem[] {
         question: "Was sind Sachbezüge durch Firmen-PKW (Firmenauto)?",
         answer: (
           <div className="space-y-3 text-left text-slate-600">
-            <p>Wenn du ein Firmenauto auch privat nutzt, wird ein monatlicher Sachbezugswert angesetzt:</p>
+            <p>Wenn Sie ein Firmenauto auch privat nutzen, wird ein monatlicher Sachbezugswert angesetzt:</p>
             <ul className="list-disc space-y-2 pl-5">
               <li>2 % der Anschaffungskosten (maximal 960 Euro/Monat),</li>
               <li>
@@ -180,7 +180,7 @@ function getFaqs(language: Language): FaqItem[] {
               <li>0 Euro bei Elektro- oder Wasserstoffautos (keine Emissionen).</li>
             </ul>
             <p>
-              Bei sehr geringer Privatnutzung kann der Sachbezug halbiert werden, wenn du das nachweist (zum Beispiel mit einem
+              Bei sehr geringer Privatnutzung kann der Sachbezug halbiert werden, wenn Sie das nachweisen (zum Beispiel mit einem
               Fahrtenbuch).
             </p>
             <p>
@@ -196,11 +196,11 @@ function getFaqs(language: Language): FaqItem[] {
           <div className="space-y-3 text-left text-slate-600">
             <p>
               Gemeint ist meist der <strong className="text-slate-900">Freibetragsbescheid</strong>: Das Finanzamt berücksichtigt
-              vorausschauend deine Werbungskosten (zum Beispiel Arbeitsmittel), Sonderausgaben oder außergewöhnlichen Belastungen
+              vorausschauend Ihre Werbungskosten (zum Beispiel Arbeitsmittel), Sonderausgaben oder außergewöhnlichen Belastungen
               schon unterjährig.
             </p>
             <p>
-              Dadurch wird monatlich weniger Lohnsteuer abgezogen und dein Netto steigt. Festgelegt wird das auf Basis deiner
+              Dadurch wird monatlich weniger Lohnsteuer abgezogen und Ihr Netto steigt. Festgelegt wird das auf Basis Ihrer
               letzten Steuererklärung.
             </p>
           </div>
@@ -238,7 +238,7 @@ function getFaqs(language: Language): FaqItem[] {
               </ul>
             </div>
             <p>
-              Wichtig: Kein Anspruch, wenn du für den Arbeitsweg ein Firmenauto nutzt. Die Pendlerpauschale und der Pendlereuro
+              Wichtig: Kein Anspruch, wenn Sie für den Arbeitsweg ein Firmenauto nutzen. Die Pendlerpauschale und der Pendlereuro
               werden entweder über die Lohnverrechnung berücksichtigt oder über die Steuererklärung.
             </p>
           </div>
