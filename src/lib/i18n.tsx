@@ -618,7 +618,7 @@ export const translations: Record<Language, Dictionary> = {
     },
     privacy: {
       badge: "Datenschutz",
-      title: "So gehen wir mit deinen Daten um.",
+      title: "So gehen wir mit Ihren Daten um.",
       intro:
         "Transparenz ist uns wichtig. Dieser Hinweis erklärt, welche Daten wir sammeln und warum.",
       sections: [
