@@ -149,6 +149,7 @@ export interface Dictionary {
     highlight: string;
     suffix: string;
     privacyLinkLabel: string;
+    contactLinkLabel: string;
   };
   privacy: {
     badge: string;
@@ -372,6 +373,7 @@ export const translations: Record<Language, Dictionary> = {
       highlight: "Aestero Studios",
       suffix: "in Austria.",
       privacyLinkLabel: "Privacy notice",
+      contactLinkLabel: "Contact",
     },
     privacy: {
       badge: "Privacy",
@@ -616,6 +618,7 @@ export const translations: Record<Language, Dictionary> = {
       highlight: "Aestero Studios",
       suffix: "in Austria.",
       privacyLinkLabel: "Datenschutzhinweis",
+      contactLinkLabel: "Kontakt",
     },
     privacy: {
       badge: "Datenschutz",
