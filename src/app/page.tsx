@@ -845,7 +845,7 @@ export default function Home() {
             >
               {calculationMode === 'gross-to-net'
                 ? home.calculateButton
-                : (common.nav.calculator === "Calculator" ? "Calculate Required Gross" : "Benötigtes Brutto berechnen")
+                : (common.nav.calculator === "Calculator" ? "Calculate now" : "Jetzt berechnen")
               }
             </Button>
             <Button
