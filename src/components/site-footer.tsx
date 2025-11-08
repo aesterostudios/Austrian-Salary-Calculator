@@ -24,6 +24,15 @@ export function SiteFooter() {
           >
             {footer.privacyLinkLabel}
           </Link>
+          <span aria-hidden="true" className="text-rose-200">
+            •
+          </span>
+          <a
+            href="mailto:aesterostudios@icloud.com"
+            className="inline-flex items-center gap-1 rounded-full bg-rose-50/80 px-3 py-1 text-sm font-semibold text-rose-600 shadow-sm ring-1 ring-transparent transition hover:bg-rose-100/80 hover:text-rose-700 hover:shadow-md hover:ring-rose-200"
+          >
+            {footer.contactLinkLabel}
+          </a>
         </p>
       </div>
     </footer>
