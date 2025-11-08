@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   description:
     "Answers to common questions about Austrian salary calculations, tax credits, family bonuses, social insurance, commuter allowances, and employment types.",
   alternates: {
+    canonical: "/faq",
     languages: {
       en: "/faq",
       de: "/faq",

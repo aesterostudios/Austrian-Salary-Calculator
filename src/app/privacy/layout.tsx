@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   description:
     "Learn about our privacy practices. We respect your privacy - all calculations are performed locally in your browser with minimal data collection.",
   alternates: {
+    canonical: "/privacy",
     languages: {
       en: "/privacy",
       de: "/privacy",
