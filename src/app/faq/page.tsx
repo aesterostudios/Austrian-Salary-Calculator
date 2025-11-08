@@ -401,7 +401,7 @@ function getFaqs(language: Language): FaqItem[] {
           <ul className="list-disc space-y-2 pl-5">
             <li>2% of the purchase price (max. EUR 960 per month),</li>
             <li>
-              1.5% (max. EUR 720 per month) if the car's CO₂ emissions stay below the legal threshold (126 g/km in 2026).
+              1.5% (max. EUR 720 per month) if the car&apos;s CO₂ emissions stay below the legal threshold (126 g/km in 2026).
             </li>
             <li>0 EUR for electric or hydrogen cars (zero emissions).</li>
           </ul>
