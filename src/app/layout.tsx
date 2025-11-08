@@ -22,13 +22,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://austrian-salary-calculator.vercel.app'),
+  metadataBase: new URL('https://austriansalary.xyz'),
   title: {
-    default: "Austrian Salary Calculator | Calculate Your Net Salary 2025",
+    default: "Austrian Salary Calculator | Calculate your Austrian net or gross salary with accurate 2026 tax rates",
     template: "%s | Austrian Salary Calculator",
   },
   description:
-    "Calculate your Austrian net salary, taxes, and social insurance contributions with accurate 2025 rates. Supports gross-to-net and net-to-gross calculations, family bonuses, and special payments.",
+    "Calculate your Austrian salary with accurate 2026 tax rates. Supports gross-to-net, net-to-gross, family bonuses, and other special payments.",
   keywords: [
     "Austrian salary calculator",
     "net salary Austria",
@@ -48,9 +48,9 @@ export const metadata: Metadata = {
     alternateLocale: ["de_AT"],
     url: "/",
     siteName: "Austrian Salary Calculator",
-    title: "Austrian Salary Calculator | Calculate Your Net Salary 2025",
+    title: "Austrian Salary Calculator | Calculate your Austrian net or gross salary with accurate 2026 tax rates",
     description:
-      "Calculate your Austrian net salary with accurate 2025 tax rates. Supports gross-to-net, net-to-gross, family bonuses, and special payments.",
+      "Calculate your Austrian salary with accurate 2026 tax rates. Supports gross-to-net, net-to-gross, family bonuses, and other special payments.",
     images: [
       {
         url: "/opengraph-image.png",
@@ -62,9 +62,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Austrian Salary Calculator | Calculate Your Net Salary 2025",
+    title: "Austrian Salary Calculator | Calculate your Austrian net or gross salary with accurate 2026 tax rates",
     description:
-      "Calculate your Austrian net salary with accurate 2025 tax rates. Supports gross-to-net, net-to-gross, and special payments.",
+      "Calculate your Austrian salary with accurate 2026 tax rates. Supports gross-to-net, net-to-gross, family bonuses, and other special payments.",
     images: ["/opengraph-image.png"],
   },
   alternates: {

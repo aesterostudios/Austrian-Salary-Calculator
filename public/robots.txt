@@ -22,4 +22,4 @@ User-agent: Google-Extended
 Allow: /
 
 # Sitemap location
-Sitemap: https://salary-calculator-austrian.vercel.app/sitemap.xml
+Sitemap: https://austriansalary.xyz/sitemap.xml

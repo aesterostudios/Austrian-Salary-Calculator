@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "FAQ - Frequently Asked Questions | Austrian Salary Calculator",
+  title: "Frequently asked questions | Austrian Salary Calculator",
   description:
     "Answers to common questions about Austrian salary calculations, tax credits, family bonuses, social insurance, commuter allowances, and employment types.",
   alternates: {
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "FAQ - Frequently Asked Questions | Austrian Salary Calculator",
+    title: "Frequently asked questions | Austrian Salary Calculator",
     description:
       "Answers to common questions about Austrian salary calculations, tax credits, family bonuses, and social insurance.",
     type: "website",
