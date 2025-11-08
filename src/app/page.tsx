@@ -391,8 +391,8 @@ export default function Home() {
           </h1>
           <p className="mt-4 text-base text-slate-600 sm:text-lg">
             {common.nav.calculator === "Calculator"
-              ? "Gross-to-net or net-to-gross calculator with accurate 2025 Austrian tax rates"
-              : "Brutto-Netto oder Netto-Brutto Rechner mit aktuellen österreichischen Steuersätzen für 2025"}
+              ? "Gross-to-net or net-to-gross calculator with accurate 2026 Austrian tax rates"
+              : "Brutto-Netto oder Netto-Brutto Rechner mit aktuellen österreichischen Steuersätzen für 2026"}
           </p>
         </header>
 

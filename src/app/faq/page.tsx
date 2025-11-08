@@ -98,7 +98,7 @@ function getFaqs(language: Language): FaqItem[] {
             <div className="space-y-3">
               <p>
                 <strong className="text-slate-900">Einkommensteuer:</strong> Ja, diese bekommen eigene Steuerabsetzbeträge
-                (Alleinverdiener:innen-/Alleinerzieher:innen-Absetzbetrag). Richtwerte 2025:
+                (Alleinverdiener:innen-/Alleinerzieher:innen-Absetzbetrag). Richtwerte 2026:
               </p>
               <ul className="list-disc space-y-1 pl-5">
                 <li>
@@ -175,7 +175,7 @@ function getFaqs(language: Language): FaqItem[] {
               <li>2 % der Anschaffungskosten (maximal 960 Euro/Monat),</li>
               <li>
                 1,5 % (maximal 720 Euro/Monat), wenn der CO₂-Ausstoß des Autos unter einem gesetzlich definierten Grenzwert liegt
-                (2025: 126 g/km).
+                (2026: 126 g/km).
               </li>
               <li>0 Euro bei Elektro- oder Wasserstoffautos (keine Emissionen).</li>
             </ul>
@@ -326,7 +326,7 @@ function getFaqs(language: Language): FaqItem[] {
           </p>
           <div className="space-y-3">
             <p>
-              <strong className="text-slate-900">Income tax:</strong> Yes, specific tax credits apply. Guide values for 2025:
+              <strong className="text-slate-900">Income tax:</strong> Yes, specific tax credits apply. Guide values for 2026:
             </p>
             <ul className="list-disc space-y-1 pl-5">
               <li>
@@ -401,7 +401,7 @@ function getFaqs(language: Language): FaqItem[] {
           <ul className="list-disc space-y-2 pl-5">
             <li>2% of the purchase price (max. EUR 960 per month),</li>
             <li>
-              1.5% (max. EUR 720 per month) if the car’s CO₂ emissions stay below the legal threshold (126 g/km in 2025).
+              1.5% (max. EUR 720 per month) if the car&apos;s CO₂ emissions stay below the legal threshold (126 g/km in 2026).
             </li>
             <li>0 EUR for electric or hydrogen cars (zero emissions).</li>
           </ul>
