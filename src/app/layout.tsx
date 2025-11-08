@@ -53,7 +53,7 @@ export const metadata: Metadata = {
       "Calculate your Austrian net salary with accurate 2025 tax rates. Supports gross-to-net, net-to-gross, family bonuses, and special payments.",
     images: [
       {
-        url: "/og-image.png",
+        url: "/opengraph-image.png",
         width: 1200,
         height: 630,
         alt: "Austrian Salary Calculator",
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     title: "Austrian Salary Calculator | Calculate Your Net Salary 2025",
     description:
       "Calculate your Austrian net salary with accurate 2025 tax rates. Supports gross-to-net, net-to-gross, and special payments.",
-    images: ["/og-image.png"],
+    images: ["/opengraph-image.png"],
   },
   alternates: {
     canonical: "/",
