@@ -46,6 +46,7 @@ type StoredFormState = {
   employmentType: EmploymentType;
   incomePeriod: IncomePeriod;
   income: string;
+  calculationMode: CalculationMode;
   hasChildren: boolean;
   childrenUnder18: string;
   childrenOver18: string;
@@ -57,6 +58,9 @@ type StoredFormState = {
   allowance: string;
   receivesCommuterAllowance: boolean;
   commuterAllowanceValue: string;
+  familyExpanded: boolean;
+  benefitsExpanded: boolean;
+  commuterExpanded: boolean;
 };
 
 export default function Home() {
@@ -135,6 +139,9 @@ export default function Home() {
       if (parsed.income) {
         setIncome(parsed.income);
       }
+      if (parsed.calculationMode) {
+        setCalculationMode(parsed.calculationMode);
+      }
       if (typeof parsed.hasChildren === "boolean") {
         setHasChildren(parsed.hasChildren);
       }
@@ -168,6 +175,15 @@ export default function Home() {
       if (typeof parsed.commuterAllowanceValue === "string") {
         setCommuterAllowanceValue(parsed.commuterAllowanceValue);
       }
+      if (typeof parsed.familyExpanded === "boolean") {
+        setFamilyExpanded(parsed.familyExpanded);
+      }
+      if (typeof parsed.benefitsExpanded === "boolean") {
+        setBenefitsExpanded(parsed.benefitsExpanded);
+      }
+      if (typeof parsed.commuterExpanded === "boolean") {
+        setCommuterExpanded(parsed.commuterExpanded);
+      }
     } catch {
       window.sessionStorage.removeItem(FORM_STATE_STORAGE_KEY);
     } finally {
@@ -191,6 +207,7 @@ export default function Home() {
         employmentType,
         incomePeriod,
         income,
+        calculationMode,
         hasChildren,
         childrenUnder18,
         childrenOver18,
@@ -202,6 +219,9 @@ export default function Home() {
         allowance,
         receivesCommuterAllowance,
         commuterAllowanceValue,
+        familyExpanded,
+        benefitsExpanded,
+        commuterExpanded,
       };
 
       window.sessionStorage.setItem(
@@ -226,12 +246,16 @@ export default function Home() {
     hasChildren,
     income,
     incomePeriod,
+    calculationMode,
     isRestoredFromStorage,
     isSingleEarner,
     receivesCommuterAllowance,
     taxableBenefit,
     companyCarValue,
     usesTaxableBenefits,
+    familyExpanded,
+    benefitsExpanded,
+    commuterExpanded,
   ]);
 
   const employmentOptions: EmploymentOption[] = useMemo(
@@ -304,6 +328,9 @@ export default function Home() {
     setAllowance("0");
     setReceivesCommuterAllowance(false);
     setCommuterAllowanceValue("0");
+    setFamilyExpanded(false);
+    setBenefitsExpanded(false);
+    setCommuterExpanded(false);
   };
 
   return (
