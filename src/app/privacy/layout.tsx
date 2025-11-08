@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Austrian Salary Calculator",
+  title: "Privacy policy | Austrian Salary Calculator",
   description:
     "Learn about our privacy practices. We respect your privacy - all calculations are performed locally in your browser with minimal data collection.",
   alternates: {
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Privacy Policy | Austrian Salary Calculator",
+    title: "Privacy policy | Austrian Salary Calculator",
     description:
       "Learn about our privacy practices. All calculations are performed locally in your browser with minimal data collection.",
     type: "website",
