@@ -377,34 +377,34 @@ export const translations: Record<Language, Dictionary> = {
       badge: "Privacy",
       title: "How we handle your data.",
       intro:
-        "Transparency matters to us. This notice explains the minimal data we process to keep the salary calculator comfortable to use.",
+        "Transparency matters to us. This notice explains what data we collect and why.",
       sections: [
         {
-          title: "What we collect",
+          title: "Language preference",
           body: [
-            "We store a single first-party cookie named asc_language.",
-            "The cookie remembers which language (German or English) you selected for the interface.",
+            "We store a single cookie (asc_language) to remember your language choice (English or German) for up to one year.",
+            "You can change languages anytime using the selector at the top-right of every page.",
           ],
         },
         {
-          title: "Why we use it",
+          title: "Anonymous usage analytics",
           body: [
-            "The language cookie lets us render each page directly in your preferred language without asking every time.",
-            "We never use it for analytics, advertising, or any cross-site tracking.",
+            "We use Vercel Analytics to understand how visitors use our calculator. This collects anonymous data such as page views, country/region, browser type, and screen size.",
+            "No personal information, IP addresses, or calculation data is collected. All analytics are aggregated and anonymized.",
           ],
         },
         {
-          title: "How long we keep it",
+          title: "What we don't do",
           body: [
-            "The cookie remains stored for one year so your choice stays in place when you come back.",
-            "If you pick a new language, the old value is overwritten immediately.",
+            "We never store or transmit your salary calculations. All calculations happen in your browser and stay on your device.",
+            "We don't use advertising cookies, tracking pixels, or third-party data sharing.",
           ],
         },
         {
-          title: "Your choices",
+          title: "Your rights",
           body: [
-            "You can switch languages at any time using the selector in the top-right corner of every page.",
-            "You may also delete the asc_language cookie in your browser settings; the site will then load in English by default.",
+            "You can delete cookies in your browser settings anytime. The site will continue to work without the language cookie (defaulting to English).",
+            "For questions about your data, contact us via the information on austriansalary.xyz.",
           ],
         },
       ],
@@ -621,34 +621,34 @@ export const translations: Record<Language, Dictionary> = {
       badge: "Datenschutz",
       title: "So gehen wir mit deinen Daten um.",
       intro:
-        "Transparenz ist uns wichtig. Dieser Hinweis erklärt, welche wenigen Daten wir verarbeiten, damit sich der Gehaltsrechner komfortabel nutzen lässt.",
+        "Transparenz ist uns wichtig. Dieser Hinweis erklärt, welche Daten wir sammeln und warum.",
       sections: [
         {
-          title: "Welche Daten wir speichern",
+          title: "Sprachauswahl",
           body: [
-            "Wir setzen genau ein First-Party-Cookie mit dem Namen asc_language.",
-            "Dieses Cookie merkt sich, welche Sprache (Deutsch oder Englisch) du für die Oberfläche ausgewählt hast.",
+            "Wir speichern ein einzelnes Cookie (asc_language), um deine Sprachwahl (Deutsch oder Englisch) bis zu einem Jahr zu merken.",
+            "Du kannst die Sprache jederzeit über den Umschalter rechts oben auf jeder Seite ändern.",
           ],
         },
         {
-          title: "Warum wir das tun",
+          title: "Anonyme Nutzungsanalyse",
           body: [
-            "Das Sprach-Cookie ermöglicht es uns, jede Seite direkt in deiner bevorzugten Sprache anzuzeigen, ohne jedes Mal nachzufragen.",
-            "Wir verwenden es nicht für Analysen, Werbung oder sonstiges Tracking über Websites hinweg.",
+            "Wir nutzen Vercel Analytics, um zu verstehen, wie Besucher unseren Rechner verwenden. Dabei werden anonyme Daten wie Seitenaufrufe, Land/Region, Browsertyp und Bildschirmgröße erfasst.",
+            "Keine personenbezogenen Daten, IP-Adressen oder Berechnungsdaten werden gesammelt. Alle Analysen sind aggregiert und anonymisiert.",
           ],
         },
         {
-          title: "Wie lange wir speichern",
+          title: "Was wir nicht tun",
           body: [
-            "Das Cookie bleibt ein Jahr gespeichert, damit deine Auswahl beim nächsten Besuch noch vorhanden ist.",
-            "Wenn du eine neue Sprache auswählst, wird der bisherige Wert sofort überschrieben.",
+            "Wir speichern oder übertragen niemals deine Gehaltsberechnungen. Alle Berechnungen erfolgen in deinem Browser und bleiben auf deinem Gerät.",
+            "Wir verwenden keine Werbe-Cookies, Tracking-Pixel oder Datenweitergabe an Dritte.",
           ],
         },
         {
-          title: "Deine Möglichkeiten",
+          title: "Deine Rechte",
           body: [
-            "Über den Sprachumschalter rechts oben auf jeder Seite kannst du die Sprache jederzeit ändern.",
-            "Du kannst das Cookie asc_language außerdem in den Browser-Einstellungen löschen; anschließend lädt die Seite standardmäßig auf Englisch.",
+            "Du kannst Cookies jederzeit in deinen Browser-Einstellungen löschen. Die Seite funktioniert auch ohne das Sprach-Cookie (lädt dann standardmäßig auf Englisch).",
+            "Bei Fragen zu deinen Daten kontaktiere uns über die Informationen auf austriansalary.xyz.",
           ],
         },
       ],
