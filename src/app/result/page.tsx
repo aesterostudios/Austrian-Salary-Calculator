@@ -151,8 +151,8 @@ export default function ResultPage() {
       // Generate a compressed shareable URL
       const shareableUrl = payload ? createShareUrl(payload) : window.location.href;
 
-      // Try using Web Share API first (mobile devices)
-      if (navigator.share) {
+      // Try using Web Share API first (works on Safari and some mobile browsers)
+      if (navigator.share && navigator.canShare && navigator.canShare({ url: shareableUrl })) {
         try {
           await navigator.share({
             title: result.headerTitle,
@@ -160,18 +160,34 @@ export default function ResultPage() {
           });
           return; // Successfully shared via native dialog
         } catch (shareErr) {
-          // User cancelled or share failed, fall back to clipboard
+          // User cancelled, don't show toast or fall back
           if ((shareErr as Error).name === 'AbortError') {
-            return; // User cancelled, don't show toast
+            return;
           }
+          // For other errors, fall through to clipboard copy
+          console.log('Web Share API failed, falling back to clipboard:', shareErr);
         }
       }
 
-      // Fallback to clipboard copy (desktop)
+      // Fallback to clipboard copy (desktop browsers, Chrome, Android Chrome, etc.)
       await navigator.clipboard.writeText(shareableUrl);
       setShowToast(true);
     } catch (err) {
       console.error('Failed to share link:', err);
+      // Try one more fallback for older browsers
+      try {
+        const textArea = document.createElement('textarea');
+        textArea.value = payload ? createShareUrl(payload) : window.location.href;
+        textArea.style.position = 'fixed';
+        textArea.style.opacity = '0';
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        setShowToast(true);
+      } catch (fallbackErr) {
+        console.error('All share methods failed:', fallbackErr);
+      }
     }
   };
 
