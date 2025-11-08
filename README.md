@@ -163,10 +163,6 @@ The app uses a custom i18n solution with:
 - Sitemap with 3 pages (home, FAQ, privacy)
 - Robots.txt allowing all crawlers including AI bots
 
-## License
-
-This project is open source and available for educational purposes.
-
 ---
 
 Built with ❤️ by [Aestero Studios](mailto:aesterostudios@icloud.com)
