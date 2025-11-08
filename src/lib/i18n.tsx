@@ -404,7 +404,6 @@ export const translations: Record<Language, Dictionary> = {
           title: "Your rights",
           body: [
             "You can delete cookies in your browser settings anytime. The site will continue to work without the language cookie (defaulting to English).",
-            "For questions about your data, contact us via the information on austriansalary.xyz.",
           ],
         },
       ],
@@ -648,7 +647,6 @@ export const translations: Record<Language, Dictionary> = {
           title: "Deine Rechte",
           body: [
             "Du kannst Cookies jederzeit in deinen Browser-Einstellungen löschen. Die Seite funktioniert auch ohne das Sprach-Cookie (lädt dann standardmäßig auf Englisch).",
-            "Bei Fragen zu deinen Daten kontaktiere uns über die Informationen auf austriansalary.xyz.",
           ],
         },
       ],
