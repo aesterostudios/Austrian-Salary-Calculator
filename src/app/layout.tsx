@@ -97,10 +97,10 @@ export default async function RootLayout({
   const cookieLanguage = cookieStore.get(LANGUAGE_COOKIE_NAME)?.value;
   const initialLanguage = isLanguage(cookieLanguage)
     ? cookieLanguage
-    : defaultLanguage;
+    : undefined;
 
   return (
-    <html lang={initialLanguage}>
+    <html lang={initialLanguage ?? defaultLanguage}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#fff5f8] text-slate-900`}
       >

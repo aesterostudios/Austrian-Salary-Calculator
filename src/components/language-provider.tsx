@@ -33,14 +33,30 @@ interface LanguageProviderProps {
   children: ReactNode;
 }
 
+function detectBrowserLanguage(): Language {
+  if (typeof window === "undefined") {
+    return defaultLanguage;
+  }
+
+  const browserLang = navigator.language || (navigator as any).userLanguage;
+  return browserLang?.toLowerCase().startsWith("de") ? "de" : "en";
+}
+
 export function LanguageProvider({
-  initialLanguage = defaultLanguage,
+  initialLanguage,
   children,
 }: LanguageProviderProps) {
-  const [language, setLanguageState] = useState<Language>(initialLanguage);
+  const [language, setLanguageState] = useState<Language>(() => {
+    // If initialLanguage is provided (from cookie), use it
+    if (initialLanguage && isLanguage(initialLanguage)) {
+      return initialLanguage;
+    }
+    // Otherwise, detect browser language
+    return detectBrowserLanguage();
+  });
 
   useEffect(() => {
-    if (!isLanguage(initialLanguage)) {
+    if (initialLanguage && !isLanguage(initialLanguage)) {
       setLanguageState(defaultLanguage);
     }
   }, [initialLanguage]);
