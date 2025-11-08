@@ -467,7 +467,6 @@ export default function ResultPage() {
           <div className="mb-4 text-center border border-slate-300 rounded-lg p-3 no-break">
             <p className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1">
               {result.headerBadge}
-              {isNetToGross && <span> • {common.nav.calculator === "Calculator" ? "Net → Gross" : "Netto → Brutto"}</span>}
             </p>
             <h2 className="text-sm font-bold text-slate-900 mb-2">{primaryResultLabel}</h2>
             <div className="space-y-1">
@@ -644,14 +643,6 @@ export default function ResultPage() {
             <span className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-600">
               {result.headerBadge}
             </span>
-            {isNetToGross && (
-              <>
-                <span className="text-rose-300">•</span>
-                <span className="text-xs font-semibold text-rose-700">
-                  {common.nav.calculator === "Calculator" ? "Net → Gross" : "Netto → Brutto"}
-                </span>
-              </>
-            )}
           </div>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
             {primaryResultLabel}
@@ -663,11 +654,11 @@ export default function ResultPage() {
           <div className="px-6 py-10 text-center sm:px-12 sm:py-14">
             {/* Monthly Amount */}
             <div className="flex flex-col items-center gap-2">
-              <div className="flex flex-wrap items-baseline justify-center gap-2 sm:gap-3">
+              <div className="flex items-baseline justify-center gap-2 sm:gap-3">
                 <p className="text-5xl font-bold text-white sm:text-6xl lg:text-7xl">
                   {primaryResultValue}
                 </p>
-                <p className="text-base font-medium text-white/80 sm:text-lg">
+                <p className="text-sm font-medium text-white/80 sm:text-base">
                   {common.currency.perMonth}
                 </p>
               </div>
