@@ -38,7 +38,7 @@ function detectBrowserLanguage(): Language {
     return defaultLanguage;
   }
 
-  const browserLang = navigator.language || (navigator as any).userLanguage;
+  const browserLang = navigator.language;
   return browserLang?.toLowerCase().startsWith("de") ? "de" : "en";
 }
 
