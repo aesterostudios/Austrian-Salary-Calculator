@@ -625,28 +625,28 @@ export const translations: Record<Language, Dictionary> = {
         {
           title: "Sprachauswahl",
           body: [
-            "Wir speichern ein einzelnes Cookie (asc_language), um deine Sprachwahl (Deutsch oder Englisch) bis zu einem Jahr zu merken.",
-            "Du kannst die Sprache jederzeit über den Umschalter rechts oben auf jeder Seite ändern.",
+            "Wir speichern genau ein Cookie („asc_language“), um Ihre Sprachauswahl (Deutsch oder Englisch) für bis zu ein Jahr zu speichern.",
+            "Sie können die Sprache jederzeit über die Sprachauswahl oben rechts auf jeder Seite ändern.",
           ],
         },
         {
           title: "Anonyme Nutzungsanalyse",
           body: [
-            "Wir nutzen Vercel Analytics, um zu verstehen, wie Besucher unseren Rechner verwenden. Dabei werden anonyme Daten wie Seitenaufrufe, Land/Region, Browsertyp und Bildschirmgröße erfasst.",
-            "Keine personenbezogenen Daten, IP-Adressen oder Berechnungsdaten werden gesammelt. Alle Analysen sind aggregiert und anonymisiert.",
+            "Wir setzen Vercel Analytics ein, um zu verstehen, wie Besucher:innen unsere Seite nutzen. Erfasst werden ausschließlich anonyme Daten wie Seitenaufrufe, Land/Region, Browsertyp und Bildschirmgröße.",
+            "Es werden keine personenbezogenen Daten, keine IP-Adressen und keine Berechnungsdaten erhoben. Sämtliche Auswertungen sind aggregiert und anonymisiert.",
           ],
         },
         {
           title: "Was wir nicht tun",
           body: [
-            "Wir speichern oder übertragen niemals deine Gehaltsberechnungen. Alle Berechnungen erfolgen in deinem Browser und bleiben auf deinem Gerät.",
-            "Wir verwenden keine Werbe-Cookies, Tracking-Pixel oder Datenweitergabe an Dritte.",
+            "Wir speichern oder übertragen niemals Ihre Gehaltsberechnungen. Alle Berechnungen erfolgen ausschließlich in Ihrem Browser und verbleiben auf Ihrem Gerät.",
+            "Wir verwenden keine Werbe-Cookies, keine Tracking-Pixel und geben keine Daten an Dritte weiter.",
           ],
         },
         {
-          title: "Deine Rechte",
+          title: "Ihre Rechte",
           body: [
-            "Du kannst Cookies jederzeit in deinen Browser-Einstellungen löschen. Die Seite funktioniert auch ohne das Sprach-Cookie (lädt dann standardmäßig auf Englisch).",
+            "Sie können die Cookies jederzeit in Ihren Browser-Einstellungen löschen. Die Seite funktioniert auch ohne das Sprach-Cookie (lädt dann standardmäßig auf Englisch).",
           ],
         },
       ],
