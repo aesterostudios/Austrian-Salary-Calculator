@@ -342,8 +342,8 @@ export const translations: Record<Language, Dictionary> = {
       labels: {
         employmentType: "Employment type",
         gross: {
-          monthly: "Gross income per month",
-          yearly: "Gross income per year",
+          monthly: "Gross salary per month",
+          yearly: "Gross salary per year",
         },
         childrenUnder18: "Children up to 17 years",
         childrenOver18: "Children from 18 years",
@@ -353,7 +353,7 @@ export const translations: Record<Language, Dictionary> = {
         taxableBenefit: "Non-cash benefit per month",
         companyCar: "Company car benefit per month",
         allowance: "Tax allowance per month",
-        commuterAllowance: "Pendlerpauschale per month",
+        commuterAllowance: "Commuter allowance per month",
       },
     },
     faq: {
@@ -586,18 +586,18 @@ export const translations: Record<Language, Dictionary> = {
       labels: {
         employmentType: "Beschäftigungsform",
         gross: {
-          monthly: "Bruttoeinkommen pro Monat",
-          yearly: "Bruttoeinkommen pro Jahr",
+          monthly: "Bruttogehalt pro Monat",
+          yearly: "Bruttogehalt pro Jahr",
         },
         childrenUnder18: "Anzahl Kinder bis 17 Jahre",
         childrenOver18: "Anzahl Kinder ab 18 Jahre",
         childrenOver18Note: "Für welche Familienbeihilfe bezogen wird",
         singleEarner: "Alleinverdiener:in / Alleinerzieher:in",
         familyBonus: "Familienbonus Plus",
-        taxableBenefit: "Sachbezug (monatlich)",
-        companyCar: "Sachbezug durch Firmen-PKW (monatlich)",
-        allowance: "Steuerlicher Freibetrag (monatlich)",
-        commuterAllowance: "Pendlerpauschale (monatlich)",
+        taxableBenefit: "Sachbezug pro Monat",
+        companyCar: "Sachbezug durch Firmen-PKW pro Monat",
+        allowance: "Steuerlicher Freibetrag pro Monat",
+        commuterAllowance: "Pendlerpauschale pro Monat",
       },
     },
     faq: {
