@@ -13,6 +13,26 @@ interface FaqItem {
   answer: ReactNode;
 }
 
+// Helper function to extract plain text from ReactNode for schema
+function extractTextFromReactNode(node: ReactNode): string {
+  if (typeof node === 'string') {
+    return node;
+  }
+  if (typeof node === 'number') {
+    return String(node);
+  }
+  if (Array.isArray(node)) {
+    return node.map(extractTextFromReactNode).join(' ');
+  }
+  if (node && typeof node === 'object' && 'props' in node) {
+    const props = (node as { props?: { children?: ReactNode } }).props;
+    if (props?.children) {
+      return extractTextFromReactNode(props.children);
+    }
+  }
+  return '';
+}
+
 function getFaqs(language: Language): FaqItem[] {
   if (language === "de") {
     return [
@@ -92,14 +112,16 @@ function getFaqs(language: Language): FaqItem[] {
         question: "Müssen Alleinverdiener:innen und Alleinerzieher:innen weniger Steuern und Abgaben zahlen?",
         answer: (
           <div className="space-y-4 text-left text-slate-600">
-            <p>
-              <strong className="text-slate-900">Sozialversicherung:</strong> Nein, die Beiträge bleiben gleich.
-            </p>
+            <div>
+              <h3 className="text-base font-bold text-slate-900 mb-1">Sozialversicherung:</h3>
+              <p>Nein, die Beiträge bleiben gleich.</p>
+            </div>
             <div className="space-y-3">
-              <p>
-                <strong className="text-slate-900">Einkommensteuer:</strong> Ja, diese bekommen eigene Steuerabsetzbeträge
-                (Alleinverdiener:innen-/Alleinerzieher:innen-Absetzbetrag). Richtwerte 2026:
-              </p>
+              <div>
+                <h3 className="text-base font-bold text-slate-900 mb-1">Einkommensteuer:</h3>
+                <p>Ja, diese bekommen eigene Steuerabsetzbeträge
+                (Alleinverdiener:innen-/Alleinerzieher:innen-Absetzbetrag). Richtwerte 2026:</p>
+              </div>
               <ul className="list-disc space-y-1 pl-5">
                 <li>
                   <strong className="text-slate-900">1 Kind:</strong> 601 Euro/Jahr
@@ -321,13 +343,15 @@ function getFaqs(language: Language): FaqItem[] {
       question: "Do single earners or single parents pay less tax and contributions?",
       answer: (
         <div className="space-y-4 text-left text-slate-600">
-          <p>
-            <strong className="text-slate-900">Social insurance:</strong> No, the contributions remain the same.
-          </p>
+          <div>
+            <h3 className="text-base font-bold text-slate-900 mb-1">Social insurance:</h3>
+            <p>No, the contributions remain the same.</p>
+          </div>
           <div className="space-y-3">
-            <p>
-              <strong className="text-slate-900">Income tax:</strong> Yes, specific tax credits apply. Guide values for 2026:
-            </p>
+            <div>
+              <h3 className="text-base font-bold text-slate-900 mb-1">Income tax:</h3>
+              <p>Yes, specific tax credits apply. Guide values for 2026:</p>
+            </div>
             <ul className="list-disc space-y-1 pl-5">
               <li>
                 <strong className="text-slate-900">1 child:</strong> EUR 601 per year
@@ -483,7 +507,7 @@ export default function FAQPage() {
       "name": faqItem.question,
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": typeof faqItem.answer === 'string' ? faqItem.answer : faqItem.question
+        "text": extractTextFromReactNode(faqItem.answer)
       }
     }))
   };

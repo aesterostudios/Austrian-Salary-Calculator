@@ -42,6 +42,21 @@ export const metadata: Metadata = {
     "family bonus plus",
   ],
   authors: [{ name: "Austrian Salary Calculator" }],
+  creator: "Aestero Studios",
+  publisher: "Aestero Studios",
+  applicationName: "Austrian Salary Calculator",
+  generator: "Next.js",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  other: {
+    "theme-color": "#fff5f8",
+    "mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "default",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",

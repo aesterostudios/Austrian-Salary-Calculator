@@ -335,6 +335,54 @@ export default function Home() {
 
   return (
     <main className="relative mx-auto min-h-screen w-full px-4 pb-20 pt-6 sm:px-6">
+      {/* Structured Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Austrian Salary Calculator",
+            "description": "Calculate your Austrian net salary (Nettogehalt) from gross income (Bruttogehalt) or vice versa with accurate 2026 tax rates.",
+            "url": "https://austriansalary.xyz",
+            "applicationCategory": "FinanceApplication",
+            "operatingSystem": "Any",
+            "browserRequirements": "Requires JavaScript",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "EUR"
+            },
+            "featureList": [
+              "Gross-to-net salary calculation",
+              "Net-to-gross salary calculation",
+              "Social insurance calculations",
+              "Income tax calculations",
+              "Family bonus plus (Familienbonus Plus)",
+              "Commuter allowance (Pendlerpauschale)",
+              "13th and 14th salary calculations"
+            ],
+            "inLanguage": ["en", "de"]
+          })
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Aestero Studios",
+            "url": "https://austriansalary.xyz",
+            "logo": "https://austriansalary.xyz/opengraph-image.png",
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "email": "aesterostudios@icloud.com",
+              "contactType": "Customer Support"
+            }
+          })
+        }}
+      />
       {isNavigating && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-rose-50/90 backdrop-blur-md"
