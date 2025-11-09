@@ -1,40 +1,43 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = 'https://austriansalary.xyz'
+  const lastModified = new Date('2025-01-09')
+
   return [
     {
-      url: 'https://austriansalary.xyz',
-      lastModified: '2025-01-09',
-      changeFrequency: 'monthly',
-      priority: 1,
+      url: baseUrl,
+      lastModified,
+      changeFrequency: 'weekly' as const,
+      priority: 1.0,
       alternates: {
         languages: {
-          en: 'https://austriansalary.xyz',
-          de: 'https://austriansalary.xyz',
+          en: baseUrl,
+          de: baseUrl,
         },
       },
     },
     {
-      url: 'https://austriansalary.xyz/faq',
-      lastModified: '2025-01-09',
-      changeFrequency: 'monthly',
+      url: `${baseUrl}/faq`,
+      lastModified,
+      changeFrequency: 'monthly' as const,
       priority: 0.8,
       alternates: {
         languages: {
-          en: 'https://austriansalary.xyz/faq',
-          de: 'https://austriansalary.xyz/faq',
+          en: `${baseUrl}/faq`,
+          de: `${baseUrl}/faq`,
         },
       },
     },
     {
-      url: 'https://austriansalary.xyz/privacy',
-      lastModified: '2025-01-09',
-      changeFrequency: 'yearly',
-      priority: 0.5,
+      url: `${baseUrl}/privacy`,
+      lastModified: new Date('2025-01-09'),
+      changeFrequency: 'yearly' as const,
+      priority: 0.3,
       alternates: {
         languages: {
-          en: 'https://austriansalary.xyz/privacy',
-          de: 'https://austriansalary.xyz/privacy',
+          en: `${baseUrl}/privacy`,
+          de: `${baseUrl}/privacy`,
         },
       },
     },
