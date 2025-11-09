@@ -471,8 +471,8 @@ export default function ResultPage() {
               <h1 className="text-lg font-bold text-slate-900" style={{ color: '#e11d48' }}>Austrian Salary Calculator</h1>
               <p className="text-xs text-slate-600 mt-0.5">austriansalary.xyz</p>
             </div>
-            <div className="text-right text-xs text-slate-600">
-              <p>{new Date().toLocaleDateString(
+            <div className="text-right text-xs text-slate-600 mt-0.5">
+              <p className="mt-[1.5em]">{new Date().toLocaleDateString(
                 common.nav.calculator === "Calculator" ? "en-US" : "de-AT",
                 { year: 'numeric', month: 'long', day: 'numeric' }
               )}</p>
@@ -480,12 +480,9 @@ export default function ResultPage() {
           </div>
 
           {/* Print: Primary Result */}
-          <div className="mb-4 text-center border border-slate-300 rounded-lg p-3 no-break">
-            <p className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1">
-              {result.headerBadge}
-            </p>
-            <h2 className="text-sm font-bold text-slate-900 mb-2">{primaryResultLabel}</h2>
-            <div className="space-y-1">
+          <div className="mb-4 text-center border-2 border-slate-300 rounded-lg p-4 no-break">
+            <h2 className="text-sm font-bold text-slate-900 mb-3">{primaryResultLabel}</h2>
+            <div className="space-y-2">
               <div>
                 <span className="text-2xl font-bold text-slate-900">{primaryResultValue}</span>
                 <span className="text-xs text-slate-600 ml-2">{common.currency.perMonth}</span>
@@ -494,10 +491,10 @@ export default function ResultPage() {
                 <span className="text-base font-semibold">{primaryResultAnnual}</span>
                 <span className="text-xs ml-1">{common.currency.perYear}</span>
               </div>
+              {primaryResultNote && (
+                <p className="text-xs text-slate-500 italic mt-2">{primaryResultNote}</p>
+              )}
             </div>
-            {primaryResultNote && (
-              <p className="text-xs text-slate-500 italic mt-1">{primaryResultNote}</p>
-            )}
           </div>
 
           {/* Print: Summary Metrics Table */}
