@@ -247,7 +247,7 @@ function getFaqs(language: Language): FaqItem[] {
                 etwa wegen fehlender Verbindungen): ab 2 km; höhere Monatsbeträge je Distanzstufe.
               </li>
               <li>
-                <strong className="text-slate-900">Pendlereuro:</strong> Jahresbetrag = einfache Entfernung in km × 2 Euro. Dieser
+                <strong className="text-slate-900">Pendlereuro:</strong> Jahresbetrag = einfache Entfernung in km × 6 Euro. Dieser
                 Betrag wird direkt von der Steuer abgezogen.
               </li>
             </ul>
@@ -471,7 +471,7 @@ function getFaqs(language: Language): FaqItem[] {
               connections); starts at 2 km with higher monthly amounts per distance bracket.
             </li>
             <li>
-              <strong className="text-slate-900">Pendlereuro:</strong> Annual amount equals one-way kilometres × EUR 2 and is
+              <strong className="text-slate-900">Pendlereuro:</strong> Annual amount equals one-way kilometres × EUR 6 and is
               deducted directly from the income tax.
             </li>
           </ul>

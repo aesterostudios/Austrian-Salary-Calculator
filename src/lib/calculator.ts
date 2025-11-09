@@ -70,26 +70,94 @@ const SPECIAL_PAYMENT_SURCHARGE_BRACKETS = [
   { cap: Number.POSITIVE_INFINITY, rate: 0.5 },
 ] as const;
 
-const EMPLOYEE_BONUS_MAX = 400;
-const EMPLOYEE_BONUS_THRESHOLD = 2000;
-const EMPLOYEE_BONUS_SLOPE = 0.27512866700977856;
-
-function calculateEmployeeBonus(
+/**
+ * Calculates Verkehrsabsetzbetrag + Erhöhter Verkehrsabsetzbetrag + Zuschlag
+ * for employees and apprentices (2026 values, indexed)
+ */
+function calculateVerkehrsabsetzbetrag(
   employmentType: EmploymentType,
-  taxableIncomeMonthly: number,
+  taxableIncomeAnnual: number,
 ): number {
   if (employmentType === "pensioner") {
     return 0;
   }
 
-  if (taxableIncomeMonthly <= EMPLOYEE_BONUS_THRESHOLD) {
-    return EMPLOYEE_BONUS_MAX;
+  // Base Verkehrsabsetzbetrag: €496
+  let credit = 496;
+
+  // Erhöhter Verkehrsabsetzbetrag: €853 if income ≤ €15,069, phases down to €496 by €16,056
+  if (taxableIncomeAnnual <= 15069) {
+    credit = 853;
+  } else if (taxableIncomeAnnual < 16056) {
+    // Linear phase-out from 853 to 496 between €15,069 and €16,056
+    const phaseOutRange = 16056 - 15069;
+    const excessIncome = taxableIncomeAnnual - 15069;
+    const reductionAmount = (853 - 496) * (excessIncome / phaseOutRange);
+    credit = 853 - reductionAmount;
   }
 
-  const reduction =
-    (taxableIncomeMonthly - EMPLOYEE_BONUS_THRESHOLD) * EMPLOYEE_BONUS_SLOPE;
+  // Zuschlag zum Verkehrsabsetzbetrag: €804, phases out from €19,761 to €30,259
+  let zuschlag = 0;
+  if (taxableIncomeAnnual <= 19761) {
+    zuschlag = 804;
+  } else if (taxableIncomeAnnual < 30259) {
+    // Linear phase-out from 804 to 0 between €19,761 and €30,259
+    const phaseOutRange = 30259 - 19761;
+    const excessIncome = taxableIncomeAnnual - 19761;
+    zuschlag = 804 * (1 - excessIncome / phaseOutRange);
+  }
 
-  return Math.max(0, EMPLOYEE_BONUS_MAX - reduction);
+  return credit + zuschlag;
+}
+
+/**
+ * Calculates Pensionistenabsetzbetrag for pensioners (2026 values, indexed)
+ */
+function calculatePensionistenabsetzbetrag(
+  taxableIncomeAnnual: number,
+): number {
+  // Erhöhter Pensionistenabsetzbetrag: €1,502 (phases out between €24,616 and €31,494)
+  if (taxableIncomeAnnual <= 24616) {
+    return 1502;
+  } else if (taxableIncomeAnnual < 31494) {
+    // Linear phase-out from 1502 to 1020 between €24,616 and €31,494
+    const phaseOutRange = 31494 - 24616;
+    const excessIncome = taxableIncomeAnnual - 24616;
+    const reductionAmount = (1502 - 1020) * (excessIncome / phaseOutRange);
+    return 1502 - reductionAmount;
+  }
+
+  // Normal Pensionistenabsetzbetrag: €1,020 (phases out between €21,614 and €31,494)
+  if (taxableIncomeAnnual <= 21614) {
+    return 1020;
+  } else if (taxableIncomeAnnual < 31494) {
+    // Linear phase-out from 1020 to 0 between €21,614 and €31,494
+    const phaseOutRange = 31494 - 21614;
+    const excessIncome = taxableIncomeAnnual - 21614;
+    return 1020 * (1 - excessIncome / phaseOutRange);
+  }
+
+  return 0;
+}
+
+/**
+ * Calculates SV-Rückerstattung (negative tax) cap for 2026
+ * This is the maximum refund amount for low-income earners
+ */
+function calculateNegativeTaxCap(
+  employmentType: EmploymentType,
+  hasCommuterAllowance: boolean,
+): number {
+  if (employmentType === "pensioner") {
+    return 723;
+  }
+
+  // Employees and apprentices
+  if (hasCommuterAllowance) {
+    return 750;
+  }
+
+  return 496;
 }
 
 function calculateSingleEarnerCredit(
@@ -100,15 +168,16 @@ function calculateSingleEarnerCredit(
     return 0;
   }
 
+  // 2026 Alleinverdiener-/Alleinerzieherabsetzbetrag (indexed)
   if (children === 1) {
-    return 494;
+    return 601;
   }
 
   if (children === 2) {
-    return 669;
+    return 813;
   }
 
-  return 889 + (children - 3) * 220;
+  return 1081 + (children - 3) * 268;
 }
 
 function calculateFamilyBonus(
@@ -123,8 +192,9 @@ function calculateFamilyBonus(
   }
 
   const factor = option === "full" ? 1 : 0.5;
-  const childBonusUnder18 = 166.68 * childrenUnder18;
-  const childBonusOver18 = 54.18 * childrenOver18;
+  // 2026 Family Bonus Plus: €2,000/year under 18, €700/year over 18
+  const childBonusUnder18 = (2000 / 12) * childrenUnder18;
+  const childBonusOver18 = (700 / 12) * childrenOver18;
 
   return (childBonusUnder18 + childBonusOver18) * factor * 12;
 }
@@ -134,12 +204,13 @@ function progressiveIncomeTax(annualTaxable: number): number {
     return 0;
   }
 
+  // 2026 tax brackets (indexed by +1.733% per BGBl II 191/2025)
   const brackets = [
-    { limit: 12816, rate: 0 },
-    { limit: 20818, rate: 0.2 },
-    { limit: 34513, rate: 0.3 },
-    { limit: 66612, rate: 0.41 },
-    { limit: 99266, rate: 0.48 },
+    { limit: 13539, rate: 0 },
+    { limit: 21992, rate: 0.2 },
+    { limit: 36458, rate: 0.3 },
+    { limit: 70365, rate: 0.4 },
+    { limit: 104859, rate: 0.48 },
     { limit: 1000000, rate: 0.5 },
   ];
 
@@ -157,6 +228,7 @@ function progressiveIncomeTax(annualTaxable: number): number {
     previousLimit = bracket.limit;
   }
 
+  // Top rate 55% for income over €1,000,000 (extended through 2029)
   if (remaining > 0) {
     tax += remaining * 0.55;
   }
@@ -225,16 +297,14 @@ export function calculateNetSalary(input: CalculatorInput): CalculationResult {
     : 0;
   const totalChildren = sanitizedChildrenUnder18 + sanitizedChildrenOver18;
 
-  const baseCredit = employmentType === "pensioner" ? 764 : 476;
-  const employeeBonusAnnual = calculateEmployeeBonus(
-    employmentType,
-    taxableIncomeMonthly,
-  );
+  // Calculate employment-type specific credits (2026 values)
+  const employmentCredit = employmentType === "pensioner"
+    ? calculatePensionistenabsetzbetrag(taxableIncomeAnnual)
+    : calculateVerkehrsabsetzbetrag(employmentType, taxableIncomeAnnual);
 
   const creditsAnnual =
     calculateSingleEarnerCredit(isSingleEarner, totalChildren) +
-    baseCredit +
-    employeeBonusAnnual;
+    employmentCredit;
 
   const familyBonusAnnual = calculateFamilyBonus(
     familyBonus,
@@ -242,10 +312,22 @@ export function calculateNetSalary(input: CalculatorInput): CalculationResult {
     sanitizedChildrenOver18,
   );
 
-  const incomeTaxRegularAnnual = Math.max(
-    0,
-    baseTaxAnnual - creditsAnnual - familyBonusAnnual,
-  );
+  // Calculate tax after credits (can be negative = SV-Rückerstattung)
+  let incomeTaxRegularAnnual = baseTaxAnnual - creditsAnnual - familyBonusAnnual;
+
+  // Apply negative tax cap (SV-Rückerstattung) for low-income earners
+  // Only applies if there is actual taxable income (no refund for zero income)
+  if (incomeTaxRegularAnnual < 0 && taxableIncomeAnnual > 0) {
+    const negativeTaxCap = calculateNegativeTaxCap(
+      employmentType,
+      receivesCommuterAllowance,
+    );
+    // Refund is capped (negative tax means refund)
+    incomeTaxRegularAnnual = Math.max(-negativeTaxCap, incomeTaxRegularAnnual);
+  } else if (taxableIncomeAnnual === 0) {
+    // No income means no tax and no refund
+    incomeTaxRegularAnnual = 0;
+  }
 
   const incomeTaxRegularMonthly =
     incomeTaxRegularAnnual / REGULAR_PAYMENTS_PER_YEAR;
