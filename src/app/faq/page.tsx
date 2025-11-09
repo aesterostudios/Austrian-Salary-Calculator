@@ -70,7 +70,7 @@ function getFaqs(language: Language): FaqItem[] {
             <ul className="list-disc space-y-2 pl-5">
               <li>
                 <strong className="text-slate-900">Familienbonus Plus:</strong> Bis zum 18. Geburtstag 2.000 Euro pro Kind und Jahr
-                (ungefähr 166,68 Euro pro Monat). Der Bonus kann die Steuer bis auf null senken, aber nicht die Sozialversicherung.
+                (ungefähr 166,67 Euro pro Monat). Der Bonus kann die Steuer bis auf null senken, aber nicht die Sozialversicherung.
               </li>
             </ul>
           </div>
@@ -83,7 +83,7 @@ function getFaqs(language: Language): FaqItem[] {
             <ul className="list-disc space-y-2 pl-5">
               <li>
                 Für volljährige Kinder, solange Familienbeihilfe zusteht, gibt es den reduzierten
-                <strong className="text-slate-900"> Familienbonus Plus</strong> von 700 Euro pro Jahr (etwa 58,34 Euro pro Monat).
+                <strong className="text-slate-900"> Familienbonus Plus</strong> von 700 Euro pro Jahr (etwa 58,33 Euro pro Monat).
                 Ohne Familienbeihilfe gibt es keinen Familienbonus.
               </li>
             </ul>
@@ -301,7 +301,7 @@ function getFaqs(language: Language): FaqItem[] {
           <ul className="list-disc space-y-2 pl-5">
             <li>
               <strong className="text-slate-900">Family Bonus Plus:</strong> EUR 2,000 per child and year until the 18th birthday
-              (roughly EUR 166.68 per month). It can reduce your tax to zero but does not touch social insurance.
+              (roughly EUR 166.67 per month). It can reduce your tax to zero but does not touch social insurance.
             </li>
           </ul>
         </div>
@@ -314,7 +314,7 @@ function getFaqs(language: Language): FaqItem[] {
           <ul className="list-disc space-y-2 pl-5">
             <li>
               As long as the family allowance is paid, you receive the reduced
-              <strong className="text-slate-900"> Family Bonus Plus</strong> of EUR 700 per year (about EUR 58.34 per month). Without
+              <strong className="text-slate-900"> Family Bonus Plus</strong> of EUR 700 per year (about EUR 58.33 per month). Without
               the allowance there is no family bonus.
             </li>
           </ul>

@@ -112,32 +112,33 @@ function calculateVerkehrsabsetzbetrag(
 
 /**
  * Calculates Pensionistenabsetzbetrag for pensioners (2026 values, indexed)
+ * Returns the MAXIMUM of normal and erhöhter credits
  */
 function calculatePensionistenabsetzbetrag(
   taxableIncomeAnnual: number,
 ): number {
-  // Erhöhter Pensionistenabsetzbetrag: €1,502 (phases out between €24,616 and €31,494)
-  if (taxableIncomeAnnual <= 24616) {
-    return 1502;
-  } else if (taxableIncomeAnnual < 31494) {
-    // Linear phase-out from 1502 to 1020 between €24,616 and €31,494
-    const phaseOutRange = 31494 - 24616;
-    const excessIncome = taxableIncomeAnnual - 24616;
-    const reductionAmount = (1502 - 1020) * (excessIncome / phaseOutRange);
-    return 1502 - reductionAmount;
-  }
-
   // Normal Pensionistenabsetzbetrag: €1,020 (phases out between €21,614 and €31,494)
+  let normalCredit = 0;
   if (taxableIncomeAnnual <= 21614) {
-    return 1020;
+    normalCredit = 1020;
   } else if (taxableIncomeAnnual < 31494) {
-    // Linear phase-out from 1020 to 0 between €21,614 and €31,494
     const phaseOutRange = 31494 - 21614;
     const excessIncome = taxableIncomeAnnual - 21614;
-    return 1020 * (1 - excessIncome / phaseOutRange);
+    normalCredit = 1020 * (1 - excessIncome / phaseOutRange);
   }
 
-  return 0;
+  // Erhöhter Pensionistenabsetzbetrag: €1,502 (phases out between €24,616 and €31,494)
+  let erhoehterCredit = 0;
+  if (taxableIncomeAnnual <= 24616) {
+    erhoehterCredit = 1502;
+  } else if (taxableIncomeAnnual < 31494) {
+    const phaseOutRange = 31494 - 24616;
+    const excessIncome = taxableIncomeAnnual - 24616;
+    erhoehterCredit = 1502 * (1 - excessIncome / phaseOutRange);
+  }
+
+  // Return the maximum of the two (pensioners get the better credit)
+  return Math.max(normalCredit, erhoehterCredit);
 }
 
 /**
