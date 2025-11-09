@@ -180,7 +180,7 @@ The core calculation logic (`src/lib/calculator.ts`) implements:
 
 ### Calculation Accuracy
 
-All calculations are **100% accurate** and comply with:
+All calculations are **(almost) 100% accurate** and comply with:
 - **Inflationsanpassungsverordnung 2026** (BGBl II 191/2025) - automatic indexation of tax brackets by +1.733%
 - **§33 EStG** - 2026 tax credits and allowances
 - **§67 EStG** - special payment (13th/14th salary) taxation rules
@@ -196,8 +196,8 @@ The calculator handles edge cases including:
 
 ## Recent Updates
 
-### December 2024 - 2026 Tax Year Update
-- ✅ Updated all tax brackets to 2026 indexed values (+1.733%)
+### 2026 Tax Year Update
+- ✅ Updated all tax brackets to 2026 indexed values
 - ✅ Completely rewrote employee credit system (Verkehrsabsetzbetrag)
 - ✅ Implemented proper pensioner credits with dual phase-out logic
 - ✅ Added SV-Rückerstattung (negative tax refund) with 2026 caps
@@ -205,8 +205,6 @@ The calculator handles edge cases including:
 - ✅ Updated Family Bonus Plus for children over 18 (€700/year)
 - ✅ Updated Pendlereuro from €2 to €6 per km
 - ✅ Fixed critical bug in pensioner credit calculation
-- ✅ Improved PDF export design
-- ✅ Fixed social preview images for all pages
 - ✅ Updated FAQs for 2026 (both languages)
 
 ## Internationalization
