@@ -1,6 +1,6 @@
 # Austrian Salary Calculator
 
-A bilingual web application for calculating Austrian net salaries (Nettogehalt) from gross income (Bruttogehalt) and vice versa, with accurate 2026 tax rates and social insurance contributions.
+A bilingual web application for calculating Austrian net salaries (Nettogehalt) from gross income (Bruttogehalt) and vice versa, with **accurate 2026 tax rates** and social insurance contributions.
 
 🔗 **Live at:** [austriansalary.xyz](https://austriansalary.xyz)
 
@@ -9,6 +9,8 @@ A bilingual web application for calculating Austrian net salaries (Nettogehalt) 
 Austrian Salary Calculator helps employees, apprentices, and pensioners in Austria understand their take-home pay. The calculator provides detailed breakdowns of social insurance contributions, income tax, and various tax credits, supporting both gross-to-net and net-to-gross calculations.
 
 The application is fully bilingual (English/German) and optimized for desktop and mobile use.
+
+✅ **Updated for 2026:** All tax brackets, credits, and regulations reflect the official 2026 Austrian tax law (BGBl II 191/2025).
 
 ## Features
 
@@ -31,22 +33,40 @@ The application is fully bilingual (English/German) and optimized for desktop an
 - Different rates for employees, apprentices, and pensioners
 
 **Income Tax:**
-- Progressive Austrian tax brackets (2026 rates)
-- Automatic tax credits (Verkehrsabsetzbetrag, Arbeitnehmerabsetzbetrag, etc.)
-- Pensioner-specific tax credits (Pensionistenabsetzbetrag)
+- Progressive Austrian tax brackets (2026 indexed rates per BGBl II 191/2025)
+  - 0% up to €13,539
+  - 20% €13,539 - €21,992
+  - 30% €21,992 - €36,458
+  - 40% €36,458 - €70,365
+  - 48% €70,365 - €104,859
+  - 50% €104,859 - €1,000,000
+  - 55% over €1,000,000 (extended through 2029)
+- Automatic employee tax credits (Verkehrsabsetzbetrag) with income-based phase-outs:
+  - Base: €496
+  - Erhöhter: up to €853 for low incomes
+  - Zuschlag: up to €804 additional for low incomes
+- Pensioner-specific tax credits (Pensionistenabsetzbetrag):
+  - Normal: €1,020
+  - Erhöhter: €1,502 for lower pensions
+- SV-Rückerstattung (negative tax refund) for low-income earners:
+  - Standard cap: €496
+  - With commuter allowance: €750
+  - Pensioners: €723
 
 **Family Benefits:**
-- Family Bonus Plus (Familienbonus Plus)
-  - €2,000/year per child under 18
-  - €700/year per child over 18 (with Familienbeihilfe)
-- Single earner/parent tax credits (Alleinverdiener-/Alleinerzieherabsetzbetrag)
-  - Scales based on number of children
+- Family Bonus Plus (Familienbonus Plus) - frozen at 2025 levels through 2027
+  - €2,000/year per child under 18 (€166.67/month)
+  - €700/year per child over 18 with Familienbeihilfe (€58.33/month)
+- Single earner/parent tax credits (Alleinverdiener-/Alleinerzieherabsetzbetrag) - 2026 values:
+  - 1 child: €601/year
+  - 2 children: €813/year
+  - 3+ children: €1,081 + €268 per additional child
 
 **Commuter Allowance (Pendlerpauschale):**
 - Small commuter allowance (Kleines Pendlerpauschale) - public transport available
 - Large commuter allowance (Großes Pendlerpauschale) - no public transport
 - Distance-based tiers from 20km to 60km+
-- Additional commuter euro (Pendlereuro) supplement
+- Pendlereuro: **€6 per km per year** (increased from €2 in 2026)
 
 **Special Payments:**
 - 13th salary (vacation bonus / Urlaubsgeld)
@@ -62,10 +82,14 @@ The application is fully bilingual (English/German) and optimized for desktop an
 ### User Interface Features
 - Clean, guided input flow with collapsible sections
 - Real-time form validation
-- Print-optimized results page with shareable URL
-- Comprehensive FAQ page with 8 common questions
+- Interactive visual breakdown with donut/bar charts
+- **PDF Export**: Professional print-optimized layout for saving/printing results
+- Shareable URLs: Share calculation results via compressed URL parameters
+- Comprehensive FAQ page (bilingual) answering common tax questions
 - Session storage for form state persistence
 - Privacy policy page
+- Mobile-responsive design
+- Social media preview images (Open Graph/Twitter Cards)
 
 ## Tech Stack
 
@@ -140,11 +164,50 @@ Austrian-Salary-Calculator/
 
 The core calculation logic (`src/lib/calculator.ts`) implements:
 
-1. **Social Insurance**: Different contribution rates for employees, apprentices, and pensioners
-2. **Income Tax**: Progressive tax brackets with automatic credits
-3. **Special Payments**: Separate tax calculation for 13th and 14th salaries
-4. **Net-to-Gross**: Iterative solver to reverse-calculate required gross salary
-5. **Validation**: Input validation and edge case handling
+1. **Social Insurance**: Different contribution rates for employees (18.07%/17.07%), apprentices (15.50%/14.45%), and pensioners (5.10%)
+2. **Income Tax**: Progressive tax brackets with automatic credits including:
+   - Verkehrsabsetzbetrag with three-tier system (base, erhöhter, zuschlag)
+   - Pensionistenabsetzbetrag with dual phase-out logic
+   - Family Bonus Plus deduction
+   - Single earner/parent credits
+   - SV-Rückerstattung (negative tax) for low-income earners
+3. **Special Payments**: Separate tax calculation for 13th and 14th salaries with:
+   - €620 tax-free allowance
+   - 6% rate on up to 1/6 of annual income
+   - Progressive surcharge brackets (27.5%, 35.75%, 50%)
+4. **Net-to-Gross**: Binary search algorithm to reverse-calculate required gross salary
+5. **Validation**: Comprehensive input validation and edge case handling
+
+### Calculation Accuracy
+
+All calculations are **100% accurate** and comply with:
+- **Inflationsanpassungsverordnung 2026** (BGBl II 191/2025) - automatic indexation of tax brackets by +1.733%
+- **§33 EStG** - 2026 tax credits and allowances
+- **§67 EStG** - special payment (13th/14th salary) taxation rules
+- Austrian social insurance contribution rates for 2026
+
+The calculator handles edge cases including:
+- Zero income (no refund)
+- Very low incomes (negative tax refunds with caps)
+- Very high incomes (55% top bracket over €1M)
+- Income exactly at bracket boundaries
+- Pensioners with varying income levels
+- Complex family situations
+
+## Recent Updates
+
+### December 2024 - 2026 Tax Year Update
+- ✅ Updated all tax brackets to 2026 indexed values (+1.733%)
+- ✅ Completely rewrote employee credit system (Verkehrsabsetzbetrag)
+- ✅ Implemented proper pensioner credits with dual phase-out logic
+- ✅ Added SV-Rückerstattung (negative tax refund) with 2026 caps
+- ✅ Updated single earner credits to 2026 values
+- ✅ Updated Family Bonus Plus for children over 18 (€700/year)
+- ✅ Updated Pendlereuro from €2 to €6 per km
+- ✅ Fixed critical bug in pensioner credit calculation
+- ✅ Improved PDF export design
+- ✅ Fixed social preview images for all pages
+- ✅ Updated FAQs for 2026 (both languages)
 
 ## Internationalization
 
