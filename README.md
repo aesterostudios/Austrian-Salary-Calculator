@@ -10,7 +10,7 @@ Austrian Salary Calculator helps employees, apprentices, and pensioners in Austr
 
 The application is fully bilingual (English/German) and optimized for desktop and mobile use.
 
-✅ **Updated for 2026:** All tax brackets, credits, and regulations reflect the official 2026 Austrian tax law (BGBl II 191/2025).
+✅ **Updated for 2026:** All tax brackets, credits, and regulations reflect the official 2026 Austrian tax law.
 
 ## Features
 
