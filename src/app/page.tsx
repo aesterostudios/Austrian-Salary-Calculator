@@ -443,6 +443,13 @@ export default function Home() {
               ? "Gross-to-net or net-to-gross calculator with accurate 2026 Austrian tax rates"
               : "Brutto-Netto oder Netto-Brutto Rechner mit aktuellen österreichischen Steuersätzen für 2026"}
           </p>
+
+          {/* Description */}
+          <div className="mx-auto mt-8 max-w-3xl">
+            <p className="text-sm leading-relaxed text-slate-600 sm:text-base sm:leading-relaxed">
+              {home.description}
+            </p>
+          </div>
         </header>
 
         {/* Main Form */}

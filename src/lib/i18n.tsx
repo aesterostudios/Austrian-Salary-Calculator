@@ -31,6 +31,7 @@ export interface Dictionary {
     badge: string;
     headline: string;
     headlineNetToGross: string;
+    description: string;
     summaryLabel: string;
     summarySuffix: string;
     incomePlaceholder: string;
@@ -210,6 +211,7 @@ export const translations: Record<Language, Dictionary> = {
       badge: "Gross-to-net calculator",
       headline: "Calculate your Austrian net salary.",
       headlineNetToGross: "Calculate your Austrian gross salary.",
+      description: "Calculate your exact take-home pay or gross salary in seconds. Our free calculator uses the latest Austrian tax regulations for 2026, including social insurance contributions, income tax brackets, and deductions like the Family Bonus Plus and commuter allowance. Whether you're negotiating a job offer, planning your finances, or comparing salaries across Austria, get precise results for employees, apprentices, and pensioners.",
       summaryLabel: "Currently selected gross salary",
       summarySuffix: "/ month",
       incomePlaceholder: "e.g. 3,000",
@@ -457,6 +459,7 @@ export const translations: Record<Language, Dictionary> = {
       badge: "Brutto-Netto-Rechner",
       headline: "Berechne dein österreichisches Nettogehalt.",
       headlineNetToGross: "Berechne dein österreichisches Bruttogehalt.",
+      description: "Berechnen Sie in Sekunden Ihr exaktes Netto- oder Bruttogehalt. Unser kostenloser Rechner verwendet die aktuellen österreichischen Steuervorschriften für 2026, einschließlich Sozialversicherungsbeiträgen, Einkommensteuerstufen und Abzügen wie dem Familienbonus Plus oder der Pendlerpauschale. Ob Sie ein Jobangebot verhandeln, Ihre Finanzen planen oder Gehälter in Österreich vergleichen – erhalten Sie präzise Ergebnisse für Angestellte, Arbeiter:innen, Lehrlinge und Pensionist:innen.",
       summaryLabel: "Aktuell ausgewähltes Bruttogehalt",
       summarySuffix: "/ Monat",
       incomePlaceholder: "z. B. 3.000",
