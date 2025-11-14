@@ -344,7 +344,7 @@ export default function Home() {
             "@context": "https://schema.org",
             "@type": "WebApplication",
             "name": "Austrian Salary Calculator",
-            "description": "Calculate your Austrian net salary (Nettogehalt) from gross income (Bruttogehalt) or vice versa with accurate 2026 tax rates.",
+            "description": "Calculate your Austrian net salary from gross income or vice versa with accurate 2026 tax rates.",
             "url": "https://austriansalary.xyz",
             "applicationCategory": "FinanceApplication",
             "operatingSystem": "Any",
