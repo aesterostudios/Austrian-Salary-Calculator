@@ -27,6 +27,7 @@ import type {
   CalculationMode,
 } from "@/lib/calculator";
 import { encodePayload } from "@/lib/url-utils";
+import { parseLocaleNumber, sanitizeNumberInput } from "@/lib/number-utils";
 
 type EmploymentOption = {
   id: EmploymentType;
@@ -105,14 +106,14 @@ export default function Home() {
 
   useEffect(() => {
     const hasBenefitsData =
-      Number.parseFloat(taxableBenefit) > 0 ||
-      Number.parseFloat(companyCarValue) > 0 ||
-      Number.parseFloat(allowance) > 0;
+      parseLocaleNumber(taxableBenefit) > 0 ||
+      parseLocaleNumber(companyCarValue) > 0 ||
+      parseLocaleNumber(allowance) > 0;
     if (hasBenefitsData) setBenefitsExpanded(true);
   }, [taxableBenefit, companyCarValue, allowance]);
 
   useEffect(() => {
-    const hasCommuterData = Number.parseFloat(commuterAllowanceValue) > 0;
+    const hasCommuterData = parseLocaleNumber(commuterAllowanceValue) > 0;
     if (hasCommuterData) setCommuterExpanded(true);
   }, [commuterAllowanceValue]);
 
@@ -275,17 +276,17 @@ export default function Home() {
     const sanitizedChildrenOver18 = Number.parseInt(childrenOver18, 10) || 0;
     const derivedHasChildren = sanitizedChildrenUnder18 > 0 || sanitizedChildrenOver18 > 0;
 
-    const sanitizedTaxableBenefit = Number.parseFloat(taxableBenefit) || 0;
-    const sanitizedCompanyCarValue = Number.parseFloat(companyCarValue) || 0;
-    const sanitizedAllowance = Number.parseFloat(allowance) || 0;
+    const sanitizedTaxableBenefit = parseLocaleNumber(taxableBenefit) || 0;
+    const sanitizedCompanyCarValue = parseLocaleNumber(companyCarValue) || 0;
+    const sanitizedAllowance = parseLocaleNumber(allowance) || 0;
 
-    const sanitizedCommuterAllowance = Number.parseFloat(commuterAllowanceValue) || 0;
+    const sanitizedCommuterAllowance = parseLocaleNumber(commuterAllowanceValue) || 0;
     const derivedReceivesCommuterAllowance = sanitizedCommuterAllowance > 0;
 
     const payload: CalculatorInput = {
       employmentType,
       incomePeriod,
-      income: Number.parseFloat(income) || 0,
+      income: parseLocaleNumber(income) || 0,
       calculationMode,
       hasChildren: derivedHasChildren,
       childrenUnder18: sanitizedChildrenUnder18,
@@ -569,21 +570,18 @@ export default function Home() {
                       <span className="text-lg font-semibold text-rose-500">€</span>
                     </div>
                     <input
-                      type="number"
+                      type="text"
                       inputMode="decimal"
-                      min="0"
-                      max="500000"
-                      step="10"
                       value={income}
-                      onChange={(event) => setIncome(event.target.value)}
+                      onChange={(event) => setIncome(sanitizeNumberInput(event.target.value))}
                       className="block w-full rounded-2xl border-2 border-rose-100 bg-white py-4 pl-10 pr-4 text-lg font-semibold text-slate-900 placeholder:text-slate-400 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
                       placeholder={common.nav.calculator === "Calculator" ? "e.g. 3000" : "z.B. 3000"}
                       required
                       aria-required="true"
-                      aria-describedby={income && (Number.parseFloat(income) <= 0 || Number.parseFloat(income) > 500000) ? "income-error" : undefined}
+                      aria-describedby={income && (parseLocaleNumber(income) <= 0 || parseLocaleNumber(income) > 500000) ? "income-error" : undefined}
                     />
                   </div>
-                  {income && Number.parseFloat(income) > 0 && Number.parseFloat(income) > 100000 && (
+                  {income && parseLocaleNumber(income) > 0 && parseLocaleNumber(income) > 100000 && (
                     <div className="mt-2 flex items-start gap-2 rounded-xl bg-amber-50 border border-amber-200 px-3 py-2">
                       <span className="text-amber-600 text-sm">⚠️</span>
                       <p className="text-sm text-amber-800">
@@ -593,13 +591,13 @@ export default function Home() {
                       </p>
                     </div>
                   )}
-                  {income && Number.parseFloat(income) <= 0 && (
+                  {income && parseLocaleNumber(income) <= 0 && (
                     <p id="income-error" className="mt-2 flex items-center gap-2 text-sm text-red-600">
                       <span>❌</span>
                       {common.nav.calculator === "Calculator" ? "Please enter a valid amount (minimum €0.01)" : "Bitte geben Sie einen gültigen Betrag ein (mindestens €0,01)"}
                     </p>
                   )}
-                  {income && Number.parseFloat(income) > 500000 && (
+                  {income && parseLocaleNumber(income) > 500000 && (
                     <p id="income-error" className="mt-2 flex items-center gap-2 text-sm text-red-600">
                       <span>❌</span>
                       {common.nav.calculator === "Calculator" ? "Amount exceeds maximum (€500,000)" : "Betrag überschreitet Maximum (€500.000)"}
@@ -800,12 +798,10 @@ export default function Home() {
                           <span className="text-base font-semibold text-rose-500">€</span>
                         </div>
                         <input
-                          type="number"
+                          type="text"
                           inputMode="decimal"
-                          min="0"
-                          step="0.01"
                           value={taxableBenefit}
-                          onChange={(event) => setTaxableBenefit(event.target.value)}
+                          onChange={(event) => setTaxableBenefit(sanitizeNumberInput(event.target.value))}
                           className="block w-full rounded-xl border-2 border-rose-100 bg-white pl-10 pr-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
                           placeholder="0.00"
                         />
@@ -818,12 +814,10 @@ export default function Home() {
                           <span className="text-base font-semibold text-rose-500">€</span>
                         </div>
                         <input
-                          type="number"
+                          type="text"
                           inputMode="decimal"
-                          min="0"
-                          step="0.01"
                           value={companyCarValue}
-                          onChange={(event) => setCompanyCarValue(event.target.value)}
+                          onChange={(event) => setCompanyCarValue(sanitizeNumberInput(event.target.value))}
                           className="block w-full rounded-xl border-2 border-rose-100 bg-white pl-10 pr-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
                           placeholder="0.00"
                         />
@@ -836,12 +830,10 @@ export default function Home() {
                           <span className="text-base font-semibold text-rose-500">€</span>
                         </div>
                         <input
-                          type="number"
+                          type="text"
                           inputMode="decimal"
-                          min="0"
-                          step="0.01"
                           value={allowance}
-                          onChange={(event) => setAllowance(event.target.value)}
+                          onChange={(event) => setAllowance(sanitizeNumberInput(event.target.value))}
                           className="block w-full rounded-xl border-2 border-rose-100 bg-white pl-10 pr-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
                           placeholder="0.00"
                         />
@@ -892,12 +884,10 @@ export default function Home() {
                           <span className="text-base font-semibold text-rose-500">€</span>
                         </div>
                         <input
-                          type="number"
+                          type="text"
                           inputMode="decimal"
-                          min="0"
-                          step="0.01"
                           value={commuterAllowanceValue}
-                          onChange={(event) => setCommuterAllowanceValue(event.target.value)}
+                          onChange={(event) => setCommuterAllowanceValue(sanitizeNumberInput(event.target.value))}
                           className="block w-full rounded-xl border-2 border-rose-100 bg-white pl-10 pr-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
                           placeholder="0.00"
                         />
