@@ -428,8 +428,8 @@ export default function Home() {
             </svg>
             <span className="text-xs font-semibold text-emerald-700">
               {common.nav.calculator === "Calculator"
-                ? "Trusted by 800+ users so far"
-                : "800+ Nutzer:innen vertrauten uns bislang"}
+                ? "Trusted by 2,000+ users so far"
+                : "2.000+ Nutzer:innen vertrauten uns bislang"}
             </span>
           </div>
 
