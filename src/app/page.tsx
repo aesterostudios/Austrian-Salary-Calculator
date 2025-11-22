@@ -59,6 +59,7 @@ type StoredFormState = {
   allowance: string;
   receivesCommuterAllowance: boolean;
   commuterAllowanceValue: string;
+  commuterDistanceKm: string;
   familyExpanded: boolean;
   benefitsExpanded: boolean;
   commuterExpanded: boolean;
@@ -88,6 +89,7 @@ export default function Home() {
     useState<boolean>(false);
   const [commuterAllowanceValue, setCommuterAllowanceValue] =
     useState<string>("0");
+  const [commuterDistanceKm, setCommuterDistanceKm] = useState<string>("0");
   const [isRestoredFromStorage, setIsRestoredFromStorage] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
   const [calculationMode, setCalculationMode] = useState<CalculationMode>("gross-to-net");
@@ -113,9 +115,10 @@ export default function Home() {
   }, [taxableBenefit, companyCarValue, allowance]);
 
   useEffect(() => {
-    const hasCommuterData = parseLocaleNumber(commuterAllowanceValue) > 0;
+    const hasCommuterData = parseLocaleNumber(commuterAllowanceValue) > 0 ||
+                           parseLocaleNumber(commuterDistanceKm) > 0;
     if (hasCommuterData) setCommuterExpanded(true);
-  }, [commuterAllowanceValue]);
+  }, [commuterAllowanceValue, commuterDistanceKm]);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -176,6 +179,9 @@ export default function Home() {
       if (typeof parsed.commuterAllowanceValue === "string") {
         setCommuterAllowanceValue(parsed.commuterAllowanceValue);
       }
+      if (typeof parsed.commuterDistanceKm === "string") {
+        setCommuterDistanceKm(parsed.commuterDistanceKm);
+      }
       if (typeof parsed.familyExpanded === "boolean") {
         setFamilyExpanded(parsed.familyExpanded);
       }
@@ -220,6 +226,7 @@ export default function Home() {
         allowance,
         receivesCommuterAllowance,
         commuterAllowanceValue,
+        commuterDistanceKm,
         familyExpanded,
         benefitsExpanded,
         commuterExpanded,
@@ -242,6 +249,7 @@ export default function Home() {
     childrenOver18,
     childrenUnder18,
     commuterAllowanceValue,
+    commuterDistanceKm,
     employmentType,
     familyBonus,
     hasChildren,
@@ -281,6 +289,7 @@ export default function Home() {
     const sanitizedAllowance = parseLocaleNumber(allowance) || 0;
 
     const sanitizedCommuterAllowance = parseLocaleNumber(commuterAllowanceValue) || 0;
+    const sanitizedCommuterDistanceKm = parseLocaleNumber(commuterDistanceKm) || 0;
     const derivedReceivesCommuterAllowance = sanitizedCommuterAllowance > 0;
 
     const payload: CalculatorInput = {
@@ -298,6 +307,7 @@ export default function Home() {
       allowance: sanitizedAllowance,
       receivesCommuterAllowance: derivedReceivesCommuterAllowance,
       commuterAllowanceMonthly: sanitizedCommuterAllowance,
+      commuterDistanceKm: sanitizedCommuterDistanceKm > 0 ? sanitizedCommuterDistanceKm : undefined,
     };
 
     setIsNavigating(true);
@@ -329,6 +339,7 @@ export default function Home() {
     setAllowance("0");
     setReceivesCommuterAllowance(false);
     setCommuterAllowanceValue("0");
+    setCommuterDistanceKm("0");
     setFamilyExpanded(false);
     setBenefitsExpanded(false);
     setCommuterExpanded(false);
@@ -898,6 +909,23 @@ export default function Home() {
                           className="block w-full rounded-xl border-2 border-rose-100 bg-white pl-10 pr-4 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
                           placeholder="0.00"
                         />
+                      </div>
+                    </label>
+                    <label className="block">
+                      <span className="block text-sm font-medium text-slate-700">{home.commuter.distanceLabel}</span>
+                      <p className="mt-1 text-xs text-slate-500">{home.commuter.distanceHelper}</p>
+                      <div className="relative mt-2">
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          value={commuterDistanceKm}
+                          onChange={(event) => setCommuterDistanceKm(sanitizeNumberInput(event.target.value))}
+                          className="block w-full rounded-xl border-2 border-rose-100 bg-white pl-4 pr-12 py-3 text-base text-slate-900 transition-all focus:border-rose-500 focus:outline-none focus:ring-4 focus:ring-rose-500/10"
+                          placeholder="0"
+                        />
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
+                          <span className="text-sm font-medium text-slate-400">km</span>
+                        </div>
                       </div>
                     </label>
                   </div>
