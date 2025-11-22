@@ -150,8 +150,8 @@ export default function ChangelogPage() {
                         <span className="text-rose-600">•</span>
                         <span>
                           {isGerman
-                            ? <><strong>Optionales Feld "commuterDistanceKm":</strong> Für genaue Pendlereuro-Berechnung (einfache Entfernung in km)</>
-                            : <><strong>Optional "commuterDistanceKm" field:</strong> For accurate commuter euro calculation (one-way distance in km)</>
+                            ? <><strong>Optionales Feld &ldquo;commuterDistanceKm&rdquo;:</strong> Für genaue Pendlereuro-Berechnung (einfache Entfernung in km)</>
+                            : <><strong>Optional &ldquo;commuterDistanceKm&rdquo; field:</strong> For accurate commuter euro calculation (one-way distance in km)</>
                           }
                         </span>
                       </li>
