@@ -18,6 +18,7 @@ export interface CalculatorInput {
   allowance: number;
   receivesCommuterAllowance: boolean;
   commuterAllowanceMonthly: number;
+  commuterDistanceKm?: number; // One-way distance for Pendlereuro calculation (2026: €6 per km)
 }
 
 export interface CalculationResult {
@@ -52,6 +53,10 @@ const PAYMENTS_PER_YEAR = 14;
 const REGULAR_PAYMENTS_PER_YEAR = 12;
 const SPECIAL_PAYMENTS_PER_YEAR = PAYMENTS_PER_YEAR - REGULAR_PAYMENTS_PER_YEAR;
 const TAX_FREE_SPECIAL_ALLOWANCE = 620;
+// 2026 SV-Freibetrag für Sonderzahlungen (indexiert von 2025: 551.10€ + 1.733%)
+const SPECIAL_PAYMENT_SV_EXEMPTION = 560.65;
+// 2026 Geringfügigkeitsgrenze (indexiert von 2025: 508.55€ + 1.733%)
+const MINOR_EMPLOYMENT_THRESHOLD = 518.44;
 
 const SOCIAL_INSURANCE_RATES: Record<EmploymentType, number> = {
   employee: 0.1807,
@@ -72,7 +77,8 @@ const SPECIAL_PAYMENT_SURCHARGE_BRACKETS = [
 
 /**
  * Calculates Verkehrsabsetzbetrag + Erhöhter Verkehrsabsetzbetrag + Zuschlag
- * for employees and apprentices (2026 values, indexed)
+ * for employees and apprentices (2026 values, indexed by 1.75% from 2025)
+ * Source: 2025 values increased by 1.75% inflation adjustment
  */
 function calculateVerkehrsabsetzbetrag(
   employmentType: EmploymentType,
@@ -82,28 +88,30 @@ function calculateVerkehrsabsetzbetrag(
     return 0;
   }
 
-  // Base Verkehrsabsetzbetrag: €496
+  // Base Verkehrsabsetzbetrag: €496 (2025: €487)
   let credit = 496;
 
-  // Erhöhter Verkehrsabsetzbetrag: €853 if income ≤ €15,069, phases down to €496 by €16,056
-  if (taxableIncomeAnnual <= 15069) {
+  // Erhöhter Verkehrsabsetzbetrag: €853 if income ≤ €15,071, phases down to €496 by €16,058
+  // 2025 values: €838 until €14,812, phases out to €15,782
+  if (taxableIncomeAnnual <= 15071) {
     credit = 853;
-  } else if (taxableIncomeAnnual < 16056) {
-    // Linear phase-out from 853 to 496 between €15,069 and €16,056
-    const phaseOutRange = 16056 - 15069;
-    const excessIncome = taxableIncomeAnnual - 15069;
+  } else if (taxableIncomeAnnual < 16058) {
+    // Linear phase-out from 853 to 496 between €15,071 and €16,058
+    const phaseOutRange = 16058 - 15071;
+    const excessIncome = taxableIncomeAnnual - 15071;
     const reductionAmount = (853 - 496) * (excessIncome / phaseOutRange);
     credit = 853 - reductionAmount;
   }
 
-  // Zuschlag zum Verkehrsabsetzbetrag: €804, phases out from €19,761 to €30,259
+  // Zuschlag zum Verkehrsabsetzbetrag: €804, phases out from €19,764 to €30,264
+  // 2025 values: €790, phases out from €19,424 to €29,743
   let zuschlag = 0;
-  if (taxableIncomeAnnual <= 19761) {
+  if (taxableIncomeAnnual <= 19764) {
     zuschlag = 804;
-  } else if (taxableIncomeAnnual < 30259) {
-    // Linear phase-out from 804 to 0 between €19,761 and €30,259
-    const phaseOutRange = 30259 - 19761;
-    const excessIncome = taxableIncomeAnnual - 19761;
+  } else if (taxableIncomeAnnual < 30264) {
+    // Linear phase-out from 804 to 0 between €19,764 and €30,264
+    const phaseOutRange = 30264 - 19764;
+    const excessIncome = taxableIncomeAnnual - 19764;
     zuschlag = 804 * (1 - excessIncome / phaseOutRange);
   }
 
@@ -252,6 +260,7 @@ export function calculateNetSalary(input: CalculatorInput): CalculationResult {
     allowance,
     receivesCommuterAllowance,
     commuterAllowanceMonthly,
+    commuterDistanceKm,
   } = input;
 
   const sanitizedIncome = Math.max(income, 0);
@@ -265,6 +274,12 @@ export function calculateNetSalary(input: CalculatorInput): CalculationResult {
     Math.max(taxableBenefitsMonthly, 0) +
     Math.max(companyCarBenefitMonthly, 0);
 
+  // For SV calculation: company car benefit only counts at 20% (§ 49 Abs 3 Z 11 ASVG)
+  const svBasisMonthly =
+    grossMonthly +
+    Math.max(taxableBenefitsMonthly, 0) +
+    Math.max(companyCarBenefitMonthly, 0) * 0.2;
+
   const sanitizedCommuterAllowance = receivesCommuterAllowance
     ? Math.max(commuterAllowanceMonthly, 0)
     : 0;
@@ -274,11 +289,20 @@ export function calculateNetSalary(input: CalculatorInput): CalculationResult {
 
   const socialInsuranceRate =
     SOCIAL_INSURANCE_RATES[employmentType] ?? SOCIAL_INSURANCE_RATES.employee;
-  const socialInsuranceMonthly = taxableGrossMonthly * socialInsuranceRate;
+
+  // Apply minor employment threshold: below threshold, lower SV rate applies
+  // For simplicity, we check if svBasis is below threshold and use 0 SV
+  // (in reality, it's optional 1.7% pension insurance, but most calculators use 0)
+  const socialInsuranceMonthly = svBasisMonthly < MINOR_EMPLOYMENT_THRESHOLD
+    ? 0
+    : svBasisMonthly * socialInsuranceRate;
 
   const socialInsuranceSpecialRate =
     SOCIAL_INSURANCE_SPECIAL_RATES[employmentType] ?? socialInsuranceRate;
-  const socialInsuranceSpecial = specialPaymentGross * socialInsuranceSpecialRate;
+
+  // Apply SV exemption for special payments: first €560.65 is exempt from SV
+  const svBaseSpecial = Math.max(0, specialPaymentGross - SPECIAL_PAYMENT_SV_EXEMPTION);
+  const socialInsuranceSpecial = svBaseSpecial * socialInsuranceSpecialRate;
 
   const taxableIncomeMonthly = Math.max(
     0,
@@ -303,9 +327,24 @@ export function calculateNetSalary(input: CalculatorInput): CalculationResult {
     ? calculatePensionistenabsetzbetrag(taxableIncomeAnnual)
     : calculateVerkehrsabsetzbetrag(employmentType, taxableIncomeAnnual);
 
+  // Calculate Pendlereuro (commuter tax credit): €6 per km for 2026 (tripled from €2)
+  // If distance is provided, use it; otherwise estimate from allowance (less accurate)
+  let pendlerEuro = 0;
+  if (receivesCommuterAllowance) {
+    if (commuterDistanceKm && commuterDistanceKm > 0) {
+      // Accurate calculation: €6 per km of one-way distance
+      pendlerEuro = commuterDistanceKm * 6;
+    } else {
+      // Fallback: estimate from allowance (old formula adapted for 2026)
+      // This is less accurate but maintains backwards compatibility
+      pendlerEuro = (sanitizedCommuterAllowance * REGULAR_PAYMENTS_PER_YEAR / 100) * 6;
+    }
+  }
+
   const creditsAnnual =
     calculateSingleEarnerCredit(isSingleEarner, totalChildren) +
-    employmentCredit;
+    employmentCredit +
+    pendlerEuro;
 
   const familyBonusAnnual = calculateFamilyBonus(
     familyBonus,
