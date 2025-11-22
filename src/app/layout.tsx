@@ -51,8 +51,18 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
+  icons: {
+    icon: [
+      { url: '/icon.png', sizes: '800x800', type: 'image/png' },
+      { url: '/favicon.ico', sizes: '48x48' },
+    ],
+    apple: [
+      { url: '/apple-icon.png', sizes: '800x800', type: 'image/png' },
+    ],
+  },
+  manifest: '/manifest.json',
   other: {
-    "theme-color": "#fff5f8",
+    "theme-color": "#e11d48",
     "mobile-web-app-capable": "yes",
     "apple-mobile-web-app-capable": "yes",
     "apple-mobile-web-app-status-bar-style": "default",
