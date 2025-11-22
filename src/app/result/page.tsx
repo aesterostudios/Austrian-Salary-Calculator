@@ -583,9 +583,9 @@ export default function ResultPage() {
                 </tr>
                 <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
                   <td className="py-1 px-2 text-slate-700" style={{ borderRight: '1px solid #f1f5f9' }}>{common.nav.calculator === "Calculator" ? "Income Tax" : "Lohnsteuer"}</td>
-                  <td className="py-1 px-2 text-right text-slate-700" style={{ borderRight: '1px solid #f1f5f9' }}>-{formatCurrency(calculation.incomeTaxMonthly, currencyLocale)}</td>
-                  <td className="py-1 px-2 text-right text-slate-700" style={{ borderRight: '1px solid #f1f5f9' }}>-{formatCurrency(calculation.incomeTaxSpecial13th, currencyLocale)}</td>
-                  <td className="py-1 px-2 text-right text-slate-700">-{formatCurrency(calculation.incomeTaxSpecial14th, currencyLocale)}</td>
+                  <td className="py-1 px-2 text-right" style={{ borderRight: '1px solid #f1f5f9', color: calculation.incomeTaxMonthly < 0 ? '#15803d' : '#64748b' }}>{calculation.incomeTaxMonthly < 0 ? '+' : '-'}{formatCurrency(Math.abs(calculation.incomeTaxMonthly), currencyLocale)}</td>
+                  <td className="py-1 px-2 text-right" style={{ borderRight: '1px solid #f1f5f9', color: calculation.incomeTaxSpecial13th < 0 ? '#15803d' : '#64748b' }}>{calculation.incomeTaxSpecial13th < 0 ? '+' : '-'}{formatCurrency(Math.abs(calculation.incomeTaxSpecial13th), currencyLocale)}</td>
+                  <td className="py-1 px-2 text-right" style={{ color: calculation.incomeTaxSpecial14th < 0 ? '#15803d' : '#64748b' }}>{calculation.incomeTaxSpecial14th < 0 ? '+' : '-'}{formatCurrency(Math.abs(calculation.incomeTaxSpecial14th), currencyLocale)}</td>
                 </tr>
                 <tr style={{ borderTop: '2px solid #e2e8f0', backgroundColor: '#f8fafc' }}>
                   <td className="py-1 px-2 font-bold text-slate-900" style={{ borderRight: '1px solid #e2e8f0' }}>{common.nav.calculator === "Calculator" ? "= Net" : "= Netto"}</td>
@@ -848,14 +848,14 @@ export default function ResultPage() {
                       <td className="px-4 py-3 text-sm font-medium text-slate-700">
                         {common.nav.calculator === "Calculator" ? "Income Tax" : "Lohnsteuer"}
                       </td>
-                      <td className="px-4 py-3 text-right text-sm font-semibold text-rose-700">
-                        -{formatCurrency(calculation.incomeTaxMonthly, currencyLocale)}
+                      <td className={`px-4 py-3 text-right text-sm font-semibold ${calculation.incomeTaxMonthly < 0 ? 'text-green-700' : 'text-rose-700'}`}>
+                        {calculation.incomeTaxMonthly < 0 ? '+' : '-'}{formatCurrency(Math.abs(calculation.incomeTaxMonthly), currencyLocale)}
                       </td>
-                      <td className="px-4 py-3 text-right text-sm font-semibold text-rose-700 bg-rose-100/40">
-                        -{formatCurrency(calculation.incomeTaxSpecial13th, currencyLocale)}
+                      <td className={`px-4 py-3 text-right text-sm font-semibold bg-rose-100/40 ${calculation.incomeTaxSpecial13th < 0 ? 'text-green-700' : 'text-rose-700'}`}>
+                        {calculation.incomeTaxSpecial13th < 0 ? '+' : '-'}{formatCurrency(Math.abs(calculation.incomeTaxSpecial13th), currencyLocale)}
                       </td>
-                      <td className="px-4 py-3 text-right text-sm font-semibold text-rose-700 bg-rose-100/70">
-                        -{formatCurrency(calculation.incomeTaxSpecial14th, currencyLocale)}
+                      <td className={`px-4 py-3 text-right text-sm font-semibold bg-rose-100/70 ${calculation.incomeTaxSpecial14th < 0 ? 'text-green-700' : 'text-rose-700'}`}>
+                        {calculation.incomeTaxSpecial14th < 0 ? '+' : '-'}{formatCurrency(Math.abs(calculation.incomeTaxSpecial14th), currencyLocale)}
                       </td>
                     </tr>
                     <tr className="bg-gradient-to-r from-emerald-50 to-teal-50 font-semibold">

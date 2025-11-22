@@ -30,7 +30,10 @@ The application is fully bilingual (English/German) and optimized for desktop an
 - Pension insurance (Pensionsversicherung)
 - Unemployment insurance (Arbeitslosenversicherung)
 - Accident insurance (Unfallversicherung)
-- Different rates for employees, apprentices, and pensioners
+- Different rates for employees (18.07%/17.07%), apprentices (15.50%/14.45%), and pensioners (5.10%)
+- **Minor employment threshold:** No SV below €518.44/month (Geringfügigkeitsgrenze)
+- **SV exemption for special payments:** First €560.65 of 13th/14th salaries are SV-free
+- **Company car 20% rule:** Only 20% of company car benefits count for SV calculation (§49 Abs 3 Z 11 ASVG)
 
 **Income Tax:**
 - Progressive Austrian tax brackets (2026 indexed rates per BGBl II 191/2025)
@@ -66,7 +69,8 @@ The application is fully bilingual (English/German) and optimized for desktop an
 - Small commuter allowance (Kleines Pendlerpauschale) - public transport available
 - Large commuter allowance (Großes Pendlerpauschale) - no public transport
 - Distance-based tiers from 20km to 60km+
-- Pendlereuro: **€6 per km per year** (increased from €2 in 2026)
+- **Pendlereuro:** €6 per km per year (tripled from €2 in 2026)
+- **Optional distance input field:** Enter one-way commute distance for accurate Pendlereuro calculation
 
 **Special Payments:**
 - 13th salary (vacation bonus / Urlaubsgeld)
@@ -86,6 +90,7 @@ The application is fully bilingual (English/German) and optimized for desktop an
 - **PDF Export**: Professional print-optimized layout for saving/printing results
 - Shareable URLs: Share calculation results via compressed URL parameters
 - Comprehensive FAQ page (bilingual) answering common tax questions
+- **Changelog page**: Track all updates and improvements
 - Session storage for form state persistence
 - Privacy policy page
 - Mobile-responsive design
@@ -116,6 +121,9 @@ Austrian-Salary-Calculator/
 │   │   ├── faq/                  # FAQ page route
 │   │   │   ├── page.tsx          # FAQ questions and answers
 │   │   │   └── layout.tsx        # FAQ page metadata
+│   │   ├── changelog/            # Changelog page route
+│   │   │   ├── page.tsx          # Updates and improvements
+│   │   │   └── layout.tsx        # Changelog page metadata
 │   │   ├── privacy/              # Privacy policy route
 │   │   │   ├── page.tsx          # Privacy policy content
 │   │   │   └── layout.tsx        # Privacy page metadata
@@ -164,10 +172,15 @@ Austrian-Salary-Calculator/
 
 The core calculation logic (`src/lib/calculator.ts`) implements:
 
-1. **Social Insurance**: Different contribution rates for employees (18.07%/17.07%), apprentices (15.50%/14.45%), and pensioners (5.10%)
+1. **Social Insurance**:
+   - Different contribution rates for employees (18.07%/17.07%), apprentices (15.50%/14.45%), and pensioners (5.10%)
+   - Minor employment threshold: No SV below €518.44/month
+   - Company car benefit: Only 20% counts towards SV basis (§49 Abs 3 Z 11 ASVG)
+   - SV exemption for special payments: First €560.65 is SV-free
 2. **Income Tax**: Progressive tax brackets with automatic credits including:
    - Verkehrsabsetzbetrag with three-tier system (base, erhöhter, zuschlag)
    - Pensionistenabsetzbetrag with dual phase-out logic
+   - Pendlereuro: €6 per km (accurate calculation if distance provided, fallback estimate otherwise)
    - Family Bonus Plus deduction
    - Single earner/parent credits
    - SV-Rückerstattung (negative tax) for low-income earners
@@ -196,14 +209,23 @@ The calculator handles edge cases including:
 
 ## Recent Updates
 
-### 2026 Tax Year Update
+### November 22, 2025 - Critical Calculation Fixes
+- ✅ **Fixed SV for special payments:** Added €560.65 SV exemption for 13th/14th salaries
+- ✅ **Fixed company car calculation:** Implemented 20% rule for SV (§49 Abs 3 Z 11 ASVG)
+- ✅ **Fixed low-income SV:** Added minor employment threshold (€518.44)
+- ✅ **Added Pendlereuro calculation:** €6 per km (tripled from €2)
+- ✅ **Added commute distance input:** Optional field for accurate Pendlereuro calculation
+- ✅ **Corrected Verkehrsabsetzbetrag limits:** Updated income phase-out thresholds
+- ✅ **Created Changelog page:** Track all updates and improvements
+- ✅ **User-reported test cases:** Validated calculations with real user examples
+
+### 2026 Tax Year Update (October 2025)
 - ✅ Updated all tax brackets to 2026 indexed values
 - ✅ Completely rewrote employee credit system (Verkehrsabsetzbetrag)
 - ✅ Implemented proper pensioner credits with dual phase-out logic
 - ✅ Added SV-Rückerstattung (negative tax refund) with 2026 caps
 - ✅ Updated single earner credits to 2026 values
 - ✅ Updated Family Bonus Plus for children over 18 (€700/year)
-- ✅ Updated Pendlereuro from €2 to €6 per km
 - ✅ Fixed critical bug in pensioner credit calculation
 - ✅ Updated FAQs for 2026 (both languages)
 
@@ -221,7 +243,7 @@ The app uses a custom i18n solution with:
 - Structured data (JSON-LD) for WebApplication and FAQPage
 - Canonical URLs on all pages
 - Bilingual hreflang tags
-- Sitemap with 3 pages (home, FAQ, privacy)
+- Sitemap with 4 pages (home, FAQ, changelog, privacy)
 - Robots.txt allowing all crawlers including AI bots
 
 ---
