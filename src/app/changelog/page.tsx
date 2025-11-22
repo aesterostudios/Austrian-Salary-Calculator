@@ -150,8 +150,8 @@ export default function ChangelogPage() {
                         <span className="text-rose-600">•</span>
                         <span>
                           {isGerman
-                            ? <><strong>Optionales Feld &ldquo;commuterDistanceKm&rdquo;:</strong> Für genaue Pendlereuro-Berechnung (einfache Entfernung in km)</>
-                            : <><strong>Optional &ldquo;commuterDistanceKm&rdquo; field:</strong> For accurate commuter euro calculation (one-way distance in km)</>
+                            ? <><strong>Eingabefeld für Pendler-Entfernung:</strong> Für genaue Pendlereuro-Berechnung (einfache Strecke in Kilometern)</>
+                            : <><strong>Commute distance input field:</strong> For accurate Pendlereuro calculation (one-way distance in kilometers)</>
                           }
                         </span>
                       </li>
@@ -225,29 +225,6 @@ export default function ChangelogPage() {
                       </tr>
                     </tbody>
                   </table>
-                </div>
-              </div>
-
-              {/* Accuracy Section */}
-              <div>
-                <h3 className="mb-4 text-lg font-semibold text-slate-900">
-                  {isGerman ? "Genauigkeit" : "Accuracy"}
-                </h3>
-                <div className="rounded-2xl border border-green-100 bg-green-50/30 p-4">
-                  <p className="mb-3 text-sm font-semibold text-slate-900">
-                    {isGerman ? "Test mit 5400€ Brutto:" : "Test with €5,400 gross:"}
-                  </p>
-                  <ul className="space-y-1 text-sm text-slate-700">
-                    <li>
-                      {isGerman ? "Berechnet:" : "Calculated:"} <span className="font-mono font-semibold">€3,408.60</span> {isGerman ? "netto" : "net"}
-                    </li>
-                    <li>
-                      {isGerman ? "Erwartet:" : "Expected:"} <span className="font-mono">€3,400.09</span> {isGerman ? "netto" : "net"}
-                    </li>
-                    <li className="font-semibold text-green-700">
-                      {isGerman ? "Differenz:" : "Difference:"} <span className="font-mono">€8.51 (0.25%)</span>
-                    </li>
-                  </ul>
                 </div>
               </div>
             </div>
