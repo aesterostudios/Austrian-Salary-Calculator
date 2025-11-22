@@ -57,6 +57,8 @@ export interface Dictionary {
       helper: ReactNode;
       linkLabel: string;
       inputLabel: string;
+      distanceLabel: string;
+      distanceHelper: string;
     };
     calculateButton: string;
   };
@@ -272,6 +274,8 @@ export const translations: Record<Language, Dictionary> = {
         ),
         linkLabel: "Pendlerrechner (commuter calculator) of the BMF",
         inputLabel: "Commuter allowance per month",
+        distanceLabel: "Commute distance (one-way, km)",
+        distanceHelper: "Optional: Enter your one-way commute distance for accurate Pendlereuro calculation (€6 per km in 2026)",
       },
       calculateButton: "Calculate now",
     },
@@ -525,6 +529,8 @@ export const translations: Record<Language, Dictionary> = {
         ),
         linkLabel: "Pendlerrechner des BMF",
         inputLabel: "Pendlerpauschale pro Monat",
+        distanceLabel: "Entfernung (einfache Strecke, km)",
+        distanceHelper: "Optional: Geben Sie die einfache Entfernung zur Arbeit ein für eine genaue Pendlereuro-Berechnung (€6 pro km in 2026)",
       },
       calculateButton: "Jetzt berechnen",
     },
