@@ -1,0 +1,23 @@
+{
+  "name": "Austrian Salary Calculator",
+  "short_name": "AT Salary Calc",
+  "description": "Calculate your Austrian salary with accurate 2026 tax rates",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff5f8",
+  "theme_color": "#e11d48",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "800x800",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-icon.png",
+      "sizes": "800x800",
+      "type": "image/png"
+    }
+  ]
+}

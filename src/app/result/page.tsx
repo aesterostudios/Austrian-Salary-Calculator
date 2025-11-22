@@ -387,6 +387,12 @@ export default function ResultPage() {
             ? formatCurrency(sanitizedCommuterAllowance, currencyLocale)
             : formatCurrency(0, currencyLocale),
         },
+        {
+          label: common.nav.calculator === "Calculator" ? "Commuter distance (one-way)" : "Entfernung (einfache Strecke)",
+          value: payload.commuterDistanceKm && payload.commuterDistanceKm > 0
+            ? `${payload.commuterDistanceKm} km`
+            : common.nav.calculator === "Calculator" ? "Not specified" : "Nicht angegeben",
+        },
       ],
     },
   ];
