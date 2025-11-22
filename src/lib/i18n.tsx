@@ -150,7 +150,14 @@ export interface Dictionary {
     highlight: string;
     suffix: string;
     privacyLinkLabel: string;
+    changelogLinkLabel: string;
     contactLinkLabel: string;
+  };
+  changelog: {
+    badge: string;
+    title: string;
+    description: string;
+    backLink: string;
   };
   privacy: {
     badge: string;
@@ -375,7 +382,14 @@ export const translations: Record<Language, Dictionary> = {
       highlight: "Aestero Studios",
       suffix: "in Austria.",
       privacyLinkLabel: "Privacy notice",
+      changelogLinkLabel: "Changelog",
       contactLinkLabel: "Contact",
+    },
+    changelog: {
+      badge: "Changelog",
+      title: "Updates & Improvements",
+      description: "Track the latest changes and improvements to the Austrian Salary Calculator.",
+      backLink: "Back to the calculator",
     },
     privacy: {
       badge: "Privacy",
@@ -621,7 +635,14 @@ export const translations: Record<Language, Dictionary> = {
       highlight: "Aestero Studios",
       suffix: "in Austria.",
       privacyLinkLabel: "Datenschutzhinweis",
+      changelogLinkLabel: "Changelog",
       contactLinkLabel: "Kontakt",
+    },
+    changelog: {
+      badge: "Changelog",
+      title: "Updates & Verbesserungen",
+      description: "Verfolgen Sie die neuesten Änderungen und Verbesserungen am österreichischen Gehaltsrechner.",
+      backLink: "Zurück zum Rechner",
     },
     privacy: {
       badge: "Datenschutz",
