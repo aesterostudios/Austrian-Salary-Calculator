@@ -391,7 +391,7 @@ export const translations: Record<Language, Dictionary> = {
     },
     changelog: {
       badge: "Changelog",
-      title: "Updates & Improvements",
+      title: "Updates & improvements",
       description: "Track the latest changes and improvements to the Austrian Salary Calculator.",
       backLink: "Back to the calculator",
     },
@@ -530,7 +530,7 @@ export const translations: Record<Language, Dictionary> = {
         linkLabel: "Pendlerrechner des BMF",
         inputLabel: "Pendlerpauschale pro Monat",
         distanceLabel: "Entfernung (einfache Strecke, km)",
-        distanceHelper: "Optional: Geben Sie die einfache Entfernung zur Arbeit ein für eine genaue Pendlereuro-Berechnung (€6 pro km in 2026)",
+        distanceHelper: "Optional: Geben Sie zur genauen Berechnung des Pendlereuro (€6 pro km für 2026) die einfache Entfernung zu Ihrem Arbeitsplatz ein",
       },
       calculateButton: "Jetzt berechnen",
     },
